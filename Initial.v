@@ -55,3 +55,13 @@ Definition IsValidISODate (year month day : Z) : bool :=
   else let daysInMonth := (ISODaysInMonth year month) in
     if orb (Z.ltb day 1) (Z.gtb day daysInMonth) then false
     else true.
+
+(* 4.5.9 IsValidTime *)
+Definition IsValidTime (hour minute second millisecond microsecond nanosecond : Z) : bool :=
+  if orb (Z.ltb hour 0) (Z.gtb hour 23) then false
+  else if orb (Z.ltb minute 0) (Z.gtb minute 59) then false
+  else if orb (Z.ltb second 0) (Z.gtb second 59) then false
+  else if orb (Z.ltb millisecond 0) (Z.gtb millisecond 999) then false
+  else if orb (Z.ltb microsecond 0) (Z.gtb microsecond 999) then false
+  else if orb (Z.ltb nanosecond 0) (Z.gtb nanosecond 999) then false
+  else true.
