@@ -17,3 +17,25 @@ Definition CompareISODate (isoDate1 isoDate2 : ISODateRecord) : Z :=
   else if Z.gtb (day isoDate1) (day isoDate2) then 1
   else if Z.ltb (day isoDate1) (day isoDate2) then -1
   else 0.
+
+Theorem CompareISODate_eq_implies_eq_zero :
+  forall (y1 y2 m1 m2 d1 d2 : Z),
+  y1 = y2 /\ m1 = m2 /\ d1 = d2 ->
+  CompareISODate (mkISODateRecord y1 m1 d1) (mkISODateRecord y2 m2 d2) = 0%Z.
+Proof.
+  intros y1 y2 m1 m2 d1 d2.
+  intro H.
+  destruct H.
+  destruct H0.
+  rewrite H.
+  rewrite H0.
+  rewrite H1.
+  unfold CompareISODate.
+  rewrite Z.gtb_ltb.
+  rewrite Z.gtb_ltb.
+  rewrite Z.gtb_ltb.
+  rewrite Z.ltb_irrefl.
+  rewrite Z.ltb_irrefl.
+  rewrite Z.ltb_irrefl.
+  reflexivity.
+Qed.
