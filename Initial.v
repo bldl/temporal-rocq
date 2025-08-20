@@ -39,3 +39,13 @@ Proof.
   rewrite Z.ltb_irrefl.
   reflexivity.
 Qed.
+
+(* 12.3.17 ISODaysInMonth *)
+Definition ISODaysInMonth (year month : Z) : Z := 31%Z.
+
+(* 3.5.7 IsValidISODate *)
+Definition IsValidISODate (year month day : Z) : bool :=
+  if orb (Z.ltb month 1) (Z.gtb month 12) then false
+  else let daysInMonth := (ISODaysInMonth year month) in
+    if orb (Z.ltb day 1) (Z.gtb day daysInMonth) then false
+    else true.
