@@ -40,8 +40,14 @@ Proof.
   reflexivity.
 Qed.
 
+(* TODO: Assert month is 2 and add leap day *)
 (* 12.3.17 ISODaysInMonth *)
-Definition ISODaysInMonth (year month : Z) : Z := 31%Z.
+Definition ISODaysInMonth (year month : Z) : Z :=
+  match month with
+  | 1%Z | 3%Z | 5%Z | 7%Z | 8%Z | 10%Z | 12%Z => 31%Z
+  | 4%Z | 6%Z | 9%Z | 11%Z => 30%Z
+  | _ => 28%Z
+  end.
 
 (* 3.5.7 IsValidISODate *)
 Definition IsValidISODate (year month day : Z) : bool :=
