@@ -1,5 +1,6 @@
 Require Import Coq.Numbers.BinNums ZArith.
 
+(* 3.5.1 ISODateRecord *)
 Record ISODateRecord : Type :=
   mkISODateRecord {
     year : Z;
@@ -7,6 +8,7 @@ Record ISODateRecord : Type :=
     day : Z;
   }.
 
+(* 3.5.12 CompareISODate *)
 Definition CompareISODate (isoDate1 isoDate2 : ISODateRecord) : Z :=
   if Z.gtb (year isoDate1) (year isoDate2) then 1
   else if Z.ltb (year isoDate1) (year isoDate2) then -1
