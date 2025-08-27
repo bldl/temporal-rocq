@@ -53,50 +53,22 @@ Definition EpochTimeForYear (y : Z) : Z :=
 
 Definition EpochTimeToEpochYear (t : Z) : Z := 0.
 
-Definition MathematicalDaysInYear (y : Z) : Z :=
+
+Inductive DaysInYear :=
+  Normal | Leap.
+
+Definition MathematicalDaysInYear (y : Z) : DaysInYear :=
   match (y mod 4) =? 0, (y mod 100) =? 0, (y mod 400) =? 0 with
-  | false, _,     _    => 365
-  | true,  false, _    => 366
-  | _,     true, false => 365
-  | _,     _,    true  => 366
+  | false, _,     _    => Normal
+  | true,  false, _    => Leap
+  | _,     true, false => Normal
+  | _,     _,    true  => Leap
   end.
-
-Lemma MathematicalDaysInYear_365_or_366 :
-  forall (y : Z),
-  MathematicalDaysInYear y = 365 \/ MathematicalDaysInYear y = 366.
-Proof.
-  intro y.
-  unfold MathematicalDaysInYear.
-  destruct (y mod 4 =? 0).
-  destruct (y mod 100 =? 0).
-  destruct (y mod 400 =? 0).
-  right.
-  reflexivity.
-  left.
-  reflexivity.
-  right.
-  reflexivity.
-  left.
-  reflexivity.
-Qed.
-
-Lemma MathematicalDaysInYear_help :
-  forall (y : Z)
-  (ne_365 : MathematicalDaysInYear y <> 365)
-  (ne_366 : MathematicalDaysInYear y <> 366),
-  False.
-Proof.
-  intros y ne_365 ne_366.
-  destruct (MathematicalDaysInYear_365_or_366 y).
-  contradiction.
-  contradiction.
-Qed.
 
 Definition MathematicalInLeapYear (t : Z) : Z :=
   match MathematicalDaysInYear (EpochTimeToEpochYear t) with
-  | 365 => 0
-  | 366 => 1
-  | _ => False_rect Z (MathematicalDaysInYear_help (EpochTimeToEpochYear t))
+  | Normal => 0
+  | Leap => 1
   end.
 
 (* TODO: Assert month is 2 and add leap day *)
