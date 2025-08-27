@@ -42,9 +42,12 @@ Proof.
   reflexivity.
 Qed.
 
-(* TODO assumptions assummptions *)
+(* Assumption: EpochDayNumberForYear and msPerDay works on Z and not real
+   numbers *)
 Definition msPerDay : Z := 86400000.
 
+(* 13.3 Date Equations *)
+(* Note: `/` is floor division with Z. https://rocq-prover.org/doc/V8.21%2Balpha/stdlib/Coq.ZArith.BinIntDef.html#Z.div_eucl *)
 Definition EpochDayNumberForYear (y : Z) : Z :=
   365 * (y - 1970) + ((y - 1969) / 4) - ((y - 1901) / 100) + ((y - 1601) / 400).
 
@@ -69,6 +72,7 @@ Definition MathematicalInLeapYear (t : Z) : Z :=
   | Normal => 0
   | Leap => 1
   end.
+(* 13.3 end *)
 
 (* TODO: Assert month is 2 *)
 (* 12.3.17 ISODaysInMonth *)
