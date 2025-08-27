@@ -42,19 +42,41 @@ Proof.
   reflexivity.
 Qed.
 
-(* Assumption: EpochDayNumberForYear and msPerDay works on Z and not real
-   numbers *)
+(* Assumption: 
+  EpochDayNumberForYear and msPerDay works on Z and not real numbers *)
 Definition msPerDay : Z := 86400000.
 
 (* 13.3 Date Equations *)
-(* Note: `/` is floor division with Z. https://rocq-prover.org/doc/V8.21%2Balpha/stdlib/Coq.ZArith.BinIntDef.html#Z.div_eucl *)
+(* Note: `/` is floor division with Z. 
+  https://rocq-prover.org/doc/V8.21%2Balpha/stdlib/Coq.ZArith.BinIntDef.html#Z.div_eucl *)
 Definition EpochDayNumberForYear (y : Z) : Z :=
   365 * (y - 1970) + ((y - 1969) / 4) - ((y - 1901) / 100) + ((y - 1601) / 400).
 
 Definition EpochTimeForYear (y : Z) : Z :=
   msPerDay * EpochDayNumberForYear y.
 
-Definition EpochTimeToEpochYear (t : Z) : Z := 0.
+Inductive Direction :=
+  Forwards | Backwards.
+
+Fixpoint FindYear (f : nat) (t y : Z) (dir : Direction) : Z := 
+  let t' := t - Z.abs (EpochTimeForYear y) in
+  match f with
+  | O => 0
+  | S f' => (
+    if t' <? 0
+    then match dir with 
+    | Forwards => y - 1
+    | Backwards => y + 1
+    end
+    else if t' =? 0 then y
+    else match dir with
+    | Forwards => FindYear f' t (y + 1) Forwards
+    | Backwards => FindYear f' t (y - 1) Backwards
+    end)
+  end.
+
+Definition EpochTimeToEpochYear (t : Z) : Z :=
+  if t >? 0 then FindYear 5000 t 1970 Forwards else FindYear 5000 (Z.abs t) 1969 Backwards.
 
 Inductive DaysInYear :=
   Normal | Leap.
