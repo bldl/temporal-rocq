@@ -53,7 +53,6 @@ Definition EpochTimeForYear (y : Z) : Z :=
 
 Definition EpochTimeToEpochYear (t : Z) : Z := 0.
 
-
 Inductive DaysInYear :=
   Normal | Leap.
 
@@ -71,13 +70,13 @@ Definition MathematicalInLeapYear (t : Z) : Z :=
   | Leap => 1
   end.
 
-(* TODO: Assert month is 2 and add leap day *)
+(* TODO: Assert month is 2 *)
 (* 12.3.17 ISODaysInMonth *)
 Definition ISODaysInMonth (year month : Z) : Z :=
   match month with
   | 1 | 3 | 5 | 7 | 8 | 10 | 12 => 31
   | 4 | 6 | 9 | 11 => 30
-  | _ => 28
+  | _ => 28 + MathematicalInLeapYear (EpochTimeForYear year)
   end.
 
 (* 3.5.7 IsValidISODate *)
