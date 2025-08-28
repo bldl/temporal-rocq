@@ -12,12 +12,12 @@ Record ISODateRecord : Type :=
 
 (* 3.5.12 CompareISODate *)
 Definition CompareISODate (isoDate1 isoDate2 : ISODateRecord) : Z :=
-  if Z.gtb (year isoDate1) (year isoDate2) then 1
-  else if Z.ltb (year isoDate1) (year isoDate2) then -1
-  else if Z.gtb (month isoDate1) (month isoDate2) then 1
-  else if Z.ltb (month isoDate1) (month isoDate2) then -1
-  else if Z.gtb (day isoDate1) (day isoDate2) then 1
-  else if Z.ltb (day isoDate1) (day isoDate2) then -1
+  if (year isoDate1) >? (year isoDate2) then 1
+  else if (year isoDate1) <? (year isoDate2) then -1
+  else if (month isoDate1) >? (month isoDate2) then 1
+  else if (month isoDate1) <? (month isoDate2) then -1
+  else if (day isoDate1) >? (day isoDate2) then 1
+  else if (day isoDate1) <? (day isoDate2) then -1
   else 0.
 
 Theorem CompareISODate_eq_implies_eq_zero :
@@ -107,17 +107,17 @@ Definition ISODaysInMonth (year month : Z) : Z :=
 
 (* 3.5.7 IsValidISODate *)
 Definition IsValidISODate (year month day : Z) : bool :=
-  if orb (Z.ltb month 1) (Z.gtb month 12) then false
+  if (month <? 1) || (month >? 12) then false
   else let daysInMonth := (ISODaysInMonth year month) in
-    if orb (Z.ltb day 1) (Z.gtb day daysInMonth) then false
+    if (day <? 1) || (day >? daysInMonth) then false
     else true.
 
 (* 4.5.9 IsValidTime *)
 Definition IsValidTime (hour minute second millisecond microsecond nanosecond : Z) : bool :=
-  if orb (Z.ltb hour 0) (Z.gtb hour 23) then false
-  else if orb (Z.ltb minute 0) (Z.gtb minute 59) then false
-  else if orb (Z.ltb second 0) (Z.gtb second 59) then false
-  else if orb (Z.ltb millisecond 0) (Z.gtb millisecond 999) then false
-  else if orb (Z.ltb microsecond 0) (Z.gtb microsecond 999) then false
-  else if orb (Z.ltb nanosecond 0) (Z.gtb nanosecond 999) then false
+  if (hour <? 0) || (hour >? 23) then false
+  else if (minute <? 0) || (minute >? 59) then false
+  else if (second <? 0) || (second >? 59) then false
+  else if (millisecond <? 0) || (millisecond >? 999) then false
+  else if (microsecond <? 0) || (microsecond >? 999) then false
+  else if (nanosecond <? 0) || (nanosecond >? 999) then false
   else true.
