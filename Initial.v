@@ -1,4 +1,5 @@
 Require Import Coq.Numbers.BinNums ZArith.
+Require Import Coq.Program.Wf.
 Open Scope bool_scope.
 Open Scope Z.
 
@@ -69,29 +70,27 @@ Definition EpochDayNumberForYear (y : Z) : Z := 365 * (y - 1970) + ((y - 1969) /
 (*>> EpochTimeForYear(y) = ℝ(msPerDay) × EpochDayNumberForYear(y) <<*)
 Definition EpochTimeForYear (y : Z) : Z := msPerDay * EpochDayNumberForYear y.
 
-Inductive Direction :=
-  Forwards | Backwards.
-
-Fixpoint FindYear (f : nat) (t y : Z) (dir : Direction) : Z := 
+Program Fixpoint FindYearForwards (t : Z) (n : nat)
+  {measure (Z.to_nat (Z.abs (t - EpochTimeForYear (1970 + Z.of_nat n))))} : Z :=
+  let y :=  1970 + Z.of_nat n in
   let t' := t - Z.abs (EpochTimeForYear y) in
-  match f with
-  | O => 0
-  | S f' => (
-    if t' <? 0
-    then match dir with 
-    | Forwards => y - 1
-    | Backwards => y + 1
-    end
-    else if t' =? 0 then y
-    else match dir with
-    | Forwards => FindYear f' t (y + 1) Forwards
-    | Backwards => FindYear f' t (y - 1) Backwards
-    end)
-  end.
+  if t' <? 0
+  then y - 1
+  else if t' =? 0 then y
+  else FindYearForwards t (S n).
+
+Program Fixpoint FindYearBackwards (t : Z) (n : nat)
+  {measure (Z.to_nat (Z.abs (t - EpochTimeForYear (1969 - Z.of_nat n))))} : Z :=
+  let y := 1969 - Z.of_nat n in
+  let t' := t - Z.abs (EpochTimeForYear y) in
+  if t' <? 0
+  then y + 1
+  else if t' =? 0 then y
+  else FindYearBackwards t (S n).
 
 (*>> EpochTimeToEpochYear(t) = the largest integral Number y (closest to +∞) such that EpochTimeForYear(y) ≤ t <<*)
 Definition EpochTimeToEpochYear (t : Z) : Z :=
-  if t >? 0 then FindYear 5000 t 1970 Forwards else FindYear 5000 (Z.abs t) 1969 Backwards.
+  if t >? 0 then FindYearForwards t 0 else FindYearBackwards (Z.abs t) 0.
 
 (* TODO: use numbers instead *)
 Inductive DaysInYear :=
