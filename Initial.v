@@ -1,4 +1,5 @@
 Require Import Coq.Numbers.BinNums ZArith.
+Require Import Coq.Program.Wf.
 Open Scope bool_scope.
 Open Scope Z.
 
@@ -69,29 +70,113 @@ Definition EpochDayNumberForYear (y : Z) : Z := 365 * (y - 1970) + ((y - 1969) /
 (*>> EpochTimeForYear(y) = ℝ(msPerDay) × EpochDayNumberForYear(y) <<*)
 Definition EpochTimeForYear (y : Z) : Z := msPerDay * EpochDayNumberForYear y.
 
-Inductive Direction :=
-  Forwards | Backwards.
+Lemma EpochTimeForYear_1970_eq_zero : EpochTimeForYear 1970 = 0.
+Proof.
+  reflexivity.
+Qed.
 
-Fixpoint FindYear (f : nat) (t y : Z) (dir : Direction) : Z := 
-  let t' := t - Z.abs (EpochTimeForYear y) in
-  match f with
-  | O => 0
-  | S f' => (
-    if t' <? 0
-    then match dir with 
-    | Forwards => y - 1
-    | Backwards => y + 1
-    end
-    else if t' =? 0 then y
-    else match dir with
-    | Forwards => FindYear f' t (y + 1) Forwards
-    | Backwards => FindYear f' t (y - 1) Backwards
-    end)
+(* TODO :O *)
+Lemma EpochTimeForYear_monotonic :
+    forall y0 y1,
+    y0 < y1 -> EpochTimeForYear y0 < EpochTimeForYear y1.
+Admitted.
+
+Program Fixpoint FindYearForwards (t y : Z) (h : EpochTimeForYear y < t)
+    {measure (Z.to_nat (t - EpochTimeForYear y))} : Z :=
+  let y' := y + 1 in
+  match EpochTimeForYear y' ?= t with
+  | Lt => FindYearForwards t y' _
+  | _ => y
   end.
 
+Next Obligation.
+Proof.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
+
+Next Obligation.
+Proof.
+  rewrite <- Z2Nat.inj_lt.
+
+  (* t - EpochTimeForYear (y + 1) < t - EpochTimeForYear y *)
+  apply Z.sub_lt_mono_l.
+  exact (EpochTimeForYear_monotonic y (y + 1) (Z.lt_succ_diag_r y)).
+  
+  (* 0 <= t - EpochTimeForYear (y + 1) *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+
+  (* 0 <= t - EpochTimeForYear y *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  exact h.
+Qed.
+
+Program Fixpoint FindYearBackwards (t y : Z) (h : t < EpochTimeForYear y)
+    {measure (Z.to_nat (EpochTimeForYear y - t))} : Z :=
+  let y' := y - 1 in
+  match t ?= EpochTimeForYear y' with
+  | Lt => FindYearBackwards t y' _
+  | _ => y'
+  end.
+
+Next Obligation.
+Proof.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
+
+Next Obligation.
+Proof.
+  rewrite <- Z2Nat.inj_lt.
+
+  (* EpochTimeForYear (y - 1) - t < EpochTimeForYear y - t *)
+  apply Z.sub_lt_mono_r.
+  exact (EpochTimeForYear_monotonic (y - 1) y (Z.lt_pred_l y)).
+  
+  (* 0 <= t - EpochTimeForYear (y + 1) *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+
+  (* 0 <= t - EpochTimeForYear y *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  exact h.
+Qed.
+
 (*>> EpochTimeToEpochYear(t) = the largest integral Number y (closest to +∞) such that EpochTimeForYear(y) ≤ t <<*)
-Definition EpochTimeToEpochYear (t : Z) : Z :=
-  if t >? 0 then FindYear 5000 t 1970 Forwards else FindYear 5000 (Z.abs t) 1969 Backwards.
+Program Definition EpochTimeToEpochYear (t : Z) : Z :=
+  match t ?= EpochTimeForYear 1970 with
+  | Eq => 1970
+  | Gt => FindYearForwards t 1970 _
+  | Lt => FindYearBackwards t 1970 _
+  end.
+
+Next Obligation.
+Proof.
+  apply Z.gt_lt.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
+
+Next Obligation.
+Proof.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
 
 (* TODO: use numbers instead *)
 Inductive DaysInYear :=
