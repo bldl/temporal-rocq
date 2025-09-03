@@ -70,27 +70,35 @@ Definition EpochDayNumberForYear (y : Z) : Z := 365 * (y - 1970) + ((y - 1969) /
 (*>> EpochTimeForYear(y) = ℝ(msPerDay) × EpochDayNumberForYear(y) <<*)
 Definition EpochTimeForYear (y : Z) : Z := msPerDay * EpochDayNumberForYear y.
 
-Program Fixpoint FindYearForwards (t : Z) (n : nat)
-  {measure (Z.to_nat (Z.abs (t - EpochTimeForYear (1970 + Z.of_nat n))))} : Z :=
-  let y :=  1970 + Z.of_nat n in
-  let t' := t - Z.abs (EpochTimeForYear y) in
-  if t' <? 0
-  then y - 1
-  else if t' =? 0 then y
-  else FindYearForwards t (S n).
+Lemma EpochTimeForYear_1970_eq_zero : EpochTimeForYear 1970 = 0.
+Proof.
+  reflexivity.
+Qed.
 
-Program Fixpoint FindYearBackwards (t : Z) (n : nat)
-  {measure (Z.to_nat (Z.abs (t - EpochTimeForYear (1969 - Z.of_nat n))))} : Z :=
-  let y := 1969 - Z.of_nat n in
-  let t' := t - Z.abs (EpochTimeForYear y) in
-  if t' <? 0
-  then y + 1
-  else if t' =? 0 then y
-  else FindYearBackwards t (S n).
+Program Fixpoint FindYearForwards (t y : Z) (h : EpochTimeForYear y < t)
+    {measure (Z.to_nat (t - EpochTimeForYear y))} : Z :=
+  let y' := y + 1 in
+  if EpochTimeForYear y' <? t then
+    FindYearForwards t y' _
+  else
+    y.
+  
+Program Fixpoint FindYearBackwards (t y : Z) (h : t < EpochTimeForYear y)
+    {measure (Z.to_nat (EpochTimeForYear y - t))} : Z :=
+  let y' := y - 1 in
+  if t <? EpochTimeForYear y' then
+    FindYearBackwards t y' _
+  else
+    y'.
 
 (*>> EpochTimeToEpochYear(t) = the largest integral Number y (closest to +∞) such that EpochTimeForYear(y) ≤ t <<*)
 Definition EpochTimeToEpochYear (t : Z) : Z :=
-  if t >? 0 then FindYearForwards t 0 else FindYearBackwards (Z.abs t) 0.
+  if t =? 0 then
+    1970
+  else if 0 <? t then
+    FindYearForwards t 1970 _
+  else
+    FindYearBackwards t 1970 _.
 
 (* TODO: use numbers instead *)
 Inductive DaysInYear :=
