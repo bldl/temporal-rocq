@@ -75,30 +75,108 @@ Proof.
   reflexivity.
 Qed.
 
+(* TODO :O *)
+Lemma EpochTimeForYear_monotonic :
+    forall y0 y1,
+    y0 < y1 -> EpochTimeForYear y0 < EpochTimeForYear y1.
+Admitted.
+
 Program Fixpoint FindYearForwards (t y : Z) (h : EpochTimeForYear y < t)
     {measure (Z.to_nat (t - EpochTimeForYear y))} : Z :=
   let y' := y + 1 in
-  if EpochTimeForYear y' <? t then
-    FindYearForwards t y' _
-  else
-    y.
+  match EpochTimeForYear y' ?= t with
+  | Lt => FindYearForwards t y' _
+  | _ => y
+  end.
+
+Next Obligation.
+Proof.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
+
+Next Obligation.
+Proof.
+  rewrite <- Z2Nat.inj_lt.
+
+  (* t - EpochTimeForYear (y + 1) < t - EpochTimeForYear y *)
+  apply Z.sub_lt_mono_l.
+  exact (EpochTimeForYear_monotonic y (y + 1) (Z.lt_succ_diag_r y)).
   
+  (* 0 <= t - EpochTimeForYear (y + 1) *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+
+  (* 0 <= t - EpochTimeForYear y *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  exact h.
+Qed.
+
 Program Fixpoint FindYearBackwards (t y : Z) (h : t < EpochTimeForYear y)
     {measure (Z.to_nat (EpochTimeForYear y - t))} : Z :=
   let y' := y - 1 in
-  if t <? EpochTimeForYear y' then
-    FindYearBackwards t y' _
-  else
-    y'.
+  match t ?= EpochTimeForYear y' with
+  | Lt => FindYearBackwards t y' _
+  | _ => y'
+  end.
+
+Next Obligation.
+Proof.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
+
+Next Obligation.
+Proof.
+  rewrite <- Z2Nat.inj_lt.
+
+  (* EpochTimeForYear (y - 1) - t < EpochTimeForYear y - t *)
+  apply Z.sub_lt_mono_r.
+  exact (EpochTimeForYear_monotonic (y - 1) y (Z.lt_pred_l y)).
+  
+  (* 0 <= t - EpochTimeForYear (y + 1) *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  rewrite <- Z.compare_lt_iff.
+  symmetry.
+  exact Heq_anonymous.
+
+  (* 0 <= t - EpochTimeForYear y *)
+  rewrite Z.le_0_sub.
+  rewrite Z.le_lteq.
+  left.
+  exact h.
+Qed.
 
 (*>> EpochTimeToEpochYear(t) = the largest integral Number y (closest to +∞) such that EpochTimeForYear(y) ≤ t <<*)
-Definition EpochTimeToEpochYear (t : Z) : Z :=
-  if t =? 0 then
-    1970
-  else if 0 <? t then
-    FindYearForwards t 1970 _
-  else
-    FindYearBackwards t 1970 _.
+Program Definition EpochTimeToEpochYear (t : Z) : Z :=
+  match t ?= EpochTimeForYear 1970 with
+  | Eq => 1970
+  | Gt => FindYearForwards t 1970 _
+  | Lt => FindYearBackwards t 1970 _
+  end.
+
+Next Obligation.
+Proof.
+  apply Z.gt_lt.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
+
+Next Obligation.
+Proof.
+  symmetry.
+  exact Heq_anonymous.
+Qed.
 
 (* TODO: use numbers instead *)
 Inductive DaysInYear :=
