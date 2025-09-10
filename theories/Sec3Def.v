@@ -1,5 +1,5 @@
 Require Import Coq.Numbers.BinNums Coq.Program.Wf ZArith.
-From Temporal Require Import Sec12Def.
+From Temporal Require Import Basic Sec12Def.
 Open Scope bool_scope.
 Open Scope Z.
 
@@ -34,19 +34,68 @@ Definition CompareISODate (isoDate1 isoDate2 : ISODateRecord) : Z :=
   (*>> 7. Return 0. <<*)
   else 0.
 
-
 (* 3.5.7 IsValidISODate *)
-Definition IsValidISODate (year month day : Z) : bool :=
+Program Definition IsValidISODate (year month day : Z) : bool :=
+  match month ?= 1, month ?= 12 with
   (*>> 1. If month < 1 or month > 12, then <<*)
-  if (month <? 1) || (month >? 12) then
+  | Lt, _ | _, Gt =>
     (*>> a. Return false. <<*)
     false
-  (*>> 2. Let daysInMonth be ISODaysInMonth(year, month). <<*)
-  else let daysInMonth := (ISODaysInMonth year month) in
+  | _, _ =>
+    (*>> 2. Let daysInMonth be ISODaysInMonth(year, month). <<*)
+    let daysInMonth := ISODaysInMonth year month _ in
     (*>> 3. If day < 1 or day > daysInMonth, then <<*)
     if (day <? 1) || (day >? daysInMonth) then
       (*>> a. Return false. <<*)
       false
     (*>> 4. Return true. <<*)
-    else true.
+    else true
+  end.
 
+Next Obligation.
+Proof.
+  split.
+
+  (* 1 <= month0 *)
+  specialize (H0 Lt).
+  rewrite (eq_sym_iff Lt (month0 ?= 1)) in H0.
+  rewrite (eq_sym_iff Lt (month0 ?= 12)) in H0.
+  rewrite Z.compare_lt_iff in H0.
+  rewrite Z.compare_lt_iff in H0.
+  specialize (Decidable.not_and _ _ (Z.lt_decidable _ _) H0).
+  intro.
+  destruct H1.
+
+  (* ~ (month0 < 1) |- 1 <= month0 *)
+  rewrite Z.nlt_ge in H1.
+  assumption.
+
+  (* ~ (month0 < 12) |- 1 <= month0 *)
+  rewrite <- Z.le_ngt in H1.
+  refine (Z.le_trans 1 12 month0 _ H1).
+  easy.
+
+  (* month0 <= 12 *)
+  specialize (H Gt).
+  rewrite (eq_sym_iff Gt (month0 ?= 1)) in H.
+  rewrite (eq_sym_iff Gt (month0 ?= 12)) in H.
+  rewrite Z.compare_gt_iff in H.
+  rewrite Z.compare_gt_iff in H.
+  specialize (Decidable.not_and _ _ (Z.lt_decidable _ _) H).
+  intro.
+  destruct H1.
+
+  (* ~ (1 < month0) |- month0 <= 12 *)
+  rewrite <- Z.le_ngt in H1.
+  refine (Z.le_trans month0 1 12 H1 _).
+  easy.
+
+  (* ~ (12 < month0) |- month0 <= 12 *)
+  rewrite Z.nlt_ge in H1.
+  assumption.
+Qed.
+
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.

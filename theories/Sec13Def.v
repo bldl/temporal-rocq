@@ -1,4 +1,5 @@
 Require Import Coq.Numbers.BinNums Coq.Program.Wf ZArith.
+From Temporal Require Import Basic.
 Open Scope bool_scope.
 Open Scope Z.
 
@@ -119,26 +120,83 @@ Proof.
   exact Heq_anonymous.
 Qed.
 
-(* TODO: use numbers instead *)
-Inductive DaysInYear :=
-  Normal | Leap.
-
-Definition MathematicalDaysInYear (y : Z) : DaysInYear :=
+Definition MathematicalDaysInYear (y : Z) : Z :=
   match (y mod 4) =? 0, (y mod 100) =? 0, (y mod 400) =? 0 with
   (*>> = 365 if ((y) modulo 4) ≠ 0 <<*)
-  | false, _,     _    => Normal
+  | false, _,     _    => 365
   (*>> = 366 if ((y) modulo 4) = 0 and ((y) modulo 100) ≠ 0 <<*)
-  | true,  false, _    => Leap
+  | true,  false, _    => 366
   (*>> = 365 if ((y) modulo 100) = 0 and ((y) modulo 400) ≠ 0 <<*)
-  | _,     true, false => Normal
+  | _,     true, false => 365
   (*>> = 366 if ((y) modulo 400) = 0 <<*)
-  | _,     _,    true  => Leap
+  | _,     _,    true  => 366
   end.
 
-Definition MathematicalInLeapYear (t : Z) : Z :=
+Lemma MathematicalDaysInYear_365_or_366 :
+    forall y,
+    MathematicalDaysInYear y = 365 \/ MathematicalDaysInYear y = 366.
+Proof.
+  intro y.
+  unfold MathematicalDaysInYear.
+  case (y mod 4 =? 0).
+  case (y mod 100 =? 0).
+  case (y mod 400 =? 0).
+  right. reflexivity.
+  left. reflexivity.
+  right. reflexivity.
+  left. reflexivity.
+Qed.
+
+Program Definition MathematicalInLeapYear (t : Z) : Z :=
   match MathematicalDaysInYear (EpochTimeToEpochYear t) with
   (*>> = 0 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 365 <<*)
-  | Normal => 0
+  | 365 => 0
   (*>> = 1 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 366 <<*)
-  | Leap => 1
+  | 366 => 1
+  | _ => impossible
   end.
+
+Next Obligation.
+Proof.
+  destruct (MathematicalDaysInYear_365_or_366 (EpochTimeToEpochYear t)).
+  symmetry in H1.
+  contradiction.
+  symmetry in H1.
+  contradiction.
+Qed.
+
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
+Next Obligation. Proof. easy. Qed.
