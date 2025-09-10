@@ -5,10 +5,10 @@ Open Scope Z.
 
 (* 3.5.1 ISODateRecord *)
 (*>>
-Field Name |	Value                                 |  Meaning
+Field Name | Value                                  | Meaning
 [[Year]]   | an integer                             | The year in the ISO 8601 calendar.
 [[Month]]  | an integer between 1 and 12, inclusive | The number of the month in the ISO 8601 calendar.
-[[Day]]    | an integer between 1 and 31, inclusive | The number of the day of the month in the ISO 8601 calendar. 
+[[Day]]    | an integer between 1 and 31, inclusive | The number of the day of the month in the ISO 8601 calendar.
 <<*)
 Record ISODateRecord : Type :=
   mkISODateRecord {

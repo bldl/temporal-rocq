@@ -31,7 +31,18 @@ Definition IsValidTime (hour minute second millisecond microsecond nanosecond : 
   (*>> 7. Return true. <<*)
   else true.
 
-  (* 4.5.1 Time Records *)
+(* 4.5.1 Time Records *)
+(*>> For any Time Record t, IsValidTime(t.[[Hour]], t.[[Minute]], t.[[Second]], t.[[Millisecond]], t.[[Microsecond]], t.[[Nanosecond]]) must return true. <<*)
+(*>>
+Field Name      | Value                                              | Meaning
+[[Days]]        | an integer ≥ 0                                     | A number of overflow days.
+[[Hour]]        | an integer in the inclusive interval from 0 to 23  | The number of the hour.
+[[Minute]]      | an integer in the inclusive interval from 0 to 59  | The number of the minute.
+[[Second]]      | an integer in the inclusive interval from 0 to 59  | The number of the second.
+[[Millisecond]] | an integer in the inclusive interval from 0 to 999 | The number of the millisecond.
+[[Microsecond]] | an integer in the inclusive interval from 0 to 999 | The number of the microsecond.
+[[Nanosecond]]  | an integer in the inclusive interval from 0 to 999 | The number of the nanosecond.
+<<*)
 Record TimeRecord := 
   mkTimeRecord {
     days : Z;
@@ -44,3 +55,13 @@ Record TimeRecord :=
     daysInvariance : days >= 0;
     invariance : IsValidTime hour minute second millisecond microsecond nanosecond = true;
   }.
+
+(* 4.5.3 MidnightTimeRecord *)
+Program Definition MidnightTimeRecord : TimeRecord :=
+  (*>> 1. Return Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0  }. <<*)
+  mkTimeRecord 0 0 0 0 0 0 0 _ _.
+
+(* 4.5.4 NoonTimeRecord *)
+Program Definition NoonTimeRecord : TimeRecord :=
+  (*>> 1. Return Time Record { [[Days]]: 0, [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0  }. <<*)
+  mkTimeRecord 0 12 0 0 0 0 0 _ _.
