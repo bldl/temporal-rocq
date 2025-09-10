@@ -2,18 +2,6 @@ Require Import ZArith.
 Open Scope bool_scope.
 Open Scope Z.
 
-(* 4.5.1 Time Records *)
-Record TimeRecord := 
-  mkTimeRecord {
-    days : Z;
-    hour : Z;
-    minute : Z;
-    second : Z;
-    millisecond : Z;
-    microsecond : Z;
-    nanosecond : Z;
-  }.
-
 (* 4.5.9 IsValidTime *)
 Definition IsValidTime (hour minute second millisecond microsecond nanosecond : Z) : bool :=
   (*>> 1. If hour < 0 or hour > 23, then <<*)
@@ -42,3 +30,17 @@ Definition IsValidTime (hour minute second millisecond microsecond nanosecond : 
     false
   (*>> 7. Return true. <<*)
   else true.
+
+  (* 4.5.1 Time Records *)
+Record TimeRecord := 
+  mkTimeRecord {
+    days : Z;
+    hour : Z;
+    minute : Z;
+    second : Z;
+    millisecond : Z;
+    microsecond : Z;
+    nanosecond : Z;
+    daysInvariance : days >= 0;
+    invariance : IsValidTime hour minute second millisecond microsecond nanosecond = true;
+  }.
