@@ -3,3 +3,6 @@
 *.vo
 *.vos
 *.vok
+.Makefile.d
+Makefile
+Makefile.conf
