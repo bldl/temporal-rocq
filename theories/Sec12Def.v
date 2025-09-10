@@ -1,5 +1,5 @@
 Require Import Coq.Numbers.BinNums Coq.Program.Wf ZArith.
-Require Import Sec13Def.
+From Temporal Require Export Sec13Def.
 Open Scope bool_scope.
 Open Scope Z.
 
