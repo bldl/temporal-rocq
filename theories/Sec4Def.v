@@ -83,7 +83,28 @@ Definition IsValidTime (hour minute second millisecond microsecond nanosecond : 
   (*>> 7. Return true. <<*)
   else true.
 
-(* TODO: very tedious proof *)
+Lemma inside_range_outside_range_impossible {a b c : Z} :
+  (a <= b <= c) -> ((b <? a) || (b >? c)) = true -> False.
+Proof.
+  intro a_le_b_le_c.
+  destruct a_le_b_le_c as [a_le_b b_le_c].
+  intro H.
+  apply Bool.Is_true_eq_left in H.
+  apply Bool.orb_prop_elim in H.
+  destruct H.
+  
+  (* b <? a *)
+  - apply Bool.Is_true_eq_true in H.
+    rewrite Z.ltb_lt in H.
+    exact (proj2 (Z.nlt_ge b a) a_le_b H).
+  
+  (* b >? c *)
+  - apply Bool.Is_true_eq_true in H.
+    rewrite Z.gtb_gt in H.
+    apply Z.gt_lt in H.
+    exact (proj2 (Z.nlt_ge c b) b_le_c H).
+Qed.
+
 Theorem TimeRecord_IsValidTime :
   forall (t : TimeRecord),
   IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
@@ -100,90 +121,18 @@ Proof.
   5: destruct_with_eqn ((microsecond0 <? 0) || (microsecond0 >? 999)).
   6: destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)).
 
-  (* (hour0 <? 0) || (hour0 >? 23) = true -> false = true *)
   - exfalso.
-    apply Bool.Is_true_eq_left in Heqb.
-    apply Bool.orb_prop_elim in Heqb.
-    destruct hour_valid0.
-    destruct Heqb.
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.ltb_lt in H1.
-      exact (proj2 (Z.nlt_ge hour0 0) H H1).
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.gtb_gt in H1.
-      apply Z.gt_lt in H1.
-      exact (proj2 (Z.nlt_ge 23 hour0) H0 H1).
+    exact (inside_range_outside_range_impossible hour_valid0 Heqb).
+  - exfalso.
+    exact (inside_range_outside_range_impossible minute_valid0 Heqb0).
+  - exfalso.
+    exact (inside_range_outside_range_impossible second_valid0 Heqb1).
+  - exfalso.
+    exact (inside_range_outside_range_impossible millisecond_valid0 Heqb2).
+  - exfalso.
+    exact (inside_range_outside_range_impossible microsecond_valid0 Heqb3).
+  - exfalso.
+    exact (inside_range_outside_range_impossible nanosecond_valid0 Heqb4).
 
-  (* (minute0 <? 0) || (minute0 >? 59) = true -> false = true *)
-  - exfalso.
-    apply Bool.Is_true_eq_left in Heqb0.
-    apply Bool.orb_prop_elim in Heqb0.
-    destruct minute_valid0.
-    destruct Heqb0.
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.ltb_lt in H1.
-      exact (proj2 (Z.nlt_ge minute0 0) H H1).
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.gtb_gt in H1.
-      apply Z.gt_lt in H1.
-      exact (proj2 (Z.nlt_ge 59 minute0) H0 H1).
-
-  (* (second0 <? 0) || (second0 >? 59) = true -> false = true *)
-  - exfalso.
-    apply Bool.Is_true_eq_left in Heqb1.
-    apply Bool.orb_prop_elim in Heqb1.
-    destruct second_valid0.
-    destruct Heqb1.
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.ltb_lt in H1.
-      exact (proj2 (Z.nlt_ge second0 0) H H1).
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.gtb_gt in H1.
-      apply Z.gt_lt in H1.
-      exact (proj2 (Z.nlt_ge 59 second0) H0 H1).
-
-  (* (millisecond0 <? 0) || (millisecond0 >? 999) = true -> false = true *)
-  - exfalso.
-    apply Bool.Is_true_eq_left in Heqb2.
-    apply Bool.orb_prop_elim in Heqb2.
-    destruct millisecond_valid0.
-    destruct Heqb2.
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.ltb_lt in H1.
-      exact (proj2 (Z.nlt_ge millisecond0 0) H H1).
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.gtb_gt in H1.
-      apply Z.gt_lt in H1.
-      exact (proj2 (Z.nlt_ge 999 millisecond0) H0 H1).
-
-  (* (microsecond0 <? 0) || (microsecond0 >? 999) = true -> false = true *)
-  - exfalso.
-    apply Bool.Is_true_eq_left in Heqb3.
-    apply Bool.orb_prop_elim in Heqb3.
-    destruct microsecond_valid0.
-    destruct Heqb3.
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.ltb_lt in H1.
-      exact (proj2 (Z.nlt_ge microsecond0 0) H H1).
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.gtb_gt in H1.
-      apply Z.gt_lt in H1.
-      exact (proj2 (Z.nlt_ge 999 microsecond0) H0 H1).
-
-  (* (nanosecond0 <? 0) || (nanosecond0 >? 999) = true -> false = true *)
-  - exfalso.
-    apply Bool.Is_true_eq_left in Heqb4.
-    apply Bool.orb_prop_elim in Heqb4.
-    destruct nanosecond_valid0.
-    destruct Heqb4.
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.ltb_lt in H1.
-      exact (proj2 (Z.nlt_ge nanosecond0 0) H H1).
-    + apply Bool.Is_true_eq_true in H1.
-      rewrite Z.gtb_gt in H1.
-      apply Z.gt_lt in H1.
-      exact (proj2 (Z.nlt_ge 999 nanosecond0) H0 H1).
-  
-  (* true = true *)
   - reflexivity.
 Qed.
