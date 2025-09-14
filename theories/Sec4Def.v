@@ -1,4 +1,5 @@
 Require Import ZArith.
+From Temporal Require Import Basic.
 Open Scope bool_scope.
 Open Scope Z.
 
@@ -136,6 +137,49 @@ Proof.
 
   - reflexivity.
 Qed.
+
+(*>> 4.5.2 CreateTimeRecord <<*)
+Program Definition CreateTimeRecord (hour minute second millisecond microsecond nanosecond : Z) (deltaDays : option Z) : TimeRecord := 
+  (*>> 1. If deltaDays is not present, set deltaDays to 0. <<*)
+  let deltaDays' := 
+    match deltaDays with
+    | Some value => value
+    | None => 0 
+    end
+  in
+  (*>> 2. Assert: IsValidTime(hour, minute, second, millisecond, microsecond, nanosecond). <<*)
+  (* TODO: ASSERT! *)
+  (*>> 3. Return Time Record { [[Days]]: deltaDays, [[Hour]]: hour, [[Minute]]: minute, [[Second]]: second, [[Millisecond]]: millisecond, [[Microsecond]]: microsecond, [[Nanosecond]]: nanosecond  }. <<*)
+  mkTimeRecord deltaDays' _ hour _ minute _ second _ millisecond _ microsecond _ nanosecond _.
+
+(*>> 4.5.10 BalanceTime <<*)
+Program Definition BalanceTime (hour minute second millisecond microsecond nanosecond : Z) : TimeRecord :=
+  (*>> 1. Set microsecond to microsecond + floor(nanosecond / 1000). <<*)
+  let microsecond' := microsecond + nanosecond / 1000 in
+  (*>> 2. Set nanosecond to nanosecond modulo 1000. <<*)
+  let nanosecond' := nanosecond mod 1000 in
+  (*>> 3. Set millisecond to millisecond + floor(microsecond / 1000). <<*)
+  let millisecond' :=  millisecond + microsecond / 1000 in
+  (*>> 4. Set microsecond to microsecond modulo 1000. <<*)
+  let microsecond'' := microsecond' mod 1000 in
+  (*>> 5. Set second to second + floor(millisecond / 1000). <<*)
+  let second' := second + millisecond' / 1000 in
+  (*>> 6. Set millisecond to millisecond modulo 1000. <<*)
+  let millisecond'' := millisecond' mod 1000 in
+  (*>> 7. Set minute to minute + floor(second / 60). <<*)
+  let minute' := minute + second' / 60 in
+  (*>> 8. Set second to second modulo 60. <<*)
+  let second'' := second' mod 60 in
+  (*>> 9. Set hour to hour + floor(minute / 60). <<*)
+  let hour' := hour + minute' / 60 in
+  (*>> 10. Set minute to minute modulo 60. <<*)
+  let minute'' := minute' mod 60 in
+  (*>> 11. Let deltaDays be floor(hour / 24). <<*)
+  let deltaDays := hour / 24 in
+  (*>> 12. Set hour to hour modulo 24. <<*)
+  let hour'' := hour mod 24 in
+  (*>> 13. Return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays). <<*)
+  CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' deltaDays.
 
 (* 4.5.14 CompareTimeRecord *)
 Definition CompareTimeRecord (time1 time2 : TimeRecord) : Z :=
