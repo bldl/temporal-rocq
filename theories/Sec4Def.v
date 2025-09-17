@@ -138,8 +138,18 @@ Proof.
   - reflexivity.
 Qed.
 
+Definition DeltaDaysValid (deltaDays : option Z) : Prop :=
+  match deltaDays with 
+  | Some dd => dd >= 0
+  | None => True
+  end.
+
 (*>> 4.5.2 CreateTimeRecord <<*)
-Program Definition CreateTimeRecord (hour minute second millisecond microsecond nanosecond : Z) (deltaDays : option Z) : TimeRecord := 
+Program Definition CreateTimeRecord (hour minute second millisecond microsecond nanosecond : Z) (deltaDays : option Z) 
+  (days_valid : DeltaDaysValid deltaDays)
+  (hour_valid : 0 <= hour <= 23) (minute_valid : 0 <= minute <= 59) (second_valid : 0 <= second <= 59)
+  (millisecond_valid : 0 <= millisecond <= 999) (microsecond_valid : 0 <= microsecond <= 999) (nanosecond_valid : 0 <= nanosecond <= 999)
+    : TimeRecord := 
   (*>> 1. If deltaDays is not present, set deltaDays to 0. <<*)
   let deltaDays' := 
     match deltaDays with
@@ -148,10 +158,63 @@ Program Definition CreateTimeRecord (hour minute second millisecond microsecond 
     end
   in
   (*>> 2. Assert: IsValidTime(hour, minute, second, millisecond, microsecond, nanosecond). <<*)
-  (* TODO: ASSERT! *)
+  assert IsValidTime hour minute second millisecond microsecond nanosecond = true in
   (*>> 3. Return Time Record { [[Days]]: deltaDays, [[Hour]]: hour, [[Minute]]: minute, [[Second]]: second, [[Millisecond]]: millisecond, [[Microsecond]]: microsecond, [[Nanosecond]]: nanosecond  }. <<*)
-  mkTimeRecord deltaDays' _ hour _ minute _ second _ millisecond _ microsecond _ nanosecond _.
+  mkTimeRecord deltaDays' _ hour hour_valid minute minute_valid second second_valid millisecond millisecond_valid microsecond microsecond_valid nanosecond nanosecond_valid.
 
+Lemma inside_range_outside_range_impossible_2 {a b c : Z} :
+  (a <= b) -> (b <= c) -> ((b <? a) || (b >? c)) = true -> False.
+Proof.
+  intros a_le_b b_le_c.
+  intro H.
+  apply Bool.Is_true_eq_left in H.
+  apply Bool.orb_prop_elim in H.
+  destruct H.
+  
+  (* b <? a *)
+  - apply Bool.Is_true_eq_true in H.
+    rewrite Z.ltb_lt in H.
+    exact (proj2 (Z.nlt_ge b a) a_le_b H).
+  
+  (* b >? c *)
+  - apply Bool.Is_true_eq_true in H.
+    rewrite Z.gtb_gt in H.
+    apply Z.gt_lt in H.
+    exact (proj2 (Z.nlt_ge c b) b_le_c H).
+Qed.
+
+Next Obligation.
+Proof.
+  unfold IsValidTime.
+  1: destruct_with_eqn ((hour0 <? 0) || (hour0 >? 23)).
+  2: destruct_with_eqn ((minute0 <? 0) || (minute0 >? 59)).
+  3: destruct_with_eqn ((second0 <? 0) || (second0 >? 59)).
+  4: destruct_with_eqn ((millisecond0 <? 0) || (millisecond0 >? 999)).
+  5: destruct_with_eqn ((microsecond0 <? 0) || (microsecond0 >? 999)).
+  6: destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)).
+
+  - exfalso.
+    exact (inside_range_outside_range_impossible_2 H9 H10 Heqb).
+  - exfalso.
+    exact (inside_range_outside_range_impossible_2 H7 H8 Heqb0).
+  - exfalso.
+    exact (inside_range_outside_range_impossible_2 H5 H6 Heqb1).
+  - exfalso.
+    exact (inside_range_outside_range_impossible_2 H3 H4 Heqb2).
+  - exfalso.
+    exact (inside_range_outside_range_impossible_2 H1 H2 Heqb3).
+  - exfalso.
+    exact (inside_range_outside_range_impossible_2 H H0 Heqb4).
+
+  - reflexivity.
+Qed.
+Next Obligation.
+Proof.
+  destruct deltaDays.
+  unfold DeltaDaysValid in days_valid0.
+  assumption.
+  easy.
+Qed.
 (*>> 4.5.10 BalanceTime <<*)
 Program Definition BalanceTime (hour minute second millisecond microsecond nanosecond : Z) : TimeRecord :=
   (*>> 1. Set microsecond to microsecond + floor(nanosecond / 1000). <<*)
@@ -179,7 +242,7 @@ Program Definition BalanceTime (hour minute second millisecond microsecond nanos
   (*>> 12. Set hour to hour modulo 24. <<*)
   let hour'' := hour mod 24 in
   (*>> 13. Return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays). <<*)
-  CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' deltaDays.
+  CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' (Some deltaDays) _ _ _ _ _ _ _.
 
 (* 4.5.14 CompareTimeRecord *)
 Definition CompareTimeRecord (time1 time2 : TimeRecord) : Z :=
