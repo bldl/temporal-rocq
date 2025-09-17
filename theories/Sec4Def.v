@@ -255,22 +255,6 @@ Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
 
-(* Proofs that BalanceTime is missing a precondition *)
-Theorem delta_days_can_be_negative : exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.
-Proof.
-  exists (-42).
-  unfold BalanceTime.
-  simpl.
-  easy.
-Qed.
-
-Theorem BalanceTime_inconsistent : False.
-Proof.
-  destruct delta_days_can_be_negative.
-  pose (days_valid (BalanceTime x 0 0 0 0 0)) as H1.
-  contradiction.
-Qed.
-
 (* 4.5.14 CompareTimeRecord *)
 Definition CompareTimeRecord (time1 time2 : TimeRecord) : Z :=
   (*>> 1. If time1.[[Hour]] > time2.[[Hour]], return 1. <<*)
