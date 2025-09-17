@@ -243,11 +243,45 @@ Program Definition BalanceTime (hour minute second millisecond microsecond nanos
   (*>> 10. Set minute to minute modulo 60. <<*)
   let minute'' := minute' mod 60 in
   (*>> 11. Let deltaDays be floor(hour / 24). <<*)
-  let deltaDays := hour / 24 in
+  let deltaDays := hour' / 24 in
   (*>> 12. Set hour to hour modulo 24. <<*)
-  let hour'' := hour mod 24 in
+  let hour'' := hour' mod 24 in
   (*>> 13. Return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays). <<*)
   CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' (Some deltaDays) _ _ _ _ _ _ _.
+
+Next Obligation.
+Proof.
+Admitted.
+Next Obligation.
+Proof.
+  refine (mod_pos_bound 24 _ _).
+  easy.
+Qed.
+Next Obligation.
+Proof.
+  refine (mod_pos_bound 60 _ _).
+  easy.
+Qed.
+Next Obligation.
+Proof.
+  refine (mod_pos_bound 60 _ _).
+  easy.
+Qed.
+Next Obligation.
+Proof.
+  refine (mod_pos_bound 1000 _ _).
+  easy.
+Qed.
+Next Obligation.
+Proof.
+  refine (mod_pos_bound 1000 _ _).
+  easy.
+Qed.
+Next Obligation.
+Proof.
+  refine (mod_pos_bound 1000 _ _).
+  easy.
+Qed.
 
 (* 4.5.14 CompareTimeRecord *)
 Definition CompareTimeRecord (time1 time2 : TimeRecord) : Z :=
