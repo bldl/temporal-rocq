@@ -218,7 +218,14 @@ Qed.
 
 Lemma mod_pos_bound (b : Z) (h : 0 < b) : forall a, 0 <= a mod b <= b - 1.
 Proof.
-Admitted.
+  intro a.
+  split.
+  - exact (proj1 (Z.mod_pos_bound a b h)).
+  - apply (Zlt_succ_le (a mod b) (b - 1)).
+    rewrite Z.sub_1_r.
+    rewrite Z.succ_pred.
+    exact (proj2 (Z.mod_pos_bound a b h)).
+Qed.
 
 (*>> 4.5.10 BalanceTime <<*)
 Program Definition BalanceTime (hour minute second millisecond microsecond nanosecond : Z) : TimeRecord :=
