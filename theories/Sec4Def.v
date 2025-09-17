@@ -85,10 +85,9 @@ Definition IsValidTime (hour minute second millisecond microsecond nanosecond : 
   else true.
 
 Lemma inside_range_outside_range_impossible {a b c : Z} :
-  (a <= b <= c) -> ((b <? a) || (b >? c)) = true -> False.
+  (a <= b) -> (b <= c) -> ((b <? a) || (b >? c)) = true -> False.
 Proof.
-  intro a_le_b_le_c.
-  destruct a_le_b_le_c as [a_le_b b_le_c].
+  intros a_le_b b_le_c.
   intro H.
   apply Bool.Is_true_eq_left in H.
   apply Bool.orb_prop_elim in H.
@@ -104,6 +103,14 @@ Proof.
     rewrite Z.gtb_gt in H.
     apply Z.gt_lt in H.
     exact (proj2 (Z.nlt_ge c b) b_le_c H).
+Qed.
+
+Lemma inside_range_outside_range_impossible' {a b c : Z} :
+  (a <= b <= c) -> ((b <? a) || (b >? c)) = true -> False.
+Proof.
+  intro a_le_b_le_c.
+  destruct a_le_b_le_c as [a_le_b b_le_c].
+  exact (inside_range_outside_range_impossible a_le_b b_le_c).
 Qed.
 
 Theorem TimeRecord_IsValidTime :
@@ -123,17 +130,17 @@ Proof.
   6: destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)).
 
   - exfalso.
-    exact (inside_range_outside_range_impossible hour_valid0 Heqb).
+    exact (inside_range_outside_range_impossible' hour_valid0 Heqb).
   - exfalso.
-    exact (inside_range_outside_range_impossible minute_valid0 Heqb0).
+    exact (inside_range_outside_range_impossible' minute_valid0 Heqb0).
   - exfalso.
-    exact (inside_range_outside_range_impossible second_valid0 Heqb1).
+    exact (inside_range_outside_range_impossible' second_valid0 Heqb1).
   - exfalso.
-    exact (inside_range_outside_range_impossible millisecond_valid0 Heqb2).
+    exact (inside_range_outside_range_impossible' millisecond_valid0 Heqb2).
   - exfalso.
-    exact (inside_range_outside_range_impossible microsecond_valid0 Heqb3).
+    exact (inside_range_outside_range_impossible' microsecond_valid0 Heqb3).
   - exfalso.
-    exact (inside_range_outside_range_impossible nanosecond_valid0 Heqb4).
+    exact (inside_range_outside_range_impossible' nanosecond_valid0 Heqb4).
 
   - reflexivity.
 Qed.
@@ -162,27 +169,6 @@ Program Definition CreateTimeRecord (hour minute second millisecond microsecond 
   (*>> 3. Return Time Record { [[Days]]: deltaDays, [[Hour]]: hour, [[Minute]]: minute, [[Second]]: second, [[Millisecond]]: millisecond, [[Microsecond]]: microsecond, [[Nanosecond]]: nanosecond  }. <<*)
   mkTimeRecord deltaDays' _ hour hour_valid minute minute_valid second second_valid millisecond millisecond_valid microsecond microsecond_valid nanosecond nanosecond_valid.
 
-Lemma inside_range_outside_range_impossible_2 {a b c : Z} :
-  (a <= b) -> (b <= c) -> ((b <? a) || (b >? c)) = true -> False.
-Proof.
-  intros a_le_b b_le_c.
-  intro H.
-  apply Bool.Is_true_eq_left in H.
-  apply Bool.orb_prop_elim in H.
-  destruct H.
-  
-  (* b <? a *)
-  - apply Bool.Is_true_eq_true in H.
-    rewrite Z.ltb_lt in H.
-    exact (proj2 (Z.nlt_ge b a) a_le_b H).
-  
-  (* b >? c *)
-  - apply Bool.Is_true_eq_true in H.
-    rewrite Z.gtb_gt in H.
-    apply Z.gt_lt in H.
-    exact (proj2 (Z.nlt_ge c b) b_le_c H).
-Qed.
-
 Next Obligation.
 Proof.
   unfold IsValidTime.
@@ -194,20 +180,21 @@ Proof.
   6: destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)).
 
   - exfalso.
-    exact (inside_range_outside_range_impossible_2 H9 H10 Heqb).
+    exact (inside_range_outside_range_impossible H9 H10 Heqb).
   - exfalso.
-    exact (inside_range_outside_range_impossible_2 H7 H8 Heqb0).
+    exact (inside_range_outside_range_impossible H7 H8 Heqb0).
   - exfalso.
-    exact (inside_range_outside_range_impossible_2 H5 H6 Heqb1).
+    exact (inside_range_outside_range_impossible H5 H6 Heqb1).
   - exfalso.
-    exact (inside_range_outside_range_impossible_2 H3 H4 Heqb2).
+    exact (inside_range_outside_range_impossible H3 H4 Heqb2).
   - exfalso.
-    exact (inside_range_outside_range_impossible_2 H1 H2 Heqb3).
+    exact (inside_range_outside_range_impossible H1 H2 Heqb3).
   - exfalso.
-    exact (inside_range_outside_range_impossible_2 H H0 Heqb4).
+    exact (inside_range_outside_range_impossible H H0 Heqb4).
 
   - reflexivity.
 Qed.
+
 Next Obligation.
 Proof.
   destruct deltaDays.
@@ -256,46 +243,32 @@ Program Definition BalanceTime (hour minute second millisecond microsecond nanos
   (*>> 13. Return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays). <<*)
   CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' (Some deltaDays) _ _ _ _ _ _ _.
 
+(* DeltaDaysValid (Some deltaDays) *)
 Next Obligation.
 Proof.
 Admitted.
-Next Obligation.
-Proof.
-  refine (mod_pos_bound 24 _ _).
-  easy.
-Qed.
-Next Obligation.
-Proof.
-  refine (mod_pos_bound 60 _ _).
-  easy.
-Qed.
-Next Obligation.
-Proof.
-  refine (mod_pos_bound 60 _ _).
-  easy.
-Qed.
-Next Obligation.
-Proof.
-  refine (mod_pos_bound 1000 _ _).
-  easy.
-Qed.
-Next Obligation.
-Proof.
-  refine (mod_pos_bound 1000 _ _).
-  easy.
-Qed.
-Next Obligation.
-Proof.
-  refine (mod_pos_bound 1000 _ _).
-  easy.
-Qed.
 
+Next Obligation. Proof. refine (mod_pos_bound 24 _ _). easy. Qed.
+Next Obligation. Proof. refine (mod_pos_bound 60 _ _). easy. Qed.
+Next Obligation. Proof. refine (mod_pos_bound 60 _ _). easy. Qed.
+Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
+Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
+Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
+
+(* Proofs that BalanceTime is missing a precondition *)
 Theorem delta_days_can_be_negative : exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.
 Proof.
   exists (-42).
   unfold BalanceTime.
   simpl.
   easy.
+Qed.
+
+Theorem BalanceTime_inconsistent : False.
+Proof.
+  destruct delta_days_can_be_negative.
+  pose (days_valid (BalanceTime x 0 0 0 0 0)) as H1.
+  contradiction.
 Qed.
 
 (* 4.5.14 CompareTimeRecord *)
