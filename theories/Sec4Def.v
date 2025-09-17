@@ -215,6 +215,11 @@ Proof.
   assumption.
   easy.
 Qed.
+
+Lemma mod_pos_bound (b : Z) (h : 0 < b) : forall a, 0 <= a mod b <= b - 1.
+Proof.
+Admitted.
+
 (*>> 4.5.10 BalanceTime <<*)
 Program Definition BalanceTime (hour minute second millisecond microsecond nanosecond : Z) : TimeRecord :=
   (*>> 1. Set microsecond to microsecond + floor(nanosecond / 1000). <<*)
