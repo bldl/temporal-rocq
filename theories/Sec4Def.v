@@ -290,6 +290,14 @@ Proof.
   easy.
 Qed.
 
+Theorem delta_days_can_be_negative : exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.
+Proof.
+  exists (-42).
+  unfold BalanceTime.
+  simpl.
+  easy.
+Qed.
+
 (* 4.5.14 CompareTimeRecord *)
 Definition CompareTimeRecord (time1 time2 : TimeRecord) : Z :=
   (*>> 1. If time1.[[Hour]] > time2.[[Hour]], return 1. <<*)
