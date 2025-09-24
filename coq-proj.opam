@@ -1,0 +1,22 @@
+opam-version: "2.0"
+
+maintainer: "https://github.com/bldl"
+authors: [
+  "Aria Bjørnbakken Eide"
+  "Vebjørn Søreide Øiestad"
+]
+
+homepage: "https://github.com/bldl/temporal-rocq"
+bug-reports: "https://github.com/bldl/temporal-rocq/issues"
+synopsis: "Formalisation of parts of the TC39 Temporal proposal in Rocq."
+license: "MIT"
+
+build: [
+  ["sh" "-c" "coq_makefile -f _CoqProject theories/*.v -o Makefile"]
+  [make]
+]
+
+depends: [
+  "ocaml" {>= "4.05.0"}
+  "coq" {(>= "8.20")}
+]
