@@ -28,3 +28,9 @@ Proof.
   rewrite Z.ltb_irrefl.
   reflexivity.
 Qed.
+
+(* This seems to be the case but the spec does not explicitly state it yet. *)
+Theorem ISODateRecord_IsValidISODate :
+  forall (date : ISODateRecord),
+  IsValidISODate (year date) (month date) (day date) = true.
+Admitted.
