@@ -113,38 +113,6 @@ Proof.
   exact (inside_range_outside_range_impossible a_le_b b_le_c).
 Qed.
 
-Theorem TimeRecord_IsValidTime :
-  forall (t : TimeRecord),
-  IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
-Proof.
-  intro t.
-  destruct t.
-  simpl.
-  unfold IsValidTime.
-
-  1: destruct_with_eqn ((hour0 <? 0) || (hour0 >? 23)).
-  2: destruct_with_eqn ((minute0 <? 0) || (minute0 >? 59)).
-  3: destruct_with_eqn ((second0 <? 0) || (second0 >? 59)).
-  4: destruct_with_eqn ((millisecond0 <? 0) || (millisecond0 >? 999)).
-  5: destruct_with_eqn ((microsecond0 <? 0) || (microsecond0 >? 999)).
-  6: destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)).
-
-  - exfalso.
-    exact (inside_range_outside_range_impossible' hour_valid0 Heqb).
-  - exfalso.
-    exact (inside_range_outside_range_impossible' minute_valid0 Heqb0).
-  - exfalso.
-    exact (inside_range_outside_range_impossible' second_valid0 Heqb1).
-  - exfalso.
-    exact (inside_range_outside_range_impossible' millisecond_valid0 Heqb2).
-  - exfalso.
-    exact (inside_range_outside_range_impossible' microsecond_valid0 Heqb3).
-  - exfalso.
-    exact (inside_range_outside_range_impossible' nanosecond_valid0 Heqb4).
-
-  - reflexivity.
-Qed.
-
 Definition DeltaDaysValid (deltaDays : option Z) : Prop :=
   match deltaDays with 
   | Some dd => dd >= 0
