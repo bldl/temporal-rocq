@@ -7,3 +7,4 @@
 .Makefile.d
 Makefile
 Makefile.conf
+.vscode
