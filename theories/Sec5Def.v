@@ -1,4 +1,7 @@
 From Temporal Require Import Sec4Def Sec4Thm Sec3Def Sec3Thm.
+Require Import ZArith.
+Open Scope Z.
+Open Scope bool_scope.
 
 (* 5.5.1 ISO Date-Time Records *)
 (*>> For any ISO Date-Time Record r,
@@ -16,7 +19,7 @@ mkISODateTimeRecord {
   Time_valid : IsValidTime (hour Time) (minute Time) (second Time) (millisecond Time) (microsecond Time) (nanosecond Time) = true;
   }.
 
-(*>> 5.5.3 CombineISODateAndTimeRecord <<*)
+(* 5.5.3 CombineISODateAndTimeRecord *)
 Program Definition CombineISODateAndTimeRecord (isoDate : ISODateRecord) (time : TimeRecord) : ISODateTimeRecord :=
   (*>> 1. NOTE: time.[[Days]] is ignored. <<*)
   (*>> 2. Return ISO Date-Time Record { [[ISODate]]: isoDate, [[Time]]: time }. <<*)
@@ -24,3 +27,12 @@ Program Definition CombineISODateAndTimeRecord (isoDate : ISODateRecord) (time :
 
 Next Obligation. Proof. exact (ISODateRecord_IsValidISODate isoDate). Qed.
 Next Obligation. Proof. exact (TimeRecord_IsValidTime time). Qed.
+
+(* 5.5.10 CompareISODateTime *)
+Definition CompareISODateTime (isoDateTime1 isoDateTime2 : ISODateTimeRecord) : Z :=
+  (*>> 1. Let dateResult be CompareISODate(isoDateTime1.[[ISODate]], isoDateTime2.[[ISODate]]). <<*)
+  let dateResult := CompareISODate (ISODate isoDateTime1) (ISODate isoDateTime2) in
+  (*>> 2. If dateResult ≠ 0, return dateResult. <<*)
+  if Zneq_bool dateResult 0 then dateResult
+  (*>> 3. Return CompareTimeRecord(isoDateTime1.[[Time]], isoDateTime2.[[Time]]). <<*)
+  else CompareTimeRecord (Time isoDateTime1) (Time isoDateTime2).
