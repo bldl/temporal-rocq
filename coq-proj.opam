@@ -9,7 +9,7 @@ authors: [
 homepage: "https://github.com/bldl/temporal-rocq"
 bug-reports: "https://github.com/bldl/temporal-rocq/issues"
 synopsis: "Formalisation of parts of the TC39 Temporal proposal in Rocq."
-license: "MIT"
+license: "BSD-3-Clause"
 
 build: [
   ["sh" "-c" "coq_makefile -f _CoqProject theories/*.v -o Makefile"]
