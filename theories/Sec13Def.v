@@ -18,36 +18,6 @@ Definition EpochDayNumberForYear (y : Z) : Z := 365 * (y - 1970) + ((y - 1969) /
 (*>> EpochTimeForYear(y) = ℝ(msPerDay) × EpochDayNumberForYear(y) <<*)
 Definition EpochTimeForYear (y : Z) : Z := msPerDay * EpochDayNumberForYear y.
 
-Lemma sub_swap : forall x y z, x - y - z = x - z - y.
-Proof.
-  intros.
-  lia.
-Qed.
-
-Lemma div_mul_le : forall x y, 0 < y -> (x / y) * y <= x.
-Proof.
-  intros.
-  rewrite Z.mul_comm.
-  apply Z.mul_div_le.
-  assumption.
-Qed.
-
-Lemma lt_1_le : forall x y, x < y -> 1 <= y - x.
-Proof.
-  intros.
-  rewrite <- Z.le_add_le_sub_r.
-  rewrite Z.add_1_l.
-  rewrite Z.le_succ_l.
-  assumption.
-Qed.
-
-Lemma mul_1_le : forall x y z, 0 < y -> 1 <= z -> x <= y -> x <= y * z.
-Proof.
-  intros.
-  refine (Z.le_trans _ _ _ H1 _).
-  rewrite <-Z.le_mul_diag_r; assumption.
-Qed.
-
 Lemma EpochDayNumberForYear_monotonic :
   forall y0 y1,
   y0 < y1 -> EpochDayNumberForYear y0 < EpochDayNumberForYear y1.
@@ -57,27 +27,35 @@ Proof.
   rewrite (Z.add_comm).
   rewrite (Z.add_comm _ ((y1 - 1601) / 400)).
   refine (Z.add_le_lt_mono _ _ _ _ _ _).
+
+  (* (y0 - 1601) / 400 <= (y1 - 1601) / 400 *)
   - refine (Z.div_le_mono _ _ 400 ltac:(easy) _).
     rewrite <-Z.sub_le_mono_r.
-    exact (Z.lt_le_incl _ _ H).
+    apply Z.lt_le_incl.
+    assumption.
+  
+  (* 365 * (y0 - 1970) + (y0 - 1969) / 4 - (y0 - 1901) / 100 <
+     365 * (y1 - 1970) + (y1 - 1969) / 4 - (y1 - 1901) / 100 *)
   - rewrite Z.add_sub_swap.
     rewrite Z.add_sub_swap.
     rewrite Z.add_comm.
     rewrite (Z.add_comm _ ((y1 - 1969) / 4)).
     refine (Z.add_le_lt_mono _ _ _ _ _ _).
+
+    (* (y0 - 1969) / 4 <= (y1 - 1969) / 4 *)
     + refine (Z.div_le_mono _ _ 4 ltac:(easy) _).
       rewrite <-Z.sub_le_mono_r.
       exact (Z.lt_le_incl _ _ H).
+    
+    (* 365 * (y0 - 1970) - (y0 - 1901) / 100 <
+       365 * (y0 - 1970) - (y1 - 1901) / 100 *)
     + rewrite <-Z.lt_0_sub.
       rewrite Z.sub_sub_distr.
       rewrite sub_swap.
       rewrite <-Z.mul_sub_distr_l.
       rewrite Z.sub_sub_distr.
       rewrite <-(Z.add_sub_swap _ 1970 _).
-      rewrite <-(Z.add_sub_swap _ 1970 _).
-      rewrite <-Z.add_sub_assoc.
-      rewrite Z.sub_diag.
-      rewrite Z.add_0_r.
+      rewrite sub_add_cancel.
       rewrite <-Z.sub_sub_distr.
       rewrite <-(Z.add_opp_l ((y1 - 1901) / 100) _).
       rewrite Z.add_comm.
@@ -85,18 +63,12 @@ Proof.
       rewrite Z.add_comm.
       rewrite Z.mul_opp_l.
       rewrite Z.add_opp_l.
-      rewrite <-(Z.add_0_l ((y0 - 1901) / 100 * 100)).
-      rewrite <-Z.sub_diag with (n := (y0 - 1901)).
-      rewrite Z.sub_add_distr.
-      rewrite Z.sub_sub_distr with (n := y1 - 1901).
-      rewrite <-Z.add_sub_assoc.
-      rewrite <-Zmod_eq.
-      rewrite Z.sub_diag.
+      rewrite div_mul_cancel.
       rewrite Z.sub_sub_distr.
       rewrite sub_swap.
-      rewrite <-Z.sub_sub_distr.
-      rewrite Z.sub_diag.
-      rewrite Z.sub_0_r.
+      rewrite Z.sub_sub_distr.
+      rewrite Z.add_sub_swap.
+      rewrite sub_add_cancel.
       rewrite Z.lt_0_sub.
       rewrite (Z.mul_lt_mono_pos_r 100).
       rewrite (Z.mul_comm (365 * (y1 - y0))).
