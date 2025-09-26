@@ -1,4 +1,4 @@
-From Temporal Require Import Sec4Def Sec4Thm Sec3Def Sec3Thm.
+From Temporal Require Import Basic Sec4Def Sec4Thm Sec3Def Sec3Thm.
 Require Import ZArith.
 Open Scope Z.
 Open Scope bool_scope.
@@ -33,6 +33,6 @@ Definition CompareISODateTime (isoDateTime1 isoDateTime2 : ISODateTimeRecord) : 
   (*>> 1. Let dateResult be CompareISODate(isoDateTime1.[[ISODate]], isoDateTime2.[[ISODate]]). <<*)
   let dateResult := CompareISODate (ISODate isoDateTime1) (ISODate isoDateTime2) in
   (*>> 2. If dateResult ≠ 0, return dateResult. <<*)
-  if Zneq_bool dateResult 0 then dateResult
+  if dateResult !=? 0 then dateResult
   (*>> 3. Return CompareTimeRecord(isoDateTime1.[[Time]], isoDateTime2.[[Time]]). <<*)
   else CompareTimeRecord (Time isoDateTime1) (Time isoDateTime2).
