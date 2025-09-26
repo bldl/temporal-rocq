@@ -17,11 +17,27 @@ Definition EpochDayNumberForYear (y : Z) : Z := 365 * (y - 1970) + ((y - 1969) /
 (*>> EpochTimeForYear(y) = ℝ(msPerDay) × EpochDayNumberForYear(y) <<*)
 Definition EpochTimeForYear (y : Z) : Z := msPerDay * EpochDayNumberForYear y.
 
+Lemma EpochTimeForYear_monotonic_ge_1970 :
+    forall y0 y1,
+    (1970 <= y0) -> (1970 <= y1) ->
+    y0 < y1 -> EpochDayNumberForYear y0 < EpochDayNumberForYear y1.
+Proof.
+  intros.
+  unfold EpochDayNumberForYear.
+  Check Z.add_lt_mono.
+  refine (Z.add_lt_mono _ _ _ _ _ _).
+  - refine (Z.sub_lt_mono _ _ _ _ _ _).
+    -  
+  - admit. 
+
+
+
+(*
 (* TODO :O *)
 Lemma EpochTimeForYear_monotonic :
     forall y0 y1,
     y0 < y1 -> EpochTimeForYear y0 < EpochTimeForYear y1.
-Admitted.
+
 
 Program Fixpoint FindYearForwards (t y : Z) (h : EpochTimeForYear y < t)
     {measure (Z.to_nat (t - EpochTimeForYear y))} : Z :=
@@ -200,3 +216,4 @@ Next Obligation. Proof. easy. Qed.
 Next Obligation. Proof. easy. Qed.
 Next Obligation. Proof. easy. Qed.
 Next Obligation. Proof. easy. Qed.
+*)
