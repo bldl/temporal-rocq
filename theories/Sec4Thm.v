@@ -1,4 +1,4 @@
-Require Import ZArith.
+From Stdlib Require Import ZArith.
 From Temporal Require Import Sec4Def.
 Open Scope Z.
 

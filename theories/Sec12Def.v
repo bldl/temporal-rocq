@@ -1,4 +1,4 @@
-Require Import Coq.Numbers.BinNums Coq.Program.Wf ZArith Lia.
+From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia.
 From Temporal Require Import Basic Sec13Def.
 Open Scope bool_scope.
 Open Scope Z.
