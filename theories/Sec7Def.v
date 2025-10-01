@@ -1,4 +1,4 @@
-Require Import ZArith ZArith.Zpow_alt.
+From Stdlib Require Import ZArith ZArith.Zpow_alt.
 Open Scope Z.
 
 Record Float64RepresentableInteger :=
