@@ -1,5 +1,5 @@
 From Temporal Require Import Basic Sec4Def Sec4Thm Sec3Def Sec3Thm.
-Require Import ZArith.
+From Stdlib Require Import ZArith.
 Open Scope Z.
 Open Scope bool_scope.
 

@@ -1,4 +1,4 @@
-Require Import ZArith.
+From Stdlib Require Import ZArith.
 Open Scope Z.
 
 Definition assert (P : Prop) (proof : P) : unit := tt.
