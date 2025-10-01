@@ -29,7 +29,7 @@ Proof.
 
   (* (y0 - 1601) / 400 <= (y1 - 1601) / 400 *)
   - refine (Z.div_le_mono _ _ 400 ltac:(easy) _).
-    rewrite <-Z.sub_le_mono_r.
+    rewrite <- Z.sub_le_mono_r.
     apply Z.lt_le_incl.
     assumption.
   
@@ -43,22 +43,22 @@ Proof.
 
     (* (y0 - 1969) / 4 <= (y1 - 1969) / 4 *)
     + refine (Z.div_le_mono _ _ 4 ltac:(easy) _).
-      rewrite <-Z.sub_le_mono_r.
+      rewrite <- Z.sub_le_mono_r.
       exact (Z.lt_le_incl _ _ H).
     
     (* 365 * (y0 - 1970) - (y0 - 1901) / 100 <
        365 * (y0 - 1970) - (y1 - 1901) / 100 *)
-    + rewrite <-Z.lt_0_sub.
+    + rewrite <- Z.lt_0_sub.
       rewrite Z.sub_sub_distr.
       rewrite sub_swap.
-      rewrite <-Z.mul_sub_distr_l.
+      rewrite <- Z.mul_sub_distr_l.
       rewrite Z.sub_sub_distr.
-      rewrite <-(Z.add_sub_swap _ 1970 _).
+      rewrite <- (Z.add_sub_swap _ 1970 _).
       rewrite sub_add_cancel.
-      rewrite <-Z.sub_sub_distr.
-      rewrite <-(Z.add_opp_l ((y1 - 1901) / 100) _).
+      rewrite <- Z.sub_sub_distr.
+      rewrite <- (Z.add_opp_l ((y1 - 1901) / 100) _).
       rewrite Z.add_comm.
-      rewrite <-Z.div_add.
+      rewrite <- Z.div_add.
       rewrite Z.add_comm.
       rewrite Z.mul_opp_l.
       rewrite Z.add_opp_l.

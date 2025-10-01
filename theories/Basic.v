@@ -17,8 +17,8 @@ Qed.
 Lemma sub_swap : forall x y z, x - y - z = x - z - y.
 Proof.
   intros.
-  rewrite <-Z.add_opp_r.
-  rewrite <-Z.add_sub_swap.
+  rewrite <- Z.add_opp_r.
+  rewrite <- Z.add_sub_swap.
   rewrite Z.add_opp_r.
   reflexivity.
 Qed.
@@ -44,14 +44,14 @@ Lemma mul_1_le : forall x y z, 0 < y -> 1 <= z -> x <= y -> x <= y * z.
 Proof.
   intros.
   refine (Z.le_trans _ _ _ H1 _).
-  rewrite <-Z.le_mul_diag_r; assumption.
+  rewrite <- Z.le_mul_diag_r; assumption.
 Qed.
 
 Lemma sub_add_cancel : forall x y, x - y + y = x.
 Proof.
   intros.
-  rewrite <-Z.add_sub_swap.
-  rewrite <-Z.add_sub_assoc.
+  rewrite <- Z.add_sub_swap.
+  rewrite <- Z.add_sub_assoc.
   rewrite Z.sub_diag.
   rewrite Z.add_0_r.
   reflexivity.
