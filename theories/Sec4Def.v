@@ -1,4 +1,4 @@
-From Stdlib Require Import ZArith.
+From Stdlib Require Import ZArith Lia.
 From Temporal Require Import Basic.
 Open Scope bool_scope.
 Open Scope Z.
@@ -36,24 +36,14 @@ Program Definition MidnightTimeRecord : TimeRecord :=
   (*>> 1. Return Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0  }. <<*)
   mkTimeRecord 0 _ 0 _ 0 _ 0 _ 0 _ 0 _ 0 _.
 
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
+Solve Obligations with easy.
 
 (* 4.5.4 NoonTimeRecord *)
 Program Definition NoonTimeRecord : TimeRecord :=
   (*>> 1. Return Time Record { [[Days]]: 0, [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0  }. <<*)
   mkTimeRecord 0 _ 12 _ 0 _ 0 _ 0 _ 0 _ 0 _.
 
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
+Solve Obligations with easy.
 
 (* 4.5.9 IsValidTime *)
 Definition IsValidTime (hour minute second millisecond microsecond nanosecond : Z) : bool :=
@@ -111,27 +101,12 @@ Program Definition CreateTimeRecord (hour minute second millisecond microsecond 
 Next Obligation.
 Proof.
   unfold IsValidTime.
-  1: destruct_with_eqn ((hour0 <? 0) || (hour0 >? 23)).
-  2: destruct_with_eqn ((minute0 <? 0) || (minute0 >? 59)).
-  3: destruct_with_eqn ((second0 <? 0) || (second0 >? 59)).
-  4: destruct_with_eqn ((millisecond0 <? 0) || (millisecond0 >? 999)).
-  5: destruct_with_eqn ((microsecond0 <? 0) || (microsecond0 >? 999)).
-  6: destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)).
-
-  - exfalso.
-    exact (inside_range_outside_range_impossible H9 H10 Heqb).
-  - exfalso.
-    exact (inside_range_outside_range_impossible H7 H8 Heqb0).
-  - exfalso.
-    exact (inside_range_outside_range_impossible H5 H6 Heqb1).
-  - exfalso.
-    exact (inside_range_outside_range_impossible H3 H4 Heqb2).
-  - exfalso.
-    exact (inside_range_outside_range_impossible H1 H2 Heqb3).
-  - exfalso.
-    exact (inside_range_outside_range_impossible H H0 Heqb4).
-
-  - reflexivity.
+  destruct_with_eqn ((hour0 <? 0) || (hour0 >? 23)); try lia.
+  destruct_with_eqn ((minute0 <? 0) || (minute0 >? 59)); try lia.
+  destruct_with_eqn ((second0 <? 0) || (second0 >? 59)); try lia.
+  destruct_with_eqn ((millisecond0 <? 0) || (millisecond0 >? 999)); try lia.
+  destruct_with_eqn ((microsecond0 <? 0) || (microsecond0 >? 999)); try lia.
+  destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)); try lia.
 Qed.
 
 Next Obligation.
