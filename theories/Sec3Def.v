@@ -95,10 +95,7 @@ Proof.
   assumption.
 Qed.
 
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
+Solve Obligations with easy.
 
 (* 3.5.2 CreateISODateRecord *)
 Program Definition CreateISODateRecord

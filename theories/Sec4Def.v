@@ -36,24 +36,14 @@ Program Definition MidnightTimeRecord : TimeRecord :=
   (*>> 1. Return Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0  }. <<*)
   mkTimeRecord 0 _ 0 _ 0 _ 0 _ 0 _ 0 _ 0 _.
 
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
+Solve Obligations with easy.
 
 (* 4.5.4 NoonTimeRecord *)
 Program Definition NoonTimeRecord : TimeRecord :=
   (*>> 1. Return Time Record { [[Days]]: 0, [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0  }. <<*)
   mkTimeRecord 0 _ 12 _ 0 _ 0 _ 0 _ 0 _ 0 _.
 
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
+Solve Obligations with easy.
 
 (* 4.5.9 IsValidTime *)
 Definition IsValidTime (hour minute second millisecond microsecond nanosecond : Z) : bool :=

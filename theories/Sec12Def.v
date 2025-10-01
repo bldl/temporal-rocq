@@ -27,19 +27,4 @@ Proof.
   lia.
 Qed.
 
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
+Solve Obligations with easy.

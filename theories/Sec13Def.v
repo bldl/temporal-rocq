@@ -246,39 +246,4 @@ Proof.
   symmetry in H1.
   contradiction.
 Qed.
-
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
-Next Obligation. Proof. easy. Qed.
+Solve Obligations with easy.
