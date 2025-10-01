@@ -12,11 +12,11 @@ synopsis: "Formalisation of parts of the TC39 Temporal proposal in Rocq."
 license: "BSD-3-Clause"
 
 build: [
-  ["sh" "-c" "coq_makefile -f _CoqProject theories/*.v -o Makefile"]
+  ["sh" "-c" "rocq makefile -f _CoqProject theories/*.v -o Makefile"]
   [make]
 ]
 
 depends: [
-  "ocaml" {>= "4.05.0"}
-  "coq" {(>= "8.20")}
+  "ocaml" {>= "4.14.1"}
+  "coq" {(>= "9.0")}
 ]

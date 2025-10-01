@@ -1,4 +1,4 @@
-Require Import ZArith.
+From Stdlib Require Import ZArith.
 From Temporal Require Import Basic.
 Open Scope bool_scope.
 Open Scope Z.
