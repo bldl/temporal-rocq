@@ -84,35 +84,6 @@ Definition IsValidTime (hour minute second millisecond microsecond nanosecond : 
   (*>> 7. Return true. <<*)
   else true.
 
-Lemma inside_range_outside_range_impossible {a b c : Z} :
-  (a <= b) -> (b <= c) -> ((b <? a) || (b >? c)) = true -> False.
-Proof.
-  intros a_le_b b_le_c.
-  intro H.
-  apply Bool.Is_true_eq_left in H.
-  apply Bool.orb_prop_elim in H.
-  destruct H.
-  
-  (* b <? a *)
-  - apply Bool.Is_true_eq_true in H.
-    rewrite Z.ltb_lt in H.
-    exact (proj2 (Z.nlt_ge b a) a_le_b H).
-  
-  (* b >? c *)
-  - apply Bool.Is_true_eq_true in H.
-    rewrite Z.gtb_gt in H.
-    apply Z.gt_lt in H.
-    exact (proj2 (Z.nlt_ge c b) b_le_c H).
-Qed.
-
-Lemma inside_range_outside_range_impossible' {a b c : Z} :
-  (a <= b <= c) -> ((b <? a) || (b >? c)) = true -> False.
-Proof.
-  intro a_le_b_le_c.
-  destruct a_le_b_le_c as [a_le_b b_le_c].
-  exact (inside_range_outside_range_impossible a_le_b b_le_c).
-Qed.
-
 Definition DeltaDaysValid (deltaDays : option Z) : Prop :=
   match deltaDays with 
   | Some dd => dd >= 0

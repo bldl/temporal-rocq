@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Sec4Def.
+From Temporal Require Import Basic Sec4Def.
 Open Scope Z.
 
 Theorem TimeRecord_IsValidTime :

@@ -1,4 +1,4 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith.
+From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia.
 From Temporal Require Import Basic.
 Open Scope bool_scope.
 Open Scope Z.
@@ -17,11 +17,93 @@ Definition EpochDayNumberForYear (y : Z) : Z := 365 * (y - 1970) + ((y - 1969) /
 (*>> EpochTimeForYear(y) = ℝ(msPerDay) × EpochDayNumberForYear(y) <<*)
 Definition EpochTimeForYear (y : Z) : Z := msPerDay * EpochDayNumberForYear y.
 
-(* TODO :O *)
-Lemma EpochTimeForYear_monotonic :
+Lemma EpochDayNumberForYear_monotonic :
+  forall y0 y1,
+  y0 < y1 -> EpochDayNumberForYear y0 < EpochDayNumberForYear y1.
+Proof.
+  intros.
+  unfold EpochDayNumberForYear.
+  rewrite (Z.add_comm).
+  rewrite (Z.add_comm _ ((y1 - 1601) / 400)).
+  refine (Z.add_le_lt_mono _ _ _ _ _ _).
+
+  (* (y0 - 1601) / 400 <= (y1 - 1601) / 400 *)
+  - refine (Z.div_le_mono _ _ 400 ltac:(easy) _).
+    rewrite <- Z.sub_le_mono_r.
+    apply Z.lt_le_incl.
+    assumption.
+  
+  (* 365 * (y0 - 1970) + (y0 - 1969) / 4 - (y0 - 1901) / 100 <
+     365 * (y1 - 1970) + (y1 - 1969) / 4 - (y1 - 1901) / 100 *)
+  - rewrite Z.add_sub_swap.
+    rewrite Z.add_sub_swap.
+    rewrite Z.add_comm.
+    rewrite (Z.add_comm _ ((y1 - 1969) / 4)).
+    refine (Z.add_le_lt_mono _ _ _ _ _ _).
+
+    (* (y0 - 1969) / 4 <= (y1 - 1969) / 4 *)
+    + refine (Z.div_le_mono _ _ 4 ltac:(easy) _).
+      rewrite <- Z.sub_le_mono_r.
+      exact (Z.lt_le_incl _ _ H).
+    
+    (* 365 * (y0 - 1970) - (y0 - 1901) / 100 <
+       365 * (y0 - 1970) - (y1 - 1901) / 100 *)
+    + rewrite <- Z.lt_0_sub.
+      rewrite Z.sub_sub_distr.
+      rewrite sub_swap.
+      rewrite <- Z.mul_sub_distr_l.
+      rewrite Z.sub_sub_distr.
+      rewrite <- (Z.add_sub_swap _ 1970 _).
+      rewrite sub_add_cancel.
+      rewrite <- Z.sub_sub_distr.
+      rewrite <- (Z.add_opp_l ((y1 - 1901) / 100) _).
+      rewrite Z.add_comm.
+      rewrite <- Z.div_add.
+      rewrite Z.add_comm.
+      rewrite Z.mul_opp_l.
+      rewrite Z.add_opp_l.
+      rewrite div_mul_cancel.
+      rewrite Z.sub_sub_distr.
+      rewrite sub_swap.
+      rewrite Z.sub_sub_distr.
+      rewrite Z.add_sub_swap.
+      rewrite sub_add_cancel.
+      rewrite Z.lt_0_sub.
+      rewrite (Z.mul_lt_mono_pos_r 100).
+      rewrite (Z.mul_comm (365 * (y1 - y0))).
+      rewrite Z.mul_assoc.
+      refine (Z.le_lt_trans _ (y1 - y0 + (y0 - 1901) mod 100) _ _ _).
+      * apply div_mul_le.
+        easy.
+      * rewrite <- Z.succ_pred with (n := 100 * 365).
+        rewrite Z.mul_succ_l.
+        rewrite Z.add_comm.
+        rewrite <- Z.add_lt_mono_r.
+        refine (Z.lt_trans _ 100 _ _ _).
+        apply Z.mod_pos_bound.
+        easy.
+        refine (Z.lt_le_trans 100 (Z.pred (100 * 365)) _ _ _).
+        easy.
+        refine (mul_1_le _ _ _ _ _ _).
+        easy.
+        exact (lt_1_le _ _ H).
+        apply Z.le_refl.
+      * easy.
+      * easy.
+      * easy.
+Qed.
+
+Theorem EpochTimeForYear_monotonic :
     forall y0 y1,
     y0 < y1 -> EpochTimeForYear y0 < EpochTimeForYear y1.
-Admitted.
+Proof.
+  intros.
+  unfold EpochTimeForYear.
+  rewrite <- Z.mul_lt_mono_pos_l.
+  apply EpochDayNumberForYear_monotonic.
+  assumption.
+  easy.
+Qed.
 
 Program Fixpoint FindYearForwards (t y : Z) (h : EpochTimeForYear y < t)
     {measure (Z.to_nat (t - EpochTimeForYear y))} : Z :=
