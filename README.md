@@ -8,6 +8,12 @@ Our mission is to prove the correctness of a selection of the functions in the E
 
 ## Creating Makefile and Building Project
 ```
-$ rocq makefile -f _CoqProject theories/*.v -o Makefile
+$ rocq makefile -f _CoqProject -o Makefile
 $ make
+```
+
+or just
+
+```
+$ ./build.sh
 ```
