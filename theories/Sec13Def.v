@@ -1,5 +1,5 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia.
-From Temporal Require Import Basic.
+From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal.
+From Temporal Require Import Basic StringUtil.
 Open Scope bool_scope.
 Open Scope Z.
 
@@ -247,3 +247,132 @@ Proof.
   contradiction.
 Qed.
 Solve Obligations with easy.
+
+Inductive Precision := 
+  | AUTO
+  | PrecisionValue : forall (p : Z), 0 <= p <= 9 -> Precision.
+
+(* TODO: Use code units *)
+(* 13.25 FormatFractionalSeconds *)
+Program Definition FormatFractionalSeconds (subSecondNanoseconds : Z) (precision : Precision) (subSecondNanoseconds_valid : 0 <= subSecondNanoseconds <= 999999999) : string :=
+  (*>> 1. If precision is auto, then <<*)
+  match precision with
+  | AUTO =>
+  (*>> a. If subSecondNanoseconds = 0, return the empty String. <<*)
+    if subSecondNanoseconds =? 0 then EmptyString
+    (*>> b. Let fractionString be ToZeroPaddedDecimalString(subSecondNanoseconds, 9). <<*)
+    else let fractionString := ToZeroPaddedDecimalString subSecondNanoseconds 9 _ _ in
+    (*>> c. Set fractionString to the longest prefix of fractionString ending with a code unit other than 0x0030 (DIGIT ZERO). <<*)
+    let fractionString' := fractionString in
+    fractionString'
+  (*>> 2. Else, <<*)
+  | PrecisionValue p _ => 
+    (*>> a. If precision = 0, return the empty String. <<*)
+    if p =? 0 then EmptyString
+    (*>> b. Let fractionString be ToZeroPaddedDecimalString(subSecondNanoseconds, 9). <<*)
+    else let fractionString := ToZeroPaddedDecimalString subSecondNanoseconds p _ _ in
+    (*>> c. Set fractionString to the substring of fractionString from 0 to precision. <<*)
+    let fractionString' := fractionString in
+  (*>> 3. Return the string-concatenation of the code unit 0x002E (FULL STOP) and fractionString. <<*)
+    fractionString'
+  end.
+
+Inductive Precision' :=
+| NormalPrecision (p : Precision)
+| MINUTE.
+
+Inductive Style := SEPARATED | UNSEPARATED.
+
+Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.
+
+(* 13.26 FormatTimeString *)
+Definition FormatTimeString (hour minute second subSecondNanoseconds : Z) (precision' : Precision') (style : option Style) 
+  (hour_valid : 0 <= hour <= 23) (second_valid : 0 <= second <= 59) (minute_valid : 0 <= minute <= 59) (subSecondNanoseconds_valid : 0 <= subSecondNanoseconds <= 999999999) : string :=
+  (*>> 1. If style is present and style is unseparated, let separator be the empty String; otherwise, let separator be ":". <<*)
+  let separator := match style with
+  | Some style' => 
+    match style' with
+    | SEPARATED => ":"
+    | UNSEPARATED => EmptyString
+    end
+  | None => ":"
+  end in
+  (*>> 2. Let hh be ToZeroPaddedDecimalString(hour, 2). <<*)
+  let hh := ToZeroPaddedDecimalString hour 2 (proj1 hour_valid) zero_le_two in
+  (*>> 3. Let mm be ToZeroPaddedDecimalString(minute, 2). <<*)
+  let mm := ToZeroPaddedDecimalString minute 2 (proj1 minute_valid) zero_le_two in
+  (*>> 4. If precision is minute, return the string-concatenation of hh, separator, and mm. <<*)
+  match precision' with
+  | MINUTE => hh ++ separator ++ mm
+  (*>> 5. Let ss be ToZeroPaddedDecimalString(second, 2). <<*)
+  | NormalPrecision precision =>
+    let ss := ToZeroPaddedDecimalString second 2 (proj1 second_valid) zero_le_two in
+  (*>> 6. Let subSecondsPart be FormatFractionalSeconds(subSecondNanoseconds, precision). <<*)
+    let subSecondsPart := FormatFractionalSeconds subSecondNanoseconds precision subSecondNanoseconds_valid in
+  (*>> 7. Return the string-concatenation of hh, separator, mm, separator, ss, and subSecondsPart. <<*)
+  hh ++ separator ++ mm ++ separator ++ ss ++ subSecondsPart
+  end.
+
+Inductive RoundingMode :=
+  | CEIL
+  | FLOOR
+  | EXPAND
+  | TRUNC
+  | HALF_CEIL
+  | HALF_FLOOR
+  | HALF_EXPAND
+  | HALF_TRUNC
+  | HALF_EVEN.
+
+Inductive Sign := POSITIVE | NEGATIVE.
+
+Inductive UnsignedRoundingMode := 
+  | ZERO
+  | INFINITY
+  | HALF_ZERO
+  | HALF_INFINITY
+  | HALF_EVEN_UNSIGNED. (* Named unsigned to avoid collision *)
+
+
+(*>> Rounding Mode | Sign     | Unsigned Rounding Mode <<*)
+(*>> ceil          | positive | infinity <<*)
+(*>> ceil          | negative | zero <<*)
+(*>> floor         | positive | zero <<*)
+(*>> floor         | negative | infinity <<*)
+(*>> expand        | positive | infinity <<*)
+(*>> expand        | negative | infinity <<*)
+(*>> trunc         | positive | zero <<*)
+(*>> trunc         | negative | zero <<*)
+(*>> half-ceil     | positive | half-infinity <<*)
+(*>> half-ceil     | negative | half-zero <<*)
+(*>> half-floor    | positive | half-zero <<*)
+(*>> half-floor    | negative | half-infinity <<*)
+(*>> half-expand   | positive | half-infinity <<*)
+(*>> half-expand   | negative | half-infinity <<*)
+(*>> half-trunc    | positive | half-zero <<*)
+(*>> half-trunc    | negative | half-zero <<*)
+(*>> half-even     | positive | half-even <<*)
+(*>> half-even     | negative | half-even <<*)
+
+(* 13.27 GetUnsignedRoundingMode *)
+Definition GetUnsignedRoundingMode (roundingMode : RoundingMode) (sign : Sign) : UnsignedRoundingMode :=
+  match roundingMode, sign with
+  | CEIL, POSITIVE => INFINITY
+  | CEIL, NEGATIVE => ZERO
+  | FLOOR, POSITIVE => ZERO
+  | FLOOR, NEGATIVE => INFINITY
+  | EXPAND, POSITIVE => INFINITY
+  | EXPAND, NEGATIVE => INFINITY
+  | TRUNC, POSITIVE => ZERO
+  | TRUNC, NEGATIVE => ZERO
+  | HALF_CEIL, POSITIVE => HALF_INFINITY
+  | HALF_CEIL, NEGATIVE => HALF_ZERO
+  | HALF_FLOOR, POSITIVE => HALF_ZERO
+  | HALF_FLOOR, NEGATIVE => HALF_INFINITY
+  | HALF_EXPAND, POSITIVE => HALF_INFINITY
+  | HALF_EXPAND, NEGATIVE => HALF_INFINITY
+  | HALF_TRUNC, POSITIVE => HALF_ZERO
+  | HALF_TRUNC, NEGATIVE => HALF_ZERO
+  | HALF_EVEN, POSITIVE => HALF_EVEN_UNSIGNED
+  | HALF_EVEN, NEGATIVE => HALF_EVEN_UNSIGNED
+  end.
