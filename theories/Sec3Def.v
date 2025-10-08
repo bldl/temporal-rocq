@@ -1,6 +1,7 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith.
+From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Strings.String Numbers.DecimalString Init.Decimal.
 From Temporal Require Import Basic Sec12Def.
 Open Scope bool_scope.
+Open Scope string_scope.
 Open Scope Z.
 
 (* 3.5.1 ISODateRecord *)
@@ -106,3 +107,61 @@ Program Definition CreateISODateRecord
     assert IsValidISODate year month day = true in
     (*>> 2. Return ISO Date Record { [[Year]]: year, [[Month]]: month, [[Day]]: day }. <<*)
     mkISODateRecord year month month_valid day day_valid.
+
+Definition Z_to_string (x : Z) : string :=
+  NilEmpty.string_of_int (Z.to_int x).
+
+Inductive PadPlacement := START | END.
+
+Definition RotateString (s : string) : string :=
+  match s with
+  | EmptyString => EmptyString
+  | String c s' => s' ++ String c EmptyString
+  end.
+
+Fixpoint RepeatString (fillString : string) (fillLen : nat) : string :=
+  match fillLen with
+  | O => EmptyString
+  | S n => 
+    match fillString with
+    | EmptyString => EmptyString
+    | String c _ => String c (RepeatString (RotateString fillString) n)
+    end
+  end.
+
+Definition StringPad (S : string) (maxLength : Z) (fillString : string) (placement : PadPlacement) (h1 : 0 <= maxLength) : string := 
+  let stringLength := Z.of_nat (length S) in
+  if maxLength <=? stringLength then S
+  else if eqb fillString EmptyString then S
+  else let fillLen := maxLength - stringLength in
+  let truncatedStringFiller := RepeatString fillString (Z.to_nat fillLen) in
+  match placement with
+  | START => truncatedStringFiller ++ S
+  | END => S ++ truncatedStringFiller
+  end.
+
+Definition ToZeroPaddedDecimalString (n minLength : Z) (h1 : 0 <= n) (h2 : 0 <= minLength) : string :=
+  let S := Z_to_string n in
+  StringPad S minLength "0" START h2.
+
+(* 3.5.9 PadISOYear *)
+Program Definition PadISOYear (y : Z) : string :=
+  (*>> 1. If y ≥ 0 and y ≤ 9999, then <<*)
+  match (y >=? 0) && (y <=? 9999) with
+  (*>> a. Return ToZeroPaddedDecimalString(y, 4). <<*)
+  | true => ToZeroPaddedDecimalString y 4 _ _
+  (*>> 2. If y > 0, let yearSign be "+"; otherwise, let yearSign be "-". <<*)
+  | false => let yearSign := if y >? 0 then "+" else "-" in
+  (*>> 3. Let year be ToZeroPaddedDecimalString(abs(y), 6). <<*)
+  let year := ToZeroPaddedDecimalString (Z.abs y) 6 _ _ in
+  (*>> 4. Return the string-concatenation of yearSign and year. <<*)
+  yearSign ++ year end.
+
+Next Obligation. 
+  apply eq_sym in Heq_anonymous.
+  apply Bool.andb_true_iff in Heq_anonymous.
+  apply proj1 in Heq_anonymous.
+  apply Z.geb_le in Heq_anonymous.
+  apply Heq_anonymous.
+Qed.
+Next Obligation. apply (Z.abs_nonneg). Qed.  
