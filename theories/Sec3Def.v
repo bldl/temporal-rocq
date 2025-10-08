@@ -106,3 +106,38 @@ Program Definition CreateISODateRecord
     assert IsValidISODate year month day = true in
     (*>> 2. Return ISO Date Record { [[Year]]: year, [[Month]]: month, [[Day]]: day }. <<*)
     mkISODateRecord year month month_valid day day_valid.
+
+Inductive Overflow := CONSTRAIN | REJECT.
+Definition eq (a b : Overflow) : bool := 
+  match a, b with
+  | CONSTRAIN, CONSTRAIN => true
+  | REJECT, REJECT => true
+  | _, _ => false
+  end.
+
+(* 3.5.6 RegulateISODate *)
+Program Definition RegulateISODate (year month day : Z) (overflow : Overflow) : Completion ISODateRecord :=
+  (*>> 1. If overflow is constrain, then <<*)
+  if eq overflow CONSTRAIN then
+    (*>> a. Set month to the result of clamping month between 1 and 12. <<*)
+    let month' := Clamp 1 12 month _ in
+    (*>> b. Let daysInMonth be ISODaysInMonth(year, month). <<*)
+    let daysInMonth := ISODaysInMonth year month' _ in
+    (*>> c. Set day to the result of clamping day between 1 and daysInMonth. <<*)
+    let day' := Clamp 1 daysInMonth day _ in
+    Normal (CreateISODateRecord year month' day' _ _ _)
+  (*>> 2. Else, <<*)
+  else
+    (*>> a. Assert: overflow is reject. <<*)
+    assert overflow = REJECT in
+    (*>> b. If IsValidISODate(year, month, day) is false, throw a RangeError exception. <<*)
+    if Bool.eqb (IsValidISODate year month day) false
+      then Throw RangeError
+      (*>> 3. Return CreateISODateRecord(year, month, day). <<*)
+      else Normal (CreateISODateRecord year month day _ _ _).
+
+Next Obligation.
+Proof.
+  apply clamp_between_lower_and_upper.
+Qed.
+Next Obligation.

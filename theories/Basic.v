@@ -7,11 +7,40 @@ Notation "'assert' P 'in' A" := (let tt := assert P _ in A) (at level 200).
 Notation "'impossible'" := (False_rect _ _).
 Notation "a '!=?' b" := (negb (a =? b)) (at level 70).
 
-Inductive exception : Type := RangeError.
+Inductive Exception := RangeError.
 
-Inductive completion (result : Type) : Type :=
-| Normal (_ : result)
-| Throw (_ : exception).
+Inductive Completion (result : Type) : Type :=
+  | Normal : result -> Completion result 
+  | Throw : Exception -> Completion result.
+
+Arguments Normal {result} a.
+Arguments Throw {result} e.
+
+Definition Clamp (lower upper x : Z) (h : lower <= upper) : Z :=
+  if x <? lower then lower
+  else if x >? upper then upper
+  else x.
+
+Lemma clamp_between_lower_and_upper :
+  forall lower upper x pre, lower <= Clamp lower upper x pre <= upper.
+Proof.
+  intros.
+  unfold Clamp.
+  split.
+  destruct (x <? lower) eqn:part1.
+  easy.
+  destruct (x >? upper).
+  easy.
+  rewrite Z.ltb_ge in part1.
+  apply part1.
+  destruct (x <? lower).
+  easy.
+  destruct (x >? upper) eqn:part2.
+  easy.
+  rewrite Z.gtb_ltb in part2.
+  rewrite Z.ltb_ge in part2.
+  apply part2.
+Qed.
 
 Lemma eq_sym_iff {A} (x y : A) : x = y <-> y = x.
 Proof.
