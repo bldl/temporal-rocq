@@ -287,7 +287,7 @@ Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.
 
 (* 13.26 FormatTimeString *)
 Definition FormatTimeString (hour minute second subSecondNanoseconds : Z) (precision' : Precision') (style : option Style) 
-  (hour_valid : 0 <= hour <= 23) (second_valid : 0 <= second <= 59) (minute_valid : 0 <= minute <= 59) (subSecondNanoseconds_valid : 0 <= subSecondNanoseconds <= 999999999) : string :=
+  (hour_valid : 0 <= hour <= 23) (minute_valid : 0 <= minute <= 59) (second_valid : 0 <= second <= 59) (subSecondNanoseconds_valid : 0 <= subSecondNanoseconds <= 999999999) : string :=
   (*>> 1. If style is present and style is unseparated, let separator be the empty String; otherwise, let separator be ":". <<*)
   let separator := match style with
   | Some style' => 
