@@ -5,7 +5,7 @@ Open Scope string_scope.
 Open Scope Z.
 
 (* Contradiction for 7.5.21 TimeDurationFromComponents *) 
-Check TimeDurationFromComponents_obligation_1.
+(* Check TimeDurationFromComponents_obligation_1. *)
 
 Definition TimeDurationFromComponents_obligation_1_copy (hours minutes seconds milliseconds microseconds nanoseconds : Z) : Prop :=
   let minutes' := minutes + hours * 60 in
@@ -29,7 +29,7 @@ Proof.
 Qed.
 
 (* Contradiction for 7.5.26 TimeDurationFromEpochNanosecondsDifference *)
-Check TimeDurationFromEpochNanosecondsDifference_obligation_1.
+(* Check TimeDurationFromEpochNanosecondsDifference_obligation_1. *)
 
 Definition TimeDurationFromEpochNanosecondsDifference_obligation_1_copy (one two : Z) :=
 let result := one - two in Z.abs result <= MaxTimeDuration.

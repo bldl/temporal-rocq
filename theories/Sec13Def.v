@@ -1,4 +1,4 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal.
+From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List.
 From Temporal Require Import Basic StringUtil.
 Open Scope bool_scope.
 Open Scope Z.
@@ -279,7 +279,7 @@ Program Definition FormatFractionalSeconds (subSecondNanoseconds : Z) (precision
 
 Inductive Precision' :=
 | NormalPrecision (p : Precision)
-| MINUTE.
+| MINUTE_PRECISION'.
 
 Inductive Style := SEPARATED | UNSEPARATED.
 
@@ -301,7 +301,7 @@ Definition FormatTimeString (hour minute second subSecondNanoseconds : Z) (preci
   let mm := ToZeroPaddedDecimalString minute 2 (proj1 minute_valid) zero_le_two in
   (*>> 4. If precision is minute, return the string-concatenation of hh, separator, and mm. <<*)
   match precision' with
-  | MINUTE => hh ++ separator ++ mm
+  | MINUTE_PRECISION' => hh ++ separator ++ mm
   (*>> 5. Let ss be ToZeroPaddedDecimalString(second, 2). <<*)
   | NormalPrecision precision =>
     let ss := ToZeroPaddedDecimalString second 2 (proj1 second_valid) zero_le_two in
@@ -332,6 +332,7 @@ Inductive UnsignedRoundingMode :=
   | HALF_EVEN_UNSIGNED. (* Named unsigned to avoid collision *)
 
 
+(* Table 22 *)
 (*>> Rounding Mode | Sign     | Unsigned Rounding Mode <<*)
 (*>> ceil          | positive | infinity <<*)
 (*>> ceil          | negative | zero <<*)
@@ -354,6 +355,7 @@ Inductive UnsignedRoundingMode :=
 
 (* 13.27 GetUnsignedRoundingMode *)
 Definition GetUnsignedRoundingMode (roundingMode : RoundingMode) (sign : Sign) : UnsignedRoundingMode :=
+  (*>> 1. Return the specification type in the "Unsigned Rounding Mode" column of Table 22 for the row where the value in the "Rounding Mode" column is roundingMode and the value in the "Sign" column is sign. <<*)
   match roundingMode, sign with
   | CEIL, POSITIVE => INFINITY
   | CEIL, NEGATIVE => ZERO
@@ -373,4 +375,276 @@ Definition GetUnsignedRoundingMode (roundingMode : RoundingMode) (sign : Sign) :
   | HALF_TRUNC, NEGATIVE => HALF_ZERO
   | HALF_EVEN, POSITIVE => HALF_EVEN_UNSIGNED
   | HALF_EVEN, NEGATIVE => HALF_EVEN_UNSIGNED
+  end.
+
+(* 13.2 EpochDaysToEpochMs *)
+Definition EpochDaysToEpochMs (day time : Z) : Z :=
+  (*>> 1. Return day × ℝ(msPerDay) + time. <<*)
+  day * msPerDay + time.
+
+(* 13.8 NegateRoundingMode *)
+Definition NegateRoundingMode (roundingMode : RoundingMode) : RoundingMode :=
+  match roundingMode with
+  (*>> 1. If roundingMode is ceil, return floor. <<*)
+  | CEIL => FLOOR
+  (*>> 2. If roundingMode is floor, return ceil. <<*)
+  | FLOOR => CEIL
+  (*>> 3. If roundingMode is half-ceil, return half-floor. <<*)
+  | HALF_CEIL => HALF_FLOOR
+  (*>> 4. If roundingMode is half-floor, return half-ceil. <<*)
+  | HALF_FLOOR => HALF_CEIL
+  (*>> 5. Return roundingMode. <<*)
+  | _ => roundingMode
+  end.
+
+Inductive Unused := UNUSED.
+
+(* 13.14 ValidateTemporalRoundingIncrement *)
+Program Definition ValidateTemporalRoundingIncrement (increment dividend : Z) (inclusive : bool)
+  (increment_valid : 1 <= increment) (dividend_valid : 1 <= dividend) (relation_valid : (dividend > 1 /\ inclusive = false) \/ (inclusive = true))
+  : Completion Unused :=
+  (*>> 1. If inclusive is true, then <<*)
+  let maximum := match inclusive with
+    (*>> a. Let maximum be dividend. <<*)
+    | true => dividend
+  (*>> 2. Else, <<*)
+    (*>> a. Assert: dividend > 1. <<*)
+    | false => assert (dividend > 1) in 
+    (*>> b. Let maximum be dividend - 1. <<*)
+    dividend - 1
+    end 
+  in
+  (*>> 3. If increment > maximum, throw a RangeError exception. <<*)
+  if increment >? maximum then Throw RangeError
+  (*>> 4. If dividend modulo increment ≠ 0, then <<*)
+  else if dividend mod increment =? 0
+    (*>> a. Throw a RangeError exception. <<*)
+    then Throw RangeError
+  (*>> 5. Return unused. <<*)
+  else Normal UNUSED.
+
+Lemma not_B_if_A_or_B_then_A : forall (A B : Prop), ~B -> A \/ B -> A.
+Proof.
+  intros.
+  destruct H0.
+  easy.
+  easy.
+Qed.
+
+Next Obligation.
+  apply not_B_if_A_or_B_then_A in relation_valid.
+  easy.
+  easy.
+Qed.
+
+Lemma not_A_if_A_or_B_then_B : forall (A B : Prop), ~A -> A \/ B -> B.
+Proof.
+  intros.
+  destruct H0.
+  easy.
+  easy.
+Qed.
+
+Inductive TemporalUnit := YEAR | MONTH | WEEK | DAY | HOUR | MINUTE | SECOND | MILLISECOND | MICROSECOND | NANOSECOND.
+
+Definition TemporalUnitEqb (u1 u2 : TemporalUnit) : bool :=
+  match u1, u2 with
+  | YEAR, YEAR => true
+  | YEAR, _ => false
+  | MONTH, MONTH => true
+  | MONTH, _ => false
+  | WEEK, WEEK => true
+  | WEEK, _ => false
+  | DAY, DAY => true
+  | DAY, _ => false
+  | HOUR, HOUR => true
+  | HOUR, _ => false
+  | MINUTE, MINUTE => true
+  | MINUTE, _ => false
+  | SECOND, SECOND => true
+  | SECOND, _ => false
+  | MILLISECOND, MILLISECOND => true
+  | MILLISECOND, _ => false
+  | MICROSECOND, MICROSECOND => true
+  | MICROSECOND, _ => false
+  | NANOSECOND, NANOSECOND => true
+  | NANOSECOND, _ => false
+  end.
+
+Lemma TemporalUnitEqb_neq : forall (u1 u2 : TemporalUnit), TemporalUnitEqb u1 u2 = false -> u1 <> u2.
+Proof.
+  intros.
+  destruct u1.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+  destruct u2.
+  all: try easy.
+Qed.
+
+Lemma TemporalUnitEqb_sym : forall (u1 u2 : TemporalUnit), TemporalUnitEqb u1 u2 = TemporalUnitEqb u2 u1.
+Proof.
+  intros.
+  destruct u1.
+  destruct u2.
+  all: easy.
+Qed.
+
+Definition TemporalUnits : list TemporalUnit := YEAR :: MONTH :: WEEK :: DAY :: HOUR :: MINUTE :: SECOND :: MILLISECOND :: MICROSECOND :: NANOSECOND :: nil.
+
+Program Fixpoint LargerOfTwoTemporalUnitsHelper (u1 u2 : TemporalUnit) (units : list TemporalUnit)
+  (Hin1 : In u1 units) (Hin2 : In u2 units) : TemporalUnit :=
+  match units with
+  | unit' :: units' => 
+    match TemporalUnitEqb u1 unit' with
+    | true => unit'
+    | false =>
+    match TemporalUnitEqb u2 unit' with
+    | true => unit'
+    | false => LargerOfTwoTemporalUnitsHelper u1 u2 units' _ _
+    end end
+  | nil => impossible
+  end.
+
+Next Obligation.
+  apply in_inv in Hin1.
+  apply not_A_if_A_or_B_then_B in Hin1.
+  easy.
+  apply TemporalUnitEqb_neq.
+  apply eq_sym.
+  rewrite TemporalUnitEqb_sym.
+  apply Heq_anonymous0.
+Qed.
+
+Next Obligation.
+  apply in_inv in Hin2.
+  apply not_A_if_A_or_B_then_B in Hin2.
+  easy.
+  apply TemporalUnitEqb_neq.
+  apply eq_sym.
+  rewrite TemporalUnitEqb_sym.
+  apply Heq_anonymous.
+Qed.
+
+(* 13.20 LargerOfTwoTemporalUnits *)
+Program Definition LargerOfTwoTemporalUnits (u1 u2 : TemporalUnit) : TemporalUnit :=
+  LargerOfTwoTemporalUnitsHelper u1 u2 TemporalUnits _ _.
+  (*>> 1. For each row of Table 21, except the header row, in table order, do <<*)
+    (*>> a. Let unit be the value in the "Value" column of the row. <<*)
+    (*>> b. If u1 is unit, return unit. <<*)
+    (*>> c. If u2 is unit, return unit. <<*)
+
+Next Obligation.
+  destruct u1.
+  apply or_introl. easy.
+  apply or_intror. apply or_introl. easy.
+  apply or_intror.
+  apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror. 
+  apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+Qed.
+
+Next Obligation.
+  destruct u2.
+  apply or_introl. easy.
+  apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
+  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+Qed.
+
+
+(* 13.21 IsCalendarUnit *) 
+Definition IsCalendarUnit (unit' : TemporalUnit) : bool :=
+  (*>> 1. If unit is year, return true. <<*)
+  if TemporalUnitEqb unit' YEAR then true
+  (*>> 2. If unit is month, return true. <<*)
+  else if TemporalUnitEqb unit' MONTH then true
+  (*>> 3. If unit is week, return true. <<*)
+  else if TemporalUnitEqb unit' WEEK then true
+  (*>> 4. Return false. <<*)
+  else false.
+
+Inductive Category := DATE | TIME.
+
+(* Table 21 - Unused rows are not displayed *)
+(*>> Value       | Category | Maximum duration rounding increment <<*)
+(*>> YEAR        | DATE     | UNSET <<*)
+(*>> MONTH       | DATE     | UNSET <<*)
+(*>> WEEK        | DATE     | UNSET <<*)
+(*>> DAY         | DATE     | UNSET <<*)
+(*>> HOUR        | TIME     | 24 <<*)
+(*>> MINUTE      | TIME     | 60 <<*)
+(*>> SECOND      | TIME     | 60 <<*)
+(*>> MILLISECOND | TIME     | 1000 <<*)
+(*>> MICROSECOND | TIME     | 1000 <<*)
+(*>> NANOSECOND  | TIME     | 1000 <<*)
+
+(* 13.22 TemporalUnitCategory *)
+Definition TemporalUnitCategory (unit' : TemporalUnit) : Category :=
+  (*>> 1. Return the value from the "Category" column of the row of Table 21 in which unit is in the "Value" column. <<*)
+  match unit' with
+  | YEAR => DATE
+  | MONTH => DATE
+  | WEEK => DATE
+  | DAY => DATE
+  | HOUR => TIME
+  | MINUTE => TIME
+  | SECOND => TIME
+  | MILLISECOND => TIME
+  | MICROSECOND => TIME
+  | NANOSECOND => TIME
+  end.
+
+Inductive RoundingIncrement := UNSET | ValuedRoundingIncrement (roundingIncrement : Z).
+
+(* 13.23 MaximumTemporalDurationRoundingIncrement *)
+Definition MaximumTemporalDurationRoundingIncrement (unit' : TemporalUnit) : RoundingIncrement :=
+  (*>> 1. Return the value from the "Maximum duration rounding increment" column of the row of Table 21 in which unit is in the "Value" column. <<*)
+  match unit' with
+  | YEAR => UNSET
+  | MONTH => UNSET
+  | WEEK => UNSET
+  | DAY => UNSET
+  | HOUR => ValuedRoundingIncrement 24
+  | MINUTE => ValuedRoundingIncrement 60
+  | SECOND => ValuedRoundingIncrement 60
+  | MILLISECOND => ValuedRoundingIncrement 1000 
+  | MICROSECOND => ValuedRoundingIncrement 1000
+  | NANOSECOND => ValuedRoundingIncrement 1000
   end.
