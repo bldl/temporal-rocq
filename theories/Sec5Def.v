@@ -38,9 +38,8 @@ Definition CompareISODateTime (isoDateTime1 isoDateTime2 : ISODateTimeRecord) : 
   (*>> 3. Return CompareTimeRecord(isoDateTime1.[[Time]], isoDateTime2.[[Time]]). <<*)
   else CompareTimeRecord (Time isoDateTime1) (Time isoDateTime2).
 
-(* NOTE: string is used as a placeholder for CalenderType *)
 (* 5.5.9 ISODateTimeToString *)
-Program Definition ISODateTimeToString (isoDateTime : ISODateTimeRecord) (calendar : string) (precision' : Precision') (showCalendar : ShowCalendar) :=
+Program Definition ISODateTimeToString (isoDateTime : ISODateTimeRecord) (calendar : CalendarType) (precision' : Precision') (showCalendar : ShowCalendar) :=
 (*>> 1. Let yearString be PadISOYear(isoDateTime.[[ISODate]].[[Year]]). <<*)
   let yearString := PadISOYear (year (ISODate isoDateTime)) in
   (*>> 2. Let monthString be ToZeroPaddedDecimalString(isoDateTime.[[ISODate]].[[Month]], 2). <<*)
