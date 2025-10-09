@@ -1,4 +1,4 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith.
+From Stdlib Require Import Numbers.BinNums Program.Equality Program.Wf ZArith.
 From Temporal Require Import Basic Sec12Def Sec12Thm.
 Open Scope bool_scope.
 Open Scope Z.
@@ -35,67 +35,258 @@ Definition CompareISODate (isoDate1 isoDate2 : ISODateRecord) : Z :=
   else 0.
 
 (* 3.5.7 IsValidISODate *)
-Program Definition IsValidISODate (year month day : Z) : bool :=
-  match month ?= 1, month ?= 12 with
-  (*>> 1. If month < 1 or month > 12, then <<*)
-  | Lt, _ | _, Gt =>
-    (*>> a. Return false. <<*)
-    false
-  | _, _ =>
-    (*>> 2. Let daysInMonth be ISODaysInMonth(year, month). <<*)
-    let daysInMonth := ISODaysInMonth year month _ in
-    (*>> 3. If day < 1 or day > daysInMonth, then <<*)
-    if (day <? 1) || (day >? daysInMonth) then
+Definition IsValidISODate (year month day : Z) : bool.
+  refine (
+    match month ?= 1 as m_1, month ?= 12 as m_2
+    return ((month ?= 1) = m_1 -> (month ?= 12) = m_2 -> bool)
+    with
+    (*>> 1. If month < 1 or month > 12, then <<*)
+    | Lt, _ | _, Gt =>
       (*>> a. Return false. <<*)
-      false
-    (*>> 4. Return true. <<*)
-    else true
-  end.
+      fun _ _ => false
+    | _, _ => fun H0 H1 =>
+      (*>> 2. Let daysInMonth be ISODaysInMonth(year, month). <<*)
+      let daysInMonth := ISODaysInMonth year month _ in
+      (*>> 3. If day < 1 or day > daysInMonth, then <<*)
+      if (day <? 1) || (day >? daysInMonth) then
+        (*>> a. Return false. <<*)
+        false
+      (*>> 4. Return true. <<*)
+      else true
+    end eq_refl eq_refl
+  ).
 
-Next Obligation.
+  (* month = 1, month = 12 *)
+  - rewrite Z.compare_eq_iff in H0.
+    rewrite Z.compare_eq_iff in H1.
+    rewrite H0 in H1.
+    discriminate.
+  
+  (* month = 1, month < 12 *)
+  - rewrite Z.compare_eq_iff in H0.
+    rewrite H0.
+    easy.
+  
+  (* month > 1, month = 12 *)
+  - rewrite Z.compare_eq_iff in H1.
+    rewrite H1.
+    easy.
+  
+  (* month > 1, month < 12 *)
+  - rewrite Z.compare_gt_iff in H0.
+    rewrite Z.compare_lt_iff in H1.
+    split.
+    + apply Z.lt_le_incl.
+      assumption.
+    + apply Z.lt_le_incl.
+      assumption.
+Defined.
+
+(** States that if we know that a month has a valid range, and the day is valid
+    for that month, then `IsValidISODate` returns true. *)
+Lemma IsValidISODate_month_day_range :
+  forall year month day month_valid,
+  1 <= day <= ISODaysInMonth year month month_valid ->
+  IsValidISODate year month day = true.
 Proof.
-  split.
+  intros.
+  unfold IsValidISODate.
+  generalize (Z.compare_eq_iff month0 1).
+  generalize (Z.compare_gt_iff month0 1).
+  generalize (Z.compare_eq_iff month0 12).
+  generalize (Z.compare_lt_iff month0 12).
+  destruct (month0 ?= 1); destruct (month0 ?= 12).
 
-  (* 1 <= month0 *)
-  specialize (H0 Lt).
-  rewrite (eq_sym_iff Lt (month0 ?= 1)) in H0.
-  rewrite (eq_sym_iff Lt (month0 ?= 12)) in H0.
-  rewrite Z.compare_lt_iff in H0.
-  rewrite Z.compare_lt_iff in H0.
-  specialize (Decidable.not_and _ _ (Z.lt_decidable _ _) H0).
-  intro.
-  destruct H1.
-
-  (* ~ (month0 < 1) |- 1 <= month0 *)
-  rewrite Z.nlt_ge in H1.
-  assumption.
-
-  (* ~ (month0 < 12) |- 1 <= month0 *)
-  rewrite <- Z.le_ngt in H1.
-  refine (Z.le_trans 1 12 month0 _ H1).
-  easy.
-
-  (* month0 <= 12 *)
-  specialize (H Gt).
-  rewrite (eq_sym_iff Gt (month0 ?= 1)) in H.
-  rewrite (eq_sym_iff Gt (month0 ?= 12)) in H.
-  rewrite Z.compare_gt_iff in H.
-  rewrite Z.compare_gt_iff in H.
-  specialize (Decidable.not_and _ _ (Z.lt_decidable _ _) H).
-  intro.
-  destruct H1.
-
-  (* ~ (1 < month0) |- month0 <= 12 *)
-  rewrite <- Z.le_ngt in H1.
-  refine (Z.le_trans month0 1 12 H1 _).
-  easy.
-
-  (* ~ (12 < month0) |- month0 <= 12 *)
-  rewrite Z.nlt_ge in H1.
-  assumption.
+  (* contradiction *)
+  - intros.
+    exfalso.
+    rewrite (proj1 i0 eq_refl) in i2.
+    specialize (proj1 i2 eq_refl).
+    intro.
+    discriminate.
+  
+  (* 1 <= day <= ISODaysInMonth year month month_valid *)
+  - intros.
+    destruct H.
+    rewrite Z.gtb_ltb.
+    rewrite (proj2 (Z.ltb_ge day0 1)).
+    + simpl.
+      rewrite (proj2 (Z.ltb_ge _ day0)).
+      * reflexivity.
+      * assumption.
+    + assumption.
+  
+  (* contradiction *)
+  - intros.
+    rewrite (proj1 i2 eq_refl) in i.
+    assert (h : Gt = Lt). { apply i. easy. }
+    discriminate.
+  
+  (* contradiction *)
+  - intros.
+    rewrite (proj1 i0 eq_refl) in i1.
+    assert (h : Lt = Gt). { apply i1. easy. }
+    discriminate.
+  
+  (* contradiction *)
+  - intros.
+    assert (month0_lt_eq : 1 < month0 \/ 1 = month0). {
+      apply Z.le_lteq.
+      apply month_valid0.
+    }
+    destruct month0_lt_eq.
+    + assert (h : Lt = Gt). { apply i1. assumption. }
+      discriminate.
+    + assert (h : Lt = Eq). { apply i2. symmetry. assumption. }
+      discriminate.
+  
+  (* contradiction *)
+  - intros.
+    assert (month0_lt_eq : month0 < 12 \/ month0 = 12). {
+      apply Z.le_lteq.
+      apply month_valid0.
+    }
+    destruct month0_lt_eq.
+    + assert (h : Gt = Lt). { apply i. assumption. }
+      discriminate.
+    + assert (h : Gt = Eq). { apply i0. assumption. }
+      discriminate.
+  
+  (* 1 <= day <= ISODaysInMonth year month month_valid *)
+  - intros.
+    destruct H.
+    rewrite Z.gtb_ltb.
+    rewrite (proj2 (Z.ltb_ge day0 1)).
+    + simpl.
+      rewrite (proj2 (Z.ltb_ge _ day0)).
+      * reflexivity.
+      * assumption.
+    + assumption.
+  
+  (* 1 <= day <= ISODaysInMonth year month month_valid *)
+  - intros.
+    destruct H.
+    rewrite (proj2 (Z.ltb_ge day0 1)).
+    + simpl.
+      rewrite Z.gtb_ltb.
+      rewrite (proj2 (Z.ltb_ge _ day0)).
+      * reflexivity.
+      * assumption.
+    + assumption.
+  
+  (* contradiction *)
+  - intros.
+    assert (month0_lt_eq : month0 < 12 \/ month0 = 12). {
+      apply Z.le_lteq.
+      apply month_valid0.
+    }
+    destruct month0_lt_eq.
+    + assert (h : Gt = Lt). { apply i. assumption. }
+      discriminate.
+    + assert (h : Gt = Eq). { apply i0. assumption. }
+      discriminate.
 Qed.
 
-Solve Obligations with easy.
+(** States that if `IsValidISODate year month day` returns true,
+    then `1 <= month 12` and `1 <= day <= ISODaysInMonth year month _` *)
+Lemma IsValidISODate_true :
+  forall year month day, IsValidISODate year month day = true ->
+  exists (month_valid : 1 <= month <= 12),
+  1 <= day <= ISODaysInMonth year month month_valid.
+Proof.
+  intro year0.
+  intro month0.
+  intro day0.
+
+  unfold IsValidISODate.
+  generalize (Z.compare_eq_iff month0 1).
+  generalize (Z.compare_gt_iff month0 1).
+  generalize (Z.compare_eq_iff month0 12).
+  generalize (Z.compare_lt_iff month0 12).
+  destruct (month0 ?= 1); destruct (month0 ?= 12).
+
+  (* contradiction *)
+  - intros.
+    assert (h : month0 = 12). { apply i0. reflexivity. }
+    assert (h1 : 12 = 1). { rewrite <- h. apply i2. reflexivity. }
+    discriminate.
+  
+  (* month = 1 *)
+  - intros.
+    assert (h : month0 = 1). { apply i2. reflexivity. }
+    rewrite h.
+    refine (ex_intro _ _ _).
+    unfold ISODaysInMonth.
+    destruct (day0 <? 1) eqn: day0_lt.
+    + simpl in H.
+      discriminate.
+    + split.
+      * rewrite Z.ltb_ge in day0_lt.
+        assumption.
+      * simpl in H.
+        destruct (day0 >? _) eqn: day0_gt.
+        discriminate.
+        rewrite Z.gtb_ltb in day0_gt.
+        rewrite Z.ltb_ge in day0_gt.
+        refine (Z.le_trans _ _ 31 _ _).
+        exact day0_gt.
+        apply ISODaysInMonth_range.
+  
+  - intros. discriminate. (* contradiction *)
+  - intros. discriminate. (* contradiction *)
+  - intros. discriminate. (* contradiction *)
+  - intros. discriminate. (* contradiction *)
+  
+  (* month = 12 *)
+  - intros.
+    assert (h : month0 = 12). { apply i0. reflexivity. }
+    rewrite h.
+    refine (ex_intro _ _ _).
+    unfold ISODaysInMonth.
+    destruct (day0 <? 1) eqn: day0_lt.
+    + simpl in H.
+      discriminate.
+    + split.
+      * rewrite Z.ltb_ge in day0_lt.
+        assumption.
+      * simpl in H.
+        destruct (day0 >? _) eqn: day0_gt.
+        discriminate.
+        rewrite Z.gtb_ltb in day0_gt.
+        rewrite Z.ltb_ge in day0_gt.
+        refine (Z.le_trans _ _ 31 _ _).
+        exact day0_gt.
+        apply ISODaysInMonth_range.
+  
+  (* 1 < month < 12 *)
+  - intros.
+    assert (h0 : 1 < month0). { apply i1. reflexivity. }
+    assert (h1 : month0 < 12). { apply i. reflexivity. }
+    refine (ex_intro _ _ _).
+    destruct (day0 <? 1) eqn: day0_lt; destruct (day0 >? _) eqn: day0_gt.
+    + discriminate.
+    + discriminate.
+    + discriminate.
+    + rewrite Z.ltb_ge in day0_lt.
+      rewrite Z.gtb_ltb in day0_gt.
+      rewrite Z.ltb_ge in day0_gt.
+      split.
+      * assumption.
+      * assumption.
+  
+  - intros. discriminate. (* contradiction *)
+
+  Unshelve.
+  
+  (* 1 <= 1 <= 12 *)
+  easy.
+
+  (* 1 <= 12 <= 12 *)
+  easy.
+
+  (* 1 < month < 12 -> 1 <= month <= 12 *)
+  split; apply Z.lt_le_incl; assumption.
+Qed.
 
 (* 3.5.2 CreateISODateRecord *)
 Program Definition CreateISODateRecord
@@ -117,24 +308,27 @@ Definition eq (a b : Overflow) : bool :=
 
 (* 3.5.6 RegulateISODate *)
 Program Definition RegulateISODate (year month day : Z) (overflow : Overflow) : Completion ISODateRecord :=
+  match overflow with
   (*>> 1. If overflow is constrain, then <<*)
-  if eq overflow CONSTRAIN then
-    (*>> a. Set month to the result of clamping month between 1 and 12. <<*)
-    let month' := Clamp 1 12 month _ in
-    (*>> b. Let daysInMonth be ISODaysInMonth(year, month). <<*)
-    let daysInMonth := ISODaysInMonth year month' _ in
-    (*>> c. Set day to the result of clamping day between 1 and daysInMonth. <<*)
-    let day' := Clamp 1 daysInMonth day _ in
-    Normal (CreateISODateRecord year month' day' _ _ _)
+  | CONSTRAIN =>
+      (*>> a. Set month to the result of clamping month between 1 and 12. <<*)
+      let month' := Clamp 1 12 month _ in
+      (*>> b. Let daysInMonth be ISODaysInMonth(year, month). <<*)
+      let daysInMonth := ISODaysInMonth year month' _ in
+      (*>> c. Set day to the result of clamping day between 1 and daysInMonth. <<*)
+      let day' := Clamp 1 daysInMonth day _ in
+      Normal (CreateISODateRecord year month' day' _ _ _)
   (*>> 2. Else, <<*)
-  else
-    (*>> a. Assert: overflow is reject. <<*)
-    assert overflow = REJECT in
-    (*>> b. If IsValidISODate(year, month, day) is false, throw a RangeError exception. <<*)
-    if Bool.eqb (IsValidISODate year month day) false
-      then Throw RangeError
+  | _ => 
+      (*>> a. Assert: overflow is reject. <<*)
+      assert overflow = REJECT in
+      match IsValidISODate year month day with
+      (*>> b. If IsValidISODate(year, month, day) is false, throw a RangeError exception. <<*)
+      | false => Throw RangeError
       (*>> 3. Return CreateISODateRecord(year, month, day). <<*)
-      else Normal (CreateISODateRecord year month day _ _ _).
+      | true => Normal (CreateISODateRecord year month day _ _ _)
+      end
+  end.
 
 Next Obligation. Proof. apply clamp_between_lower_and_upper. Qed.
 Next Obligation. Proof. apply ISODaysInMonth_at_least_1. Qed.
@@ -148,3 +342,34 @@ Proof.
     apply ISODaysInMonth_range.
 Qed.
 
+Next Obligation.
+Proof.
+  refine (IsValidISODate_month_day_range year0 _ _ _ _).
+  apply clamp_between_lower_and_upper.
+Qed.
+
+Next Obligation.
+Proof.
+  destruct overflow.
+  - contradiction.
+  - reflexivity.
+Qed.
+
+Next Obligation.
+Proof.
+  symmetry in Heq_anonymous.
+  destruct (IsValidISODate_true year0 month0 day0 Heq_anonymous).
+  assumption.
+Qed.
+
+Next Obligation.
+Proof.
+  symmetry in Heq_anonymous.
+  destruct (IsValidISODate_true year0 month0 day0 Heq_anonymous).
+  destruct H.
+  split.
+  - assumption.
+  - apply Z.le_trans with (m := ISODaysInMonth year0 month0 x).
+    + assumption.
+    + apply ISODaysInMonth_range.
+Qed.
