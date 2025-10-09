@@ -248,6 +248,122 @@ Proof.
 Qed.
 Solve Obligations with easy.
 
+Definition EpochTimeToDayNumber (t : Z) : Z := t / msPerDay.
+
+Definition EpochTimeToDayInYear (t : Z) : Z :=  EpochTimeToDayNumber t - EpochDayNumberForYear (EpochTimeToEpochYear t).
+
+Program Definition EpochTimeToMonthInYear (t : Z) : Z :=
+  (*>> = 0 if 0 ≤ EpochTimeToDayInYear(t) < 31 <<*)
+  match (0 <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 31) with
+  | true => 0
+  (*>> = 1 if 31 ≤ EpochTimeToDayInYear(t) < 59 + MathematicalInLeapYear(t) <<*) 
+  | false => match (31 <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 59) with 
+  | true => 1
+  (*>> = 2 if 59 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 90 + MathematicalInLeapYear(t) <<*)
+  | false => match (59 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 90 + MathematicalInLeapYear t) with
+  | true => 2
+  (*>> = 3 if 90 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 120 + MathematicalInLeapYear(t) <<*)
+  | false => match  (90 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 120 + MathematicalInLeapYear t) with
+  | true => 3
+  (*>> = 4 if 120 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 151 + MathematicalInLeapYear(t) <<*)
+  | false => match  (120 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 151 + MathematicalInLeapYear t) with
+  | true => 4
+  (*>> = 5 if 151 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 181 + MathematicalInLeapYear(t) <<*)
+  | false => match  (151 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 181 + MathematicalInLeapYear t) with
+  | true => 5
+  (*>> = 6 if 181 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 212 + MathematicalInLeapYear(t) <<*)
+  | false => match  (181 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 212 + MathematicalInLeapYear t) with
+  | true => 6
+  (*>> = 7 if 212 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 243 + MathematicalInLeapYear(t) <<*)
+  | false => match  (212 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 243 + MathematicalInLeapYear t) with
+  | true => 7
+  (*>> = 8 if 243 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 273 + MathematicalInLeapYear(t) <<*)
+  | false => match  (243 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 273 + MathematicalInLeapYear t) with
+  | true => 8
+  (*>> = 9 if 273 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 304 + MathematicalInLeapYear(t) <<*)
+  | false => match  (273 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 304 + MathematicalInLeapYear t) with
+  | true => 9
+  (*>> = 10 if 304 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 334 + MathematicalInLeapYear(t) <<*)
+  | false => match  (304 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 334 + MathematicalInLeapYear t) with
+  | true => 10
+  (*>> = 11 if 334 + MathematicalInLeapYear(t) ≤ EpochTimeToDayInYear(t) < 365 + MathematicalInLeapYear(t) <<*)
+  | false => match  (304 + MathematicalInLeapYear t <=? EpochTimeToDayInYear t) && (EpochTimeToDayInYear t <? 334 + MathematicalInLeapYear t) with
+  | true => 11
+  | false => impossible 
+  end end end end end end end end end end end end.
+
+Next Obligation.
+Admitted.
+
+Program Definition EpochTimeToDate (t : Z) : Z :=
+match EpochTimeToMonthInYear t with
+(*>> = EpochTimeToDayInYear(t) + 1 if EpochTimeToMonthInYear(t) = 0 <<*)
+| 0 => (EpochTimeToDayInYear t) + 1
+(*>> = EpochTimeToDayInYear(t) - 30 if EpochTimeToMonthInYear(t) = 1 <<*)
+| 1 => (EpochTimeToDayInYear t) - 30
+(*>> = EpochTimeToDayInYear(t) - 58 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 2 <<*)
+| 2 => (EpochTimeToDayInYear t) - 58 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 89 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 3 <<*)
+| 3 => (EpochTimeToDayInYear t) - 89 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 119 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 4 <<*)
+| 4 => (EpochTimeToDayInYear t) - 119 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 150 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 5 <<*)
+| 5 => (EpochTimeToDayInYear t) - 150 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 180 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 6 <<*)
+| 6 => (EpochTimeToDayInYear t) - 180 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 211 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 7 <<*)
+| 7 => (EpochTimeToDayInYear t) - 211 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 242 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 8 <<*)
+| 8 => (EpochTimeToDayInYear t) - 242 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 272 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 9 <<*)
+| 9 => (EpochTimeToDayInYear t) - 272 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 303 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 10 <<*)
+| 10 => (EpochTimeToDayInYear t) - 303 - (MathematicalInLeapYear t)
+(*>> = EpochTimeToDayInYear(t) - 333 - MathematicalInLeapYear(t) if EpochTimeToMonthInYear(t) = 11 <<*)
+| 11 => (EpochTimeToDayInYear t) - 333 - (MathematicalInLeapYear t)
+| _ => impossible
+end.
+
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+Next Obligation. Admitted.
+
+(* 13.3 Date Equations - end *)
+
+(* NOTE: Move to avoid cyclic dependency *)
+(* 12.3.17 ISODaysInMonth *)
+(*>> The abstract operation ISODaysInMonth takes arguments year (an integer) and
+     month (an integer in the inclusive interval from 1 to 12) and returns a
+     positive integer. It returns the number of days in the given year and month
+     in the ISO 8601 calendar. It performs the following steps when called: <<*)
+Program Definition ISODaysInMonth (year month : Z) (h : 1 <= month <= 12) : Z :=
+  match month with
+  (*>> 1. If month is 1, 3, 5, 7, 8, 10, or 12, return 31. <<*)
+  | 1 | 3 | 5 | 7 | 8 | 10 | 12 => 31
+  (*>> 2. If month is 4, 6, 9, or 11, return 30. <<*)
+  | 4 | 6 | 9 | 11 => 30
+  | month =>
+      (*>> 3. Assert: month = 2. <<*)
+      assert month = 2 in
+      (*>> 4. Return 28 + MathematicalInLeapYear(EpochTimeForYear(year)). <<*)
+      28 + MathematicalInLeapYear (EpochTimeForYear year)
+  end.
+
+(* assert month = 2 *)
+Next Obligation. Proof. lia. Qed.
+Solve Obligations with easy.
+
 Fixpoint RemoveTrailingZero (s : string) : string :=
   match s with
   | EmptyString => EmptyString
@@ -649,3 +765,39 @@ Definition MaximumTemporalDurationRoundingIncrement (unit' : TemporalUnit) : Rou
   | MICROSECOND => ValuedRoundingIncrement 1000
   | NANOSECOND => ValuedRoundingIncrement 1000
   end.
+
+Program Fixpoint MonthToDay (year month : Z) (month_valid : 0 <= month <= 11)
+  {measure (Z.to_nat month)} : Z :=
+  match month with
+  | 0 => 0
+  | _ => ISODaysInMonth year month _ + MonthToDay year (month - 1) _
+  end.
+
+Solve Obligations with lia.
+
+(* 13.1 ISODateToEpochDays *)
+Program Definition ISODateToEpochDays (year month date : Z) : Z :=
+  (*>> 1. Let resolvedYear be year + floor(month / 12). <<*)
+  let resolvedYear := year + month / 12 in
+  (*>> 2. Let resolvedMonth be month modulo 12. <<*)
+  let resolvedMonth := month mod 12 in
+  (*>> 3. Find a time t such that EpochTimeToEpochYear(t) = resolvedYear, EpochTimeToMonthInYear(t) = resolvedMonth, and EpochTimeToDate(t) = 1. <<*)
+  let daysToYear := EpochDayNumberForYear resolvedYear in
+  let daysToMonth := MonthToDay resolvedYear resolvedMonth _ in
+  let t := (daysToYear + daysToMonth) * msPerDay in
+  assert ((EpochTimeToEpochYear t) = resolvedYear /\ (EpochTimeToMonthInYear t) = resolvedMonth /\ (EpochTimeToDate t) = 1) in
+  (*>> 4. Return EpochTimeToDayNumber(t) + date - 1. <<*)
+  EpochTimeToDayNumber t + date - 1.
+
+Next Obligation.
+  split.
+  apply Z.mod_pos_bound.
+  easy.
+  apply Zlt_succ_le.
+  simpl.
+  apply Z.mod_pos_bound.
+  easy.
+Qed.
+
+Next Obligation.
+Admitted.

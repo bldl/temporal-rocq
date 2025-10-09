@@ -1,5 +1,5 @@
 From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Strings.String Numbers.DecimalString Init.Decimal.
-From Temporal Require Import Basic Sec12Def StringUtil.
+From Temporal Require Import Basic Sec12Def Sec13Def StringUtil.
 Open Scope bool_scope.
 Open Scope string_scope.
 Open Scope Z.
