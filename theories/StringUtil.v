@@ -35,6 +35,8 @@ Definition StringPad (S : string) (maxLength : Z) (fillString : string) (placeme
   | END => S ++ truncatedStringFiller
   end.
 
-Definition ToZeroPaddedDecimalString (n minLength : Z) (h1 : 0 <= n) (h2 : 0 <= minLength) : string :=
+Definition ToZeroPaddedDecimalString (n minLength : Z) (n_valid : 0 <= n) (minLength_valid : 0 <= minLength) : string :=
   let S := Z_to_string n in
-  StringPad S minLength "0" START h2.
+  StringPad S minLength "0" START minLength_valid.
+
+Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.

@@ -283,8 +283,6 @@ Inductive Precision' :=
 
 Inductive Style := SEPARATED | UNSEPARATED.
 
-Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.
-
 (* 13.26 FormatTimeString *)
 Definition FormatTimeString (hour minute second subSecondNanoseconds : Z) (precision' : Precision') (style : option Style) 
   (hour_valid : 0 <= hour <= 23) (minute_valid : 0 <= minute <= 59) (second_valid : 0 <= second <= 59) (subSecondNanoseconds_valid : 0 <= subSecondNanoseconds <= 999999999) : string :=
