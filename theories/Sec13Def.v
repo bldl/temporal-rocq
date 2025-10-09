@@ -1,4 +1,4 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List.
+From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List Ascii.
 From Temporal Require Import Basic StringUtil.
 Open Scope bool_scope.
 Open Scope Z.
@@ -248,23 +248,33 @@ Proof.
 Qed.
 Solve Obligations with easy.
 
+Fixpoint RemoveTrailingZero (s : string) : string :=
+  match s with
+  | EmptyString => EmptyString
+  | String c s' => 
+    match RemoveTrailingZero s' with
+    | EmptyString => if eqb c "0"%char then EmptyString else String c EmptyString
+    | s'' => String c EmptyString ++ s''
+    end
+  end. 
+
 Inductive Precision := 
   | AUTO
   | PrecisionValue : forall (p : Z), 0 <= p <= 9 -> Precision.
 
-(* TODO: Use code units *)
 (* 13.25 FormatFractionalSeconds *)
 Program Definition FormatFractionalSeconds (subSecondNanoseconds : Z) (precision : Precision) (subSecondNanoseconds_valid : 0 <= subSecondNanoseconds <= 999999999) : string :=
-  (*>> 1. If precision is auto, then <<*)
   match precision with
+  (*>> 1. If precision is auto, then <<*)
   | AUTO =>
   (*>> a. If subSecondNanoseconds = 0, return the empty String. <<*)
     if subSecondNanoseconds =? 0 then EmptyString
     (*>> b. Let fractionString be ToZeroPaddedDecimalString(subSecondNanoseconds, 9). <<*)
     else let fractionString := ToZeroPaddedDecimalString subSecondNanoseconds 9 _ _ in
     (*>> c. Set fractionString to the longest prefix of fractionString ending with a code unit other than 0x0030 (DIGIT ZERO). <<*)
-    let fractionString' := fractionString in
-    fractionString'
+    let fractionString' := RemoveTrailingZero fractionString in
+    (* NOTE: This is also 3. *)
+    "." ++ fractionString'
   (*>> 2. Else, <<*)
   | PrecisionValue p _ => 
     (*>> a. If precision = 0, return the empty String. <<*)
@@ -274,12 +284,12 @@ Program Definition FormatFractionalSeconds (subSecondNanoseconds : Z) (precision
     (*>> c. Set fractionString to the substring of fractionString from 0 to precision. <<*)
     let fractionString' := fractionString in
   (*>> 3. Return the string-concatenation of the code unit 0x002E (FULL STOP) and fractionString. <<*)
-    fractionString'
+    "." ++ fractionString'
   end.
 
 Inductive Precision' :=
 | NormalPrecision (p : Precision)
-| MINUTE_PRECISION'.
+| MINUTE_PRECISION.
 
 Inductive Style := SEPARATED | UNSEPARATED.
 
@@ -301,7 +311,7 @@ Definition FormatTimeString (hour minute second subSecondNanoseconds : Z) (preci
   let mm := ToZeroPaddedDecimalString minute 2 (proj1 minute_valid) zero_le_two in
   (*>> 4. If precision is minute, return the string-concatenation of hh, separator, and mm. <<*)
   match precision' with
-  | MINUTE_PRECISION' => hh ++ separator ++ mm
+  | MINUTE_PRECISION => hh ++ separator ++ mm
   (*>> 5. Let ss be ToZeroPaddedDecimalString(second, 2). <<*)
   | NormalPrecision precision =>
     let ss := ToZeroPaddedDecimalString second 2 (proj1 second_valid) zero_le_two in
@@ -475,26 +485,16 @@ Lemma TemporalUnitEqb_neq : forall (u1 u2 : TemporalUnit), TemporalUnitEqb u1 u2
 Proof.
   intros.
   destruct u1.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
-  destruct u2.
-  all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
+  destruct u2. all: try easy.
 Qed.
 
 Lemma TemporalUnitEqb_sym : forall (u1 u2 : TemporalUnit), TemporalUnitEqb u1 u2 = TemporalUnitEqb u2 u1.
@@ -509,11 +509,15 @@ Definition TemporalUnits : list TemporalUnit := YEAR :: MONTH :: WEEK :: DAY :: 
 
 Program Fixpoint LargerOfTwoTemporalUnitsHelper (u1 u2 : TemporalUnit) (units : list TemporalUnit)
   (Hin1 : In u1 units) (Hin2 : In u2 units) : TemporalUnit :=
+  (*>> 1. For each row of Table 21, except the header row, in table order, do <<*)
   match units with
+  (*>> a. Let unit be the value in the "Value" column of the row. <<*)
   | unit' :: units' => 
+    (*>> b. If u1 is unit, return unit. <<*)
     match TemporalUnitEqb u1 unit' with
     | true => unit'
     | false =>
+    (*>> c. If u2 is unit, return unit. <<*)
     match TemporalUnitEqb u2 unit' with
     | true => unit'
     | false => LargerOfTwoTemporalUnitsHelper u1 u2 units' _ _
@@ -541,13 +545,10 @@ Next Obligation.
   apply Heq_anonymous.
 Qed.
 
+(* NOTE: Function flow in LargerOfTwoTemporalUnitsHelper *)
 (* 13.20 LargerOfTwoTemporalUnits *)
 Program Definition LargerOfTwoTemporalUnits (u1 u2 : TemporalUnit) : TemporalUnit :=
   LargerOfTwoTemporalUnitsHelper u1 u2 TemporalUnits _ _.
-  (*>> 1. For each row of Table 21, except the header row, in table order, do <<*)
-    (*>> a. Let unit be the value in the "Value" column of the row. <<*)
-    (*>> b. If u1 is unit, return unit. <<*)
-    (*>> c. If u2 is unit, return unit. <<*)
 
 Next Obligation.
   destruct u1.

@@ -34,7 +34,7 @@ Definition FormatUTCOffsetNanoseconds_obligation_1_copy (offsetNanoseconds : Z) 
   let minute := absoluteNanoseconds / (60 * 1000000000) in
   let second := absoluteNanoseconds / 1000000000 in
   let subSecondNanoseconds := absoluteNanoseconds mod 1000000000 in
-  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION' else NormalPrecision AUTO in
+  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION else NormalPrecision AUTO in
   0 <= hour <= 23.
 
 Theorem hour_in_FormatUTCOffsetNanoseconds_outside_bounds_of_FormatTimeString :
@@ -56,7 +56,7 @@ Definition FormatUTCOffsetNanoseconds_obligation_2_copy (offsetNanoseconds : Z) 
   let minute := absoluteNanoseconds / (60 * 1000000000) in
   let second := absoluteNanoseconds / 1000000000 in
   let subSecondNanoseconds := absoluteNanoseconds mod 1000000000 in
-  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION' else NormalPrecision AUTO in
+  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION else NormalPrecision AUTO in
   0 <= minute <= 59.
 
 Theorem minute_in_FormatUTCOffsetNanoseconds_outside_bounds_of_FormatTimeString :
@@ -78,7 +78,7 @@ Definition FormatUTCOffsetNanoseconds_obligation_3_copy (offsetNanoseconds : Z) 
   let minute := absoluteNanoseconds / (60 * 1000000000) in
   let second := absoluteNanoseconds / 1000000000 in
   let subSecondNanoseconds := absoluteNanoseconds mod 1000000000 in
-  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION' else NormalPrecision AUTO in
+  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION else NormalPrecision AUTO in
   0 <= second <= 59.
 
 Theorem second_in_FormatUTCOffsetNanoseconds_outside_bounds_of_FormatTimeString :

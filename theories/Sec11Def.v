@@ -15,8 +15,8 @@ Program Definition FormatOffsetTimeZoneIdentifier (offsetMinutes : Z) (style : o
   let hour := absoluteMinutes / 60 in
   (*>> 4. Let minute be absoluteMinutes modulo 60. <<*)
   let minute := absoluteMinutes mod 60 in
-  (*>> 5. Let timeString be FormatTimeString(hour, minute, 0, 0, MINUTE_PRECISION', style). <<*)
-  let timeString := FormatTimeString hour minute 0 0 MINUTE_PRECISION' style _ _ _ _ in
+  (*>> 5. Let timeString be FormatTimeString(hour, minute, 0, 0, MINUTE_PRECISION, style). <<*)
+  let timeString := FormatTimeString hour minute 0 0 MINUTE_PRECISION style _ _ _ _ in
   (*>> 6. Return the string-concatenation of sign and timeString. <<*)
   sign ++ timeString.
 
@@ -51,8 +51,8 @@ Program Definition FormatUTCOffsetNanoseconds (offsetNanoseconds : Z) : string :
   let second := absoluteNanoseconds / 1000000000 in
   (*>> 6. Let subSecondNanoseconds be absoluteNanoseconds modulo 10**9. <<*)
   let subSecondNanoseconds := absoluteNanoseconds mod 1000000000 in
-  (*>> 7. If second = 0 and subSecondNanoseconds = 0, let precision be MINUTE_PRECISION'; otherwise, let precision be AUTO. <<*)
-  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION' else NormalPrecision AUTO in
+  (*>> 7. If second = 0 and subSecondNanoseconds = 0, let precision be MINUTE_PRECISION; otherwise, let precision be AUTO. <<*)
+  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION else NormalPrecision AUTO in
   (*>> 8. Let timeString be FormatTimeString(hour, minute, second, subSecondNanoseconds, precision). <<*)
   let timeString := FormatTimeString hour minute second subSecondNanoseconds precision' None _ _ _ _ in
   (*>> 9. Return the string-concatenation of sign and timeString. <<*)
