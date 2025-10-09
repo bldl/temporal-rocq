@@ -42,6 +42,16 @@ Proof.
   apply part2.
 Qed.
 
+Lemma clamp_upper_le :
+  forall lower upper upper' x pre,
+  upper <= upper' -> Clamp lower upper x pre <= upper'.
+Proof.
+  intros.
+  apply Z.le_trans with (m := upper).
+  - apply clamp_between_lower_and_upper.
+  - assumption.
+Qed.
+
 Lemma eq_sym_iff {A} (x y : A) : x = y <-> y = x.
 Proof.
   split.

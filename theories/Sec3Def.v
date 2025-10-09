@@ -1,5 +1,5 @@
 From Stdlib Require Import Numbers.BinNums Program.Wf ZArith.
-From Temporal Require Import Basic Sec12Def.
+From Temporal Require Import Basic Sec12Def Sec12Thm.
 Open Scope bool_scope.
 Open Scope Z.
 
@@ -136,8 +136,15 @@ Program Definition RegulateISODate (year month day : Z) (overflow : Overflow) : 
       (*>> 3. Return CreateISODateRecord(year, month, day). <<*)
       else Normal (CreateISODateRecord year month day _ _ _).
 
+Next Obligation. Proof. apply clamp_between_lower_and_upper. Qed.
+Next Obligation. Proof. apply ISODaysInMonth_at_least_1. Qed.
+Next Obligation. Proof. apply clamp_between_lower_and_upper. Qed.
+
 Next Obligation.
 Proof.
-  apply clamp_between_lower_and_upper.
+  split.
+  - apply clamp_between_lower_and_upper.
+  - apply clamp_upper_le.
+    apply ISODaysInMonth_range.
 Qed.
-Next Obligation.
+
