@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith ZArith.Zpow_alt List.
-From Temporal Require Import Basic Sec4Def.
+From Temporal Require Import Basic Sec4Def Sec13Def.
 Open Scope Z.
 
 Record Float64RepresentableInteger :=
@@ -62,3 +62,59 @@ Program Definition TimeDurationFromComponents (hours minutes seconds millisecond
   nanoseconds'.
 
 Next Obligation. Admitted.
+
+(* 7.5.22 AddTimeDuration *)
+Definition AddTimeDuration (one two : Z) 
+  (one_valid : MinTimeDuration <= one <= MaxTimeDuration) (two_valid : MinTimeDuration <= two <= MaxTimeDuration) : Completion Z :=
+  (*>> 1. Let result be one + two. <<*)
+  let result := one + two in
+  (*>> 2. If abs(result) > maxTimeDuration, throw a RangeError exception. <<*)
+  if Z.abs result >? MaxTimeDuration then Throw RangeError
+  (*>> 3. Return result. <<*)
+  else Normal result.
+
+Definition nsPerDay : Z := msPerDay * 1000000.
+
+(* 7.5.23 Add24HourDaysToTimeDuration *)
+Definition Add24HourDaysToTimeDuration (d days : Z) (d_valid : MinTimeDuration <= d <= MaxTimeDuration) : Completion Z :=
+  (*>> 1. Let result be d + days × nsPerDay. <<*)
+  let result := d + days * nsPerDay in
+  (*>> 2. If abs(result) > maxTimeDuration, throw a RangeError exception. <<*)
+  if Z.abs result >? MaxTimeDuration then Throw RangeError
+  (*>> 3. Return result. <<*)
+  else Normal result.
+
+(* 7.5.24 AddTimeDurationToEpochNanoseconds *)
+Definition AddTimeDurationToEpochNanoseconds (d epochNs : Z) (d_valid : MinTimeDuration <= d <= MaxTimeDuration) : Z :=
+  (*>> 1. Return epochNs + ℤ(d). <<*)
+  epochNs + d.
+
+(* 7.5.25 CompareTimeDuration *)
+Definition CompareTimeDuration (one two : Z)
+(one_valid : MinTimeDuration <= one <= MaxTimeDuration) (two_valid : MinTimeDuration <= two <= MaxTimeDuration) : Z :=
+  (*>> 1. If one > two, return 1. <<*)
+  if one >? two then 1
+  (*>> 2. If one < two, return -1. <<*)
+  else if one <? two then -1
+  (*>> 3. Return 0. <<*)
+  else 0.
+
+(* 7.5.26 TimeDurationFromEpochNanosecondsDifference *)
+Program Definition TimeDurationFromEpochNanosecondsDifference (one two : Z) : Z :=
+  (*>> 1. Let result be ℝ(one) - ℝ(two). <<*)
+  let result := one - two in
+  (*>> 2. Assert: abs(result) ≤ maxTimeDuration. <<*)
+  assert Z.abs result <= MaxTimeDuration in
+  (*>> 3. Return result. <<*)
+  result.
+
+Next Obligation. Admitted.
+
+(* 7.5.28 TimeDurationSign *)
+Definition TimeDurationSign (d : Z) (d_valid : MinTimeDuration <= d <= MaxTimeDuration) : Z :=
+  (*>> 1. If d < 0, return -1. <<*)
+  if d <? 0 then -1
+  (*>> 2. If d > 0, return 1. <<*)
+  else if d >? 0 then 1
+  (*>> 3. Return 0. <<*)
+  else 0.
