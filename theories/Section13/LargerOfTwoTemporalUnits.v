@@ -72,39 +72,28 @@ Program Definition LargerOfTwoTemporalUnits (u1 u2 : TemporalUnit) : TemporalUni
 
 Next Obligation.
   destruct u1.
-  apply or_introl. easy.
-  apply or_intror. apply or_introl. easy.
-  apply or_intror.
-  apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror. 
-  apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  left.  easy.
+  right. left.  easy.
+  right. right. left.  easy.
+  right. right. right. left.  easy.
+  right. right. right. right. left.  easy.
+  right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. right. right. right. left. easy.
 Qed.
 
 Next Obligation.
   destruct u2.
-  apply or_introl. easy.
-  apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_intror.
-  apply or_intror. apply or_intror. apply or_intror. apply or_intror. apply or_introl. easy.
+  left.  easy.
+  right. left.  easy.
+  right. right. left.  easy.
+  right. right. right. left.  easy.
+  right. right. right. right. left.  easy.
+  right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. right. right. left.  easy.
+  right. right. right. right. right. right. right. right. right. left. easy.
 Qed.
