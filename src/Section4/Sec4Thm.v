@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith Lia.
-From Temporal Require Import Basic Sec4Def.
+From Temporal Require Import Basic Section4.BalanceTime Section4.TimeRecord Section4.IsValidTime.
 Open Scope Z.
 
 Theorem TimeRecord_IsValidTime :

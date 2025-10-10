@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith ZArith.Zpow_alt List.
-From Temporal Require Import Basic Sec4Def Sec13Def.
+From Temporal Require Import Basic Section7.MaxTimeDuration Sec13Def.
 Open Scope Z.
 
 Record Float64RepresentableInteger :=

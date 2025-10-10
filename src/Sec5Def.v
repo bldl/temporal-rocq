@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith Strings.String Lia.
-From Temporal Require Import Basic Section3.Sec3Thm Section3.PadISOYear Section3.CompareISODate Section3.IsValidISODate Sec4Def Sec4Thm Sec12Def Sec13Def StringUtil Section3.ISODateRecord.
+From Temporal Require Import Basic Section3.Sec3Thm Section3.PadISOYear Section3.CompareISODate Section3.IsValidISODate Section4.Sec4Thm Section4.IsValidTime Section4.TimeRecord Sec12Def Sec13Def StringUtil Section3.ISODateRecord Section4.CompareTimeRecord.
 Open Scope bool_scope.
 Open Scope string_scope.
 Open Scope Z.
