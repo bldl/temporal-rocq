@@ -1,5 +1,6 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Basic Section3.ISODateRecord Sec12Def.
+From Temporal Require Import Section3.ISODateRecord Sec12Def.
+Open Scope bool_scope.
 Open Scope Z.
 
 (* 3.5.7 IsValidISODate *)

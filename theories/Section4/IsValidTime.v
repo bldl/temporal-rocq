@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Basic.
+Open Scope bool_scope.
 Open Scope Z.
 
 (* 4.5.9 IsValidTime *)

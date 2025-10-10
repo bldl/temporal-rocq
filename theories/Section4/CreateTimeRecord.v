@@ -1,5 +1,6 @@
 From Stdlib Require Import ZArith Lia.
 From Temporal Require Import Basic Section4.TimeRecord Section4.IsValidTime.
+Open Scope bool_scope.
 Open Scope Z.
 
 Definition DeltaDaysValid (deltaDays : option Z) : Prop :=
