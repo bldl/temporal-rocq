@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith Strings.String Lia.
-From Temporal Require Import Basic Section3.PadISOYear Section3.ISODateRecord Section4.TimeRecord Section5.ISODateTimeRecord Sec12Def Sec13Def StringUtil.
+From Temporal Require Import Basic Section3.PadISOYear Section3.ISODateRecord Section4.TimeRecord Section5.ISODateTimeRecord Section12.CalendarType Section12.ShowCalendar Section12.FormatCalendarAnnotation Section13.PrecisionPrime Section13.FormatTimeString StringUtil.
 Open Scope string_scope.
 Open Scope Z.
 

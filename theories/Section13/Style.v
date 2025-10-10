@@ -1,0 +1,1 @@
+Inductive Style := SEPARATED | UNSEPARATED.

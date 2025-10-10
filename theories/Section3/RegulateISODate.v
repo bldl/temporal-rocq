@@ -1,6 +1,5 @@
-From Stdlib Require Import Numbers.BinNums Program.Equality Program.Wf ZArith Strings.String Numbers.DecimalString Init.Decimal.
-From Temporal Require Import Basic Section3.CreateISODateRecord Section3.ISODateRecord Section3.IsValidISODate Sec12Def Sec12Thm StringUtil.
-Open Scope bool_scope.
+From Stdlib Require Import Program.Equality ZArith.
+From Temporal Require Import Basic Section3.CreateISODateRecord Section3.ISODateRecord Section3.IsValidISODate Section12.ISODaysInMonth Section12.Sec12Thm StringUtil.
 Open Scope Z.
 
 

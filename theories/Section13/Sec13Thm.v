@@ -1,5 +1,5 @@
 From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia.
-From Temporal Require Import Basic Sec13Def.
+From Temporal Require Import Basic Section13.DateEquations.
 Open Scope bool_scope.
 Open Scope Z.
 

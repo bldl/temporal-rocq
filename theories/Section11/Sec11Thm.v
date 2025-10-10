@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith Strings.String.
-From Temporal Require Import Section11.FormatOffsetTimeZoneIdentifier Section11.FormatUTCOffsetNanoseconds Sec13Def.
+From Temporal Require Import Section11.FormatOffsetTimeZoneIdentifier Section11.FormatUTCOffsetNanoseconds Section13.Precision Section13.PrecisionPrime Section13.Style.
 Open Scope bool_scope.
 Open Scope string_scope.
 Open Scope Z.

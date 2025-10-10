@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith Strings.String.
-From Temporal Require Import Sec13Def.
+From Temporal Require Import Section8.msPerDay Section13.FormatTimeString Section13.Precision Section13.PrecisionPrime.
 Open Scope bool_scope.
 Open Scope string_scope.
 Open Scope Z.

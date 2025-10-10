@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith Strings.String.
-From Temporal Require Import Sec13Def.
+From Temporal Require Import Section13.PrecisionPrime Section13.Style Section13.FormatTimeString.
 Open Scope string_scope.
 Open Scope Z.
 

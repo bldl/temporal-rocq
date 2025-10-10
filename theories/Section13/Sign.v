@@ -1,0 +1,1 @@
+Inductive Sign := POSITIVE | NEGATIVE.

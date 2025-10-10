@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith Lia.
-From Temporal Require Import Basic Sec13Def.
+From Temporal Require Import Basic Section13.DateEquations.
 Open Scope Z.
 
 (* 12.3.17 ISODaysInMonth *)

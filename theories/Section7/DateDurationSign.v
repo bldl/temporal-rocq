@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith List.
-From Temporal Require Import Basic Section7.DateDurationRecord Section7.MaxTimeDuration Sec13Def.
+From Temporal Require Import Basic Section7.DateDurationRecord Section7.MaxTimeDuration.
 Open Scope Z.
 
 (* 7.5.14 DateDurationSign *)

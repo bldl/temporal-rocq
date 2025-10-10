@@ -142,3 +142,19 @@ Proof.
   destruct a_le_b_le_c as [a_le_b b_le_c].
   exact (inside_range_outside_range_impossible a_le_b b_le_c).
 Qed.
+
+Lemma not_B_if_A_or_B_then_A : forall (A B : Prop), ~B -> A \/ B -> A.
+Proof.
+  intros.
+  destruct H0.
+  easy.
+  easy.
+Qed.
+
+Lemma not_A_if_A_or_B_then_B : forall (A B : Prop), ~A -> A \/ B -> B.
+Proof.
+  intros.
+  destruct H0.
+  easy.
+  easy.
+Qed.
