@@ -1,5 +1,5 @@
 From Stdlib Require Import Numbers.BinNums Program.Wf ZArith.
-From Temporal Require Export Sec3Def.
+From Temporal Require Import Section3.ISODateRecord Section3.IsValidISODate Section3.CompareISODate.
 Open Scope bool_scope.
 Open Scope Z.
 

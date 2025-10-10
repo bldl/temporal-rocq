@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Sec3Def.
+From Temporal Require Import Section3.ISODateRecord.
 Open Scope bool_scope.
 Open Scope Z.
 
