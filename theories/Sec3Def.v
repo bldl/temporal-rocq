@@ -100,10 +100,7 @@ Proof.
 
   (* contradiction *)
   - intros.
-    exfalso.
-    rewrite (proj1 i0 eq_refl) in i2.
-    specialize (proj1 i2 eq_refl).
-    intro.
+    assert (h : 12 = 1). { rewrite <- (proj1 i0 eq_refl). apply i2. easy. }
     discriminate.
   
   (* 1 <= day <= ISODaysInMonth year month month_valid *)
@@ -119,8 +116,7 @@ Proof.
   
   (* contradiction *)
   - intros.
-    rewrite (proj1 i2 eq_refl) in i.
-    assert (h : Gt = Lt). { apply i. easy. }
+    assert (h : Gt = Lt). { apply i. rewrite (proj1 i2 eq_refl). easy. }
     discriminate.
   
   (* contradiction *)
@@ -278,15 +274,9 @@ Proof.
   - intros. discriminate. (* contradiction *)
 
   Unshelve.
-  
-  (* 1 <= 1 <= 12 *)
-  easy.
-
-  (* 1 <= 12 <= 12 *)
-  easy.
-
-  (* 1 < month < 12 -> 1 <= month <= 12 *)
-  split; apply Z.lt_le_incl; assumption.
+  + easy. (* 1 <= 1 <= 12 *)
+  + easy. (* 1 <= 12 <= 12 *)
+  + split; apply Z.lt_le_incl; assumption. (* 1 < month < 12 -> 1 <= month <= 12 *)
 Qed.
 
 (* 3.5.2 CreateISODateRecord *)

@@ -4,12 +4,15 @@ From Temporal Require Import Sec12Def Sec13Def Sec13Thm.
 Open Scope bool_scope.
 Open Scope Z.
 
+(* Notations to use the `easy` and `lia` tactics *)
 Ltac2 easy0 () := ltac1:(easy).
 Ltac2 Notation easy := easy0 ().
 
 Ltac2 lia0 () := ltac1:(lia).
 Ltac2 Notation lia := lia0 ().
 
+(* Tactic to expand a `match p with ... end` to the individual cases.  Used
+   because `repeat (destruct p)` takes too long :-) *)
 Ltac2 rec expand_match () :=
   Control.enter (fun () =>
     lazy_match! goal with
@@ -25,28 +28,20 @@ Ltac2 rec expand_match () :=
     end
   ).
 
-Ltac2 solve_lower () :=
-  Control.enter (fun () =>
-    lazy_match! goal with
-    | [ year : Z |- _ <= 28 + _ ] =>
-        let year := Control.hyp year in
-        destruct (MathematicalInLeapYear_0_or_1 (EpochTimeForYear $year)) as [H | H];
-        rewrite &H;
-        easy
-    | [ |- _ <= 30 ] => easy
-    | [ |- _ <= 31 ] => easy
-    end
-  ).
+(* Solves the goals that look like `30 <= 31`, `28 <= 28 + ...` *)
+Ltac2 discharge_bound name :=
+  let name := Control.hyp name in
+  destruct (MathematicalInLeapYear_0_or_1 (EpochTimeForYear $name)) as [H | H];
+  rewrite &H;
+  easy.
 
-Ltac2 solve_upper () :=
+Ltac2 solve_bound () :=
   Control.enter (fun () =>
     lazy_match! goal with
-    | [ year : Z |- 28 + _ <= _ ] =>
-        let year := Control.hyp year in
-        destruct (MathematicalInLeapYear_0_or_1 (EpochTimeForYear $year)) as [H | H];
-        rewrite &H;
-        easy
-    | [ |- _ <= _ ] => easy 
+    | [ year : Z |- _ <= 28 + _ ] => discharge_bound year
+    | [ year : Z |- 28 + _ <= _ ] => discharge_bound year
+    | [ |- _ <= _ ] => easy
+    | [ |- _ <= _ ] => easy
     end
   ).
 
@@ -54,14 +49,14 @@ Lemma ISODaysInMonth_range : forall year month pre, 28 <= ISODaysInMonth year mo
 Proof.
   intros.
   split; unfold ISODaysInMonth; destruct month.
-  - solve_lower ().
+  - solve_bound ().
   - expand_match ().
-    all: solve_lower ().
-  - solve_lower ().
-  - solve_upper ().
+    all: solve_bound ().
+  - solve_bound ().
+  - solve_bound ().
   - expand_match ().
-    all: solve_upper ().
-  - solve_upper ().
+    all: solve_bound ().
+  - solve_bound ().
 Qed.
 
 Lemma ISODaysInMonth_at_least_1 : forall year month pre, 1 <= ISODaysInMonth year month pre.
