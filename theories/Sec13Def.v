@@ -1,4 +1,4 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List Ascii.
+From Stdlib Require Import Numbers.BinNums Program.Equality Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List Ascii.
 From Temporal Require Import Basic StringUtil.
 Open Scope bool_scope.
 Open Scope Z.
@@ -229,24 +229,24 @@ Proof.
   left. reflexivity.
 Qed.
 
-Program Definition MathematicalInLeapYear (t : Z) : Z :=
-  match MathematicalDaysInYear (EpochTimeToEpochYear t) with
-  (*>> = 0 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 365 <<*)
-  | 365 => 0
-  (*>> = 1 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 366 <<*)
-  | 366 => 1
-  | _ => impossible
-  end.
+Definition MathematicalInLeapYear (t : Z) : Z.
+  refine (
+    match MathematicalDaysInYear (EpochTimeToEpochYear t) as d
+    return (MathematicalDaysInYear (EpochTimeToEpochYear t) = d -> Z) with
+    (*>> = 0 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 365 <<*)
+    | 365 => fun _ => 0
+    (*>> = 1 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 366 <<*)
+    | 366 => fun _ => 1
+    | _ => fun H => impossible
+    end eq_refl
+  ).
 
-Next Obligation.
-Proof.
-  destruct (MathematicalDaysInYear_365_or_366 (EpochTimeToEpochYear t)).
-  symmetry in H1.
-  contradiction.
-  symmetry in H1.
-  contradiction.
-Qed.
-Solve Obligations with easy.
+  (* Proof of impossibility of the last case. *)
+  all:
+    destruct (MathematicalDaysInYear_365_or_366 (EpochTimeToEpochYear t));
+    rewrite H in H0;
+    discriminate.
+Defined.
 
 Fixpoint RemoveTrailingZero (s : string) : string :=
   match s with
