@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Basic Sec7Def.
+From Temporal Require Import Basic Section7.MaxTimeDuration Section8.nsPerDay.
 Open Scope Z.
 
 Definition nsMinInstant : Z := 100000000 * nsPerDay.

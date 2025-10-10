@@ -1,7 +1,5 @@
-From Stdlib Require Import ZArith Strings.String.
-From Temporal Require Import Section7.MaxTimeDuration Sec7Def.
-Open Scope bool_scope.
-Open Scope string_scope.
+From Stdlib Require Import ZArith.
+From Temporal Require Import Section7.MaxTimeDuration Section7.TimeDurationFromComponents.
 Open Scope Z.
 
 (* Contradiction for 7.5.21 TimeDurationFromComponents *) 

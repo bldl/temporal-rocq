@@ -1,12 +1,10 @@
 From Stdlib Require Import Numbers.BinNums Program.Equality Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List Ascii.
-From Temporal Require Import Basic StringUtil.
+From Temporal Require Import Basic StringUtil Section8.msPerDay.
 Open Scope bool_scope.
 Open Scope Z.
 
 (* Assumption: 
   EpochDayNumberForYear and msPerDay works on Z and not real numbers *)
-(*>> msPerDay = 86400000𝔽 = msPerHour × 𝔽(HoursPerDay) <<*)
-Definition msPerDay : Z := 86400000.
 
 (* 13.3 Date Equations *)
 (* Note: `/` is floor division with Z. 
