@@ -1,4 +1,4 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List Ascii.
+From Stdlib Require Import Numbers.BinNums Program.Equality Program.Wf ZArith Lia Strings.String Numbers.DecimalString Init.Decimal List Ascii.
 From Temporal Require Import Basic StringUtil.
 Open Scope bool_scope.
 Open Scope Z.
@@ -229,24 +229,24 @@ Proof.
   left. reflexivity.
 Qed.
 
-Program Definition MathematicalInLeapYear (t : Z) : Z :=
-  match MathematicalDaysInYear (EpochTimeToEpochYear t) with
-  (*>> = 0 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 365 <<*)
-  | 365 => 0
-  (*>> = 1 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 366 <<*)
-  | 366 => 1
-  | _ => impossible
-  end.
+Definition MathematicalInLeapYear (t : Z) : Z.
+  refine (
+    match MathematicalDaysInYear (EpochTimeToEpochYear t) as d
+    return (MathematicalDaysInYear (EpochTimeToEpochYear t) = d -> Z) with
+    (*>> = 0 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 365 <<*)
+    | 365 => fun _ => 0
+    (*>> = 1 if MathematicalDaysInYear(EpochTimeToEpochYear(t)) = 366 <<*)
+    | 366 => fun _ => 1
+    | _ => fun H => impossible
+    end eq_refl
+  ).
 
-Next Obligation.
-Proof.
-  destruct (MathematicalDaysInYear_365_or_366 (EpochTimeToEpochYear t)).
-  symmetry in H1.
-  contradiction.
-  symmetry in H1.
-  contradiction.
-Qed.
-Solve Obligations with easy.
+  (* Proof of impossibility of the last case. *)
+  all:
+    destruct (MathematicalDaysInYear_365_or_366 (EpochTimeToEpochYear t));
+    rewrite H in H0;
+    discriminate.
+Defined.
 
 Definition EpochTimeToDayNumber (t : Z) : Z := t / msPerDay.
 
@@ -347,22 +347,24 @@ Next Obligation. Admitted.
      month (an integer in the inclusive interval from 1 to 12) and returns a
      positive integer. It returns the number of days in the given year and month
      in the ISO 8601 calendar. It performs the following steps when called: <<*)
-Program Definition ISODaysInMonth (year month : Z) (h : 1 <= month <= 12) : Z :=
-  match month with
-  (*>> 1. If month is 1, 3, 5, 7, 8, 10, or 12, return 31. <<*)
-  | 1 | 3 | 5 | 7 | 8 | 10 | 12 => 31
-  (*>> 2. If month is 4, 6, 9, or 11, return 30. <<*)
-  | 4 | 6 | 9 | 11 => 30
-  | month =>
-      (*>> 3. Assert: month = 2. <<*)
-      assert month = 2 in
-      (*>> 4. Return 28 + MathematicalInLeapYear(EpochTimeForYear(year)). <<*)
-      28 + MathematicalInLeapYear (EpochTimeForYear year)
-  end.
+Definition ISODaysInMonth (year month : Z) (h : 1 <= month <= 12) : Z.
+  refine (
+    match month as m return (month = m -> Z) with
+    (*>> 1. If month is 1, 3, 5, 7, 8, 10, or 12, return 31. <<*)
+    | 1 | 3 | 5 | 7 | 8 | 10 | 12 => fun _ => 31
+    (*>> 2. If month is 4, 6, 9, or 11, return 30. <<*)
+    | 4 | 6 | 9 | 11 => fun _ => 30
+    | month => fun h =>
+        (*>> 3. Assert: month = 2. <<*)
+        assert month = 2 in
+        (*>> 4. Return 28 + MathematicalInLeapYear(EpochTimeForYear(year)). <<*)
+        28 + MathematicalInLeapYear (EpochTimeForYear year)
+    end eq_refl
+  ).
 
-(* assert month = 2 *)
-Next Obligation. Proof. lia. Qed.
-Solve Obligations with easy.
+  (* Proof of the assert *)
+  all: lia.
+Defined.
 
 Fixpoint RemoveTrailingZero (s : string) : string :=
   match s with
