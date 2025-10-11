@@ -1,5 +1,10 @@
-From Stdlib Require Import ZArith Lia.
-From Temporal Require Import Basic Section4.TimeRecord Section4.IsValidTime.
+From Stdlib Require Import 
+  ZArith
+  Lia.
+From Temporal Require Import
+  Basic
+  Section4.IsValidTime
+  Section4.TimeRecord.
 Open Scope bool_scope.
 Open Scope Z.
 

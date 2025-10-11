@@ -3,7 +3,6 @@ From Temporal Require Import Section3.ISODateRecord.
 Open Scope bool_scope.
 Open Scope Z.
 
-
 (* 9.5.3 ISOYearMonthWithinLimits *)
 Definition ISOYearMonthWithinLimits (isoDate : ISODateRecord) : bool :=
   (*>> 1. If isoDate.[[Year]] < -271821 or isoDate.[[Year]] > 275760, then <<*)

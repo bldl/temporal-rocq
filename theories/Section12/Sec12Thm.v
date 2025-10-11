@@ -1,6 +1,6 @@
 From Ltac2 Require Import Ltac2.
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Lia.
-From Temporal Require Import Section12.ISODaysInMonth Section13.DateEquations Section13.Sec13Thm.
+From Stdlib Require Import ZArith Lia.
+From Temporal Require Import Section12.ISODaysInMonth Section13.DateEquations.
 Open Scope bool_scope.
 Open Scope Z.
 

@@ -1,5 +1,8 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Section7.MaxTimeDuration Section4.TimeRecord Section4.BalanceTime.
+From Temporal Require Import
+  Section4.BalanceTime
+  Section4.TimeRecord
+  Section7.MaxTimeDuration.
 
 (* 4.5.15 AddTime *)
 Definition AddTime (time : TimeRecord) (timeDuration : Z) (timeDuration_valid : MinTimeDuration <= timeDuration <= MaxTimeDuration) : TimeRecord :=

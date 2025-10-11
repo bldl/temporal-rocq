@@ -1,4 +1,7 @@
-From Temporal Require Import Section13.RoundingMode Section13.Sign Section13.UnsignedRoundingMode.
+From Temporal Require Import
+  Section13.RoundingMode
+  Section13.Sign
+  Section13.UnsignedRoundingMode.
 
 (* Table 22 *)
 (*>> Rounding Mode | Sign     | Unsigned Rounding Mode <<*)

@@ -5,8 +5,7 @@ Open Scope Z.
 (* 12.3.17 ISODaysInMonth *)
 (*>> The abstract operation ISODaysInMonth takes arguments year (an integer) and
      month (an integer in the inclusive interval from 1 to 12) and returns a
-     positive integer. It returns the number of days in the given year and month
-     in the ISO 8601 calendar. It performs the following steps when called: <<*)
+     positive integer. <<*)
 Definition ISODaysInMonth (year month : Z) (h : 1 <= month <= 12) : Z.
   refine (
     match month as m return (month = m -> Z) with

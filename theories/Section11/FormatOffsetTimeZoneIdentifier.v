@@ -1,5 +1,10 @@
-From Stdlib Require Import ZArith Strings.String.
-From Temporal Require Import Section13.PrecisionPrime Section13.Style Section13.FormatTimeString.
+From Stdlib Require Import
+  ZArith
+  Strings.String.
+From Temporal Require Import
+  Section13.FormatTimeString
+  Section13.PrecisionPrime
+  Section13.Style.
 Open Scope string_scope.
 Open Scope Z.
 
@@ -32,3 +37,22 @@ Qed.
 
 Solve Obligations with easy.
 
+(* Contradiction for 11.1.5 FormatOffsetTimeZoneIdentifier *)
+(* Check FormatOffsetTimeZoneIdentifier_obligation_1. *)
+
+Definition FormatOffsetTimeZoneIdentifier_obligation_1_copy (offsetMinutes : Z) (style : option Style) : Prop :=
+  let sign := if offsetMinutes >=? 0 then "+" else "-" in
+  let absoluteMinutes := Z.abs offsetMinutes in
+  let hour := absoluteMinutes / 60 in let minute := absoluteMinutes mod 60 in
+  0 <= hour <= 23.
+
+Theorem hour_in_FormatOffsetTimeZoneIdentifier_outside_bounds_of_FormatTimeString :
+  exists (offsetMinutes : Z) (style : option Style),
+  ~ FormatOffsetTimeZoneIdentifier_obligation_1_copy offsetMinutes style.
+Proof.
+  exists (2000).
+  exists (Some SEPARATED).
+  unfold FormatOffsetTimeZoneIdentifier_obligation_1_copy.
+  simpl.
+  easy.
+Qed.

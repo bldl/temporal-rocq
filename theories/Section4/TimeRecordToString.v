@@ -1,5 +1,11 @@
-From Stdlib Require Import ZArith Strings.String Lia.
-From Temporal Require Import Section4.TimeRecord Section13.FormatTimeString Section13.PrecisionPrime.
+From Stdlib Require Import
+  ZArith
+  Strings.String
+  Lia.
+From Temporal Require Import 
+  Section4.TimeRecord
+  Section13.FormatTimeString
+  Section13.PrecisionPrime.
 Open Scope Z.
 
 (* 4.5.13 TimeRecordToString *)

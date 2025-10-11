@@ -1,5 +1,9 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Basic Section3.CompareISODate Section4.CompareTimeRecord Section5.ISODateTimeRecord.
+From Temporal Require Import
+  Basic
+  Section3.CompareISODate
+  Section4.CompareTimeRecord
+  Section5.ISODateTimeRecord.
 Open Scope Z.
 
 (* 5.5.10 CompareISODateTime *)

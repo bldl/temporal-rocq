@@ -1,4 +1,6 @@
-From Stdlib Require Import ZArith Strings.String.
+From Stdlib Require Import
+  ZArith
+  Strings.String.
 From Temporal Require Import StringUtil.
 Open Scope bool_scope.
 Open Scope string_scope.

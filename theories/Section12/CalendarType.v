@@ -1,4 +1,6 @@
-From Stdlib Require Import Strings.String Ascii.
+From Stdlib Require Import
+  Strings.String
+  Ascii.
 Open Scope char_scope.
 
 Definition ValidCalendarTypeChars : string := "abcdefghijklmnopqrstuvwxyz0123456789"%string.

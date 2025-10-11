@@ -1,5 +1,7 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Basic Section7.MaxTimeDuration.
+From Temporal Require Import
+  Basic
+  Section7.MaxTimeDuration.
 Open Scope Z.
 
 (* 7.5.21 TimeDurationFromComponents *) 
@@ -20,3 +22,27 @@ Program Definition TimeDurationFromComponents (hours minutes seconds millisecond
   nanoseconds'.
 
 Next Obligation. Admitted.
+
+(* Contradiction for 7.5.21 TimeDurationFromComponents *) 
+(* Check TimeDurationFromComponents_obligation_1. *)
+
+Definition TimeDurationFromComponents_obligation_1_copy (hours minutes seconds milliseconds microseconds nanoseconds : Z) : Prop :=
+  let minutes' := minutes + hours * 60 in
+  let seconds' := seconds + minutes * 60 in
+  let milliseconds' := milliseconds + seconds * 1000 in
+  let microseconds' := microseconds + milliseconds * 1000 in
+  let nanoseconds' := nanoseconds + microseconds * 1000 in
+  Z.abs nanoseconds' <= MaxTimeDuration.
+
+Theorem nanoseconds'_in_TimeDurationFromComponents_outside_bounds_of_MaxTimeDuration :
+  exists (hours minutes seconds milliseconds microseconds nanoseconds : Z),
+  ~ TimeDurationFromComponents_obligation_1_copy hours minutes seconds milliseconds microseconds nanoseconds.
+Proof.
+  exists (0).
+  exists (0).
+  exists (0).
+  exists (0).
+  exists (1).
+  exists (MaxTimeDuration).
+  easy.
+Qed.

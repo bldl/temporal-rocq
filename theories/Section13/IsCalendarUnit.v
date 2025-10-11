@@ -1,4 +1,6 @@
-From Temporal Require Import Section13.TemporalUnit Section13.TemporalUnitEqb.
+From Temporal Require Import
+  Section13.TemporalUnit
+  Section13.TemporalUnitEqb.
 
 (* 13.21 IsCalendarUnit *) 
 Definition IsCalendarUnit (unit' : TemporalUnit) : bool :=

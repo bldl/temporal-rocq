@@ -1,6 +1,8 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Section8.nsMinInstant Section8.nsMaxInstant.
-Open Scope bool_scope.
+From Temporal Require Import
+  Section8.nsMaxInstant
+  Section8.nsMinInstant.
+  Open Scope bool_scope.
 Open Scope Z.
 
 (* 8.5.1 IsValidEpochNanoseconds *)

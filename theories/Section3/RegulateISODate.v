@@ -1,5 +1,14 @@
-From Stdlib Require Import Program.Equality ZArith.
-From Temporal Require Import Basic Section3.CreateISODateRecord Section3.ISODateRecord Section3.IsValidISODate Section12.ISODaysInMonth Section12.Sec12Thm StringUtil.
+From Stdlib Require Import
+  Program.Equality
+  ZArith.
+From Temporal Require Import
+  Basic
+  Section3.CreateISODateRecord
+  Section3.ISODateRecord
+  Section3.IsValidISODate
+  Section12.ISODaysInMonth
+  Section12.Sec12Thm
+  StringUtil.
 Open Scope Z.
 
 
@@ -22,7 +31,7 @@ Proof.
   - intros.
     assert (h : 12 = 1). { rewrite <- (proj1 i0 eq_refl). apply i2. easy. }
     discriminate.
-  
+
   (* 1 <= day <= ISODaysInMonth year month month_valid *)
   - intros.
     destruct H.
@@ -33,18 +42,18 @@ Proof.
       * reflexivity.
       * assumption.
     + assumption.
-  
+
   (* contradiction *)
   - intros.
     assert (h : Gt = Lt). { apply i. rewrite (proj1 i2 eq_refl). easy. }
     discriminate.
-  
+
   (* contradiction *)
   - intros.
     rewrite (proj1 i0 eq_refl) in i1.
     assert (h : Lt = Gt). { apply i1. easy. }
     discriminate.
-  
+
   (* contradiction *)
   - intros.
     assert (month_lt_eq : 1 < month \/ 1 = month). {
@@ -56,7 +65,7 @@ Proof.
       discriminate.
     + assert (h : Lt = Eq). { apply i2. symmetry. assumption. }
       discriminate.
-  
+
   (* contradiction *)
   - intros.
     assert (month_lt_eq : month < 12 \/ month = 12). {
@@ -68,7 +77,7 @@ Proof.
       discriminate.
     + assert (h : Gt = Eq). { apply i0. assumption. }
       discriminate.
-  
+
   (* 1 <= day <= ISODaysInMonth year month month_valid *)
   - intros.
     destruct H.
@@ -79,7 +88,7 @@ Proof.
       * reflexivity.
       * assumption.
     + assumption.
-  
+
   (* 1 <= day <= ISODaysInMonth year month month_valid *)
   - intros.
     destruct H.
@@ -90,7 +99,7 @@ Proof.
       * reflexivity.
       * assumption.
     + assumption.
-  
+
   (* contradiction *)
   - intros.
     assert (month_lt_eq : month < 12 \/ month = 12). {
@@ -104,7 +113,7 @@ Proof.
       discriminate.
 Qed.
 
-(** States that if `IsValidISODate year month day` returns true,
+(* States that if `IsValidISODate year month day` returns true,
     then `1 <= month 12` and `1 <= day <= ISODaysInMonth year month _` *)
 Lemma IsValidISODate_true :
   forall year month day, IsValidISODate year month day = true ->
@@ -127,7 +136,7 @@ Proof.
     assert (h : month = 12). { apply i0. reflexivity. }
     assert (h1 : 12 = 1). { rewrite <- h. apply i2. reflexivity. }
     discriminate.
-  
+
   (* month = 1 *)
   - intros.
     assert (h : month = 1). { apply i2. reflexivity. }
@@ -148,12 +157,12 @@ Proof.
         refine (Z.le_trans _ _ 31 _ _).
         exact day_gt.
         apply ISODaysInMonth_range.
-  
+
   - intros. discriminate. (* contradiction *)
   - intros. discriminate. (* contradiction *)
   - intros. discriminate. (* contradiction *)
   - intros. discriminate. (* contradiction *)
-  
+
   (* month = 12 *)
   - intros.
     assert (h : month = 12). { apply i0. reflexivity. }
@@ -174,7 +183,7 @@ Proof.
         refine (Z.le_trans _ _ 31 _ _).
         exact day_gt.
         apply ISODaysInMonth_range.
-  
+
   (* 1 < month < 12 *)
   - intros.
     assert (h0 : 1 < month). { apply i1. reflexivity. }
@@ -190,7 +199,7 @@ Proof.
       split.
       * assumption.
       * assumption.
-  
+
   - intros. discriminate. (* contradiction *)
 
   Unshelve.

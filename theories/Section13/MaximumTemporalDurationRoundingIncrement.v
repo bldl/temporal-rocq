@@ -1,5 +1,7 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Section13.RoundingMode Section13.TemporalUnit.
+From Temporal Require Import
+  Section13.RoundingMode
+  Section13.TemporalUnit.
 Open Scope Z.
 
 (* Table 21 - Unused rows are not displayed *)

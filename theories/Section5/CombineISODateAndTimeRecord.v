@@ -1,5 +1,8 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Section3.Sec3Thm Section3.ISODateRecord Section4.Sec4Thm Section4.TimeRecord Section5.ISODateTimeRecord.
+From Temporal Require Import
+  Section3.ISODateRecord
+  Section4.TimeRecord
+  Section5.ISODateTimeRecord.
 Open Scope Z.
 
 (* 5.5.3 CombineISODateAndTimeRecord *)

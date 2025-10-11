@@ -1,5 +1,8 @@
-From Stdlib Require Import Program.Equality ZArith.
-From Temporal Require Import Basic StringUtil Section8.msPerDay.
+From Stdlib Require Import ZArith Program.Wf.
+From Temporal Require Import
+  Basic
+  StringUtil
+  Section8.msPerDay.
 Open Scope Z.
 
 (* 13.3 Date Equations *)
@@ -243,3 +246,17 @@ Definition MathematicalInLeapYear (t : Z) : Z.
     rewrite H in H0;
     discriminate.
 Defined.
+
+Lemma MathematicalInLeapYear_0_or_1 :
+  forall t, MathematicalInLeapYear t = 0 \/ MathematicalInLeapYear t = 1.
+Proof.
+  intros.
+  unfold MathematicalInLeapYear.
+  destruct (MathematicalDaysInYear_365_or_366 (EpochTimeToEpochYear t)).
+  - rewrite e.
+    left.
+    reflexivity.
+  - rewrite e.
+    right.
+    reflexivity.
+Qed.

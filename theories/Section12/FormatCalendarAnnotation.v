@@ -1,5 +1,7 @@
 From Stdlib Require Import Strings.String.
-From Temporal Require Import Section12.CalendarType Section12.ShowCalendar.
+From Temporal Require Import
+  Section12.CalendarType
+  Section12.ShowCalendar.
 Open Scope string_scope.
 
 (* 12.3.15 FormatCalendarAnnotation *)

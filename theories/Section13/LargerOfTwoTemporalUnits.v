@@ -1,5 +1,8 @@
 From Stdlib Require Import List.
-From Temporal Require Import Basic Section13.TemporalUnit Section13.TemporalUnitEqb.
+From Temporal Require Import
+  Basic
+  Section13.TemporalUnit
+  Section13.TemporalUnitEqb.
 
 Lemma TemporalUnitEqb_neq : forall (u1 u2 : TemporalUnit), TemporalUnitEqb u1 u2 = false -> u1 <> u2.
 Proof.

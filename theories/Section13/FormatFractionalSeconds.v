@@ -1,5 +1,10 @@
-From Stdlib Require Import ZArith Strings.String Ascii.
-From Temporal Require Import Section13.Precision StringUtil.
+From Stdlib Require Import
+  ZArith
+  Strings.String
+  Ascii.
+From Temporal Require Import
+  StringUtil
+  Section13.Precision.
 Open Scope string_scope.
 Open Scope Z.
 

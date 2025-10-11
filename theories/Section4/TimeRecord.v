@@ -1,4 +1,8 @@
-From Stdlib Require Import ZArith.
+From Stdlib Require Import 
+  ZArith 
+  Lia.
+From Temporal Require Import Section4.IsValidTime.
+Open Scope bool_scope.
 Open Scope Z.
 
 (* 4.5.1 Time Records *)
@@ -28,3 +32,20 @@ Record TimeRecord :=
     nanosecond : Z;
     nanosecond_valid : 0 <= nanosecond <= 999;
   }.
+
+Theorem TimeRecord_IsValidTime :
+  forall (t : TimeRecord),
+  IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
+Proof.
+  intro t.
+  destruct t.
+  simpl.
+  unfold IsValidTime.
+
+  destruct_with_eqn ((hour0 <? 0) || (hour0 >? 23)); try lia.
+  destruct_with_eqn ((minute0 <? 0) || (minute0 >? 59)); try lia.
+  destruct_with_eqn ((second0 <? 0) || (second0 >? 59)); try lia.
+  destruct_with_eqn ((millisecond0 <? 0) || (millisecond0 >? 999)); try lia.
+  destruct_with_eqn ((microsecond0 <? 0) || (microsecond0 >? 999)); try lia.
+  destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)); try lia.
+Qed.

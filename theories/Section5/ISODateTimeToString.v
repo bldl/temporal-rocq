@@ -1,5 +1,19 @@
-From Stdlib Require Import ZArith Strings.String Lia.
-From Temporal Require Import Basic Section3.PadISOYear Section3.ISODateRecord Section4.TimeRecord Section5.ISODateTimeRecord Section12.CalendarType Section12.ShowCalendar Section12.FormatCalendarAnnotation Section13.PrecisionPrime Section13.FormatTimeString StringUtil.
+From Stdlib Require Import
+  ZArith
+  Strings.String
+  Lia.
+From Temporal Require Import 
+  Basic
+  StringUtil
+  Section3.ISODateRecord
+  Section3.PadISOYear
+  Section4.TimeRecord
+  Section5.ISODateTimeRecord
+  Section12.CalendarType
+  Section12.FormatCalendarAnnotation
+  Section12.ShowCalendar
+  Section13.FormatTimeString
+  Section13.PrecisionPrime.
 Open Scope string_scope.
 Open Scope Z.
 
@@ -20,44 +34,9 @@ Program Definition ISODateTimeToString (isoDateTime : ISODateTimeRecord) (calend
   (*>> 7. Return the string-concatenation of yearString, the code unit 0x002D (HYPHEN-MINUS), monthString, the code unit 0x002D (HYPHEN-MINUS), dayString, 0x0054 (LATIN CAPITAL LETTER T), timeString, and calendarString. <<*)
   yearString ++ "-" ++ monthString ++ "-" ++ dayString ++ "T" ++ timeString ++ calendarString.
 
-Next Obligation.
-  destruct isoDateTime.
-  destruct ISODate.
-  simpl.
-  lia.
-Qed.
-
-Next Obligation.
-  destruct isoDateTime.
-  destruct ISODate.
-  simpl.
-  lia.
-Qed.
-
-Next Obligation.
-  destruct isoDateTime.
-  destruct Time.
-  simpl.
-  lia.
-Qed.
-
-Next Obligation.
-  destruct isoDateTime.
-  destruct Time.
-  simpl.
-  lia.
-Qed.
-
-Next Obligation.
-  destruct isoDateTime.
-  destruct Time.
-  simpl.
-  lia.
-Qed.
-
-Next Obligation.
-  destruct isoDateTime.
-  destruct Time.
-  simpl.
-  lia.
-Qed.
+Next Obligation. destruct isoDateTime. destruct ISODate. simpl. lia. Qed.
+Next Obligation. destruct isoDateTime. destruct ISODate. simpl. lia. Qed.
+Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
+Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
+Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
+Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
