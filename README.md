@@ -84,3 +84,6 @@ $ ./build.sh
 * [7.5.26 TimeDurationFromEpochNanosecondsDifference](theories/Section7/TimeDurationFromEpochNanosecondsDifference.v)
 * [11.1.5 FormatOffsetTimeZoneIdentifier](theories/Section11/FormatOffsetTimeZoneIdentifier.v)
 * [11.1.6 FormatUTCOffsetNanoseconds](theories/Section11/FormatUTCOffsetNanoseconds.v)
+
+## Notes
+* [5.5.3 CombineISODateAndTimeRecord](theories/Section5/Notes.v)
