@@ -30,3 +30,18 @@ Definition CompareTimeRecord (time1 time2 : TimeRecord) : Z :=
   else if nanosecond time1 <? nanosecond time2 then -1
   (*>> 13. Return 0. <<*)
   else 0.
+
+(** States that `CompareTimeRecord` ignores the `deltaDays` component. *)
+Lemma CompareTimeRecord_ignores_days :
+  forall d0 d0v d1 d1v,
+  forall h hv m mv s sv ms msv us usv ns nsv,
+  let t0 := mkTimeRecord d0 d0v h hv m mv s sv ms msv us usv ns nsv in
+  let t1 := mkTimeRecord d1 d1v h hv m mv s sv ms msv us usv ns nsv in
+  CompareTimeRecord t0 t1 = 0.
+Proof.
+  intros.
+  unfold CompareTimeRecord.
+  simpl.
+  repeat (rewrite Z.gtb_ltb, Z.ltb_irrefl).
+  reflexivity.
+Qed.

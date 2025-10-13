@@ -19,6 +19,14 @@ Definition CompareISODate (isoDate1 isoDate2 : ISODateRecord) : Z :=
   (*>> 7. Return 0. <<*)
   else 0.
 
+Theorem CompareISODate_eq_zero : forall i, CompareISODate i i = 0.
+Proof.
+  intros.
+  unfold CompareISODate.
+  repeat (rewrite Z.gtb_ltb, Z.ltb_irrefl).
+  reflexivity.
+Qed.
+
 Theorem CompareISODate_eq_implies_eq_zero :
   forall (y1 y2 m1 m2 d1 d2 : Z),
   y1 = y2 /\ m1 = m2 /\ d1 = d2 ->
@@ -29,18 +37,12 @@ Proof.
   intros y1 y2 m1 m2 d1 d2.
   intro H.
   intros m1_valid m2_valid d1_valid d2_valid.
-  destruct H.
-  destruct H0.
+  destruct H, H0.
   unfold CompareISODate.
   simpl.
   rewrite H.
   rewrite H0.
   rewrite H1.
-  rewrite Z.gtb_ltb.
-  rewrite Z.gtb_ltb.
-  rewrite Z.gtb_ltb.
-  rewrite Z.ltb_irrefl.
-  rewrite Z.ltb_irrefl.
-  rewrite Z.ltb_irrefl.
+  repeat (rewrite Z.gtb_ltb, Z.ltb_irrefl).
   reflexivity.
 Qed.
