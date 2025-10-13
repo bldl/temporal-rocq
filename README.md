@@ -86,4 +86,4 @@ $ ./build.sh
 * [11.1.6 FormatUTCOffsetNanoseconds](theories/Section11/FormatUTCOffsetNanoseconds.v)
 
 ## Notes
-* [5.5.3 CombineISODateAndTimeRecord](theories/Section5/Notes.v)
+* [5.5.3 CombineISODateAndTimeRecord](theories/Section5/Notes/CombineISODateAndTime.v)
