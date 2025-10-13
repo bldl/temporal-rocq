@@ -1,4 +1,7 @@
-From Stdlib Require Import Numbers.BinNums Program.Wf ZArith Strings.String Numbers.DecimalString Init.Decimal.
+From Stdlib Require Import
+  ZArith
+  Strings.String
+  Numbers.DecimalString.
 Open Scope bool_scope.
 Open Scope string_scope.
 Open Scope Z.
