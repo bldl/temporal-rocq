@@ -6,10 +6,9 @@ From Temporal Require Import
 Open Scope Z.
 
 (* 5.5.3 CombineISODateAndTimeRecord *)
-Program Definition CombineISODateAndTimeRecord (isoDate : ISODateRecord) (time : TimeRecord) : ISODateTimeRecord :=
+Definition CombineISODateAndTimeRecord (isoDate : ISODateRecord) (time : TimeRecord) : ISODateTimeRecord :=
   (*>> 1. NOTE: time.[[Days]] is ignored. <<*)
   (*>> 2. Return ISO Date-Time Record { [[ISODate]]: isoDate, [[Time]]: time }. <<*)
-  mkISODateTimeRecord isoDate _ time _.
-
-Next Obligation. Proof. exact (ISODateRecord_IsValidISODate isoDate). Qed.
-Next Obligation. Proof. exact (TimeRecord_IsValidTime time). Qed.
+  mkISODateTimeRecord
+    isoDate (ISODateRecord_IsValidISODate isoDate)
+    time (TimeRecord_IsValidTime time).
