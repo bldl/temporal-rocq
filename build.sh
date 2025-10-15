@@ -2,4 +2,4 @@
 
 rocq makefile -f _CoqProject -o Makefile
 make clean
-make
+make -j
