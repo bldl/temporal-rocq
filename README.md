@@ -79,6 +79,7 @@ $ ./build.sh
 * [13.27 GetUnsignedRoundingMode](theories/Section13/GetUnsignedRoundingMode.v)
 
 ## Inconsistencies
+* [3.5.1 ISO Date Records](theories/Section3/ISODateRecord.v) (Implied consistent, but not explicit)
 * [4.5.10 BalanceTime](theories/Section4/BalanceTime.v)
 * [7.5.21 TimeDurationFromComponents](theories/Section7/TimeDurationFromComponents.v)
 * [7.5.26 TimeDurationFromEpochNanosecondsDifference](theories/Section7/TimeDurationFromEpochNanosecondsDifference.v)
@@ -87,3 +88,5 @@ $ ./build.sh
 
 ## Notes
 * [5.5.3 CombineISODateAndTimeRecord](theories/Section5/Notes/CombineISODateAndTime.v)
+
+## Theorems

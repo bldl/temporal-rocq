@@ -21,3 +21,15 @@ Theorem ISODateRecord_IsValidISODate :
   forall (date : ISODateRecord),
   IsValidISODate (year date) (month date) (day date) = true.
 Admitted.
+
+(* Without explicit invariance *)
+Theorem ISODateRecord_IsValidISODate_not_guaranteed :
+  exists (date : ISODateRecord),
+  IsValidISODate (year date) (month date) (day date) = false.
+Proof.
+  eexists (mkISODateRecord 2025 2 _ 31 _).
+  easy.
+  Unshelve.
+  easy.
+  easy.
+Qed.
