@@ -26,4 +26,9 @@ Next Obligation.
   apply Z.geb_le in Heq_anonymous.
   apply Heq_anonymous.
 Qed.
+
 Next Obligation. apply (Z.abs_nonneg). Qed.  
+
+Theorem PadISOYear_result_length_at_least_4 :
+  forall (y : Z), (length (PadISOYear y) >= 4)%nat.
+Admitted.
