@@ -1,6 +1,7 @@
 From Stdlib Require Import ZArith.
 From Temporal Require Import 
   Section4.CreateTimeRecord
+  Section4.IsValidTime
   Section4.TimeRecord.
 Open Scope Z.
 
@@ -55,6 +56,13 @@ Next Obligation. Proof. refine (mod_pos_bound 60 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
+
+Theorem BalanceTime_is_consistent_when_inputs_are_nonnegative :
+  forall h min s ms us ns,
+  0 <= h -> 0 <= min -> 0 <= s -> 0 <= ms -> 0 <= us -> 0 <= ns ->
+  let t := BalanceTime h min s ms us ns in
+  IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
+Admitted.
 
 (* Proofs that BalanceTime is missing a precondition *)
 Theorem delta_days_can_be_negative : exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.

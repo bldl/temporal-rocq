@@ -95,3 +95,4 @@ $ ./build.sh
 
 ### Unproven
 * [PadISOYear_result_length_at_least_4](theories/Section3/PadISOYear.v)
+* [BalanceTime_is_consistent_when_inputs_are_nonnegative](theories/Section4/BalanceTime.v)
