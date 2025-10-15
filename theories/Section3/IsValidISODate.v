@@ -1,5 +1,5 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Section12.ISODaysInMonth Section12.Sec12Thm.
+From Temporal Require Import Section12.ISODaysInMonth.
 Open Scope bool_scope.
 Open Scope Z.
 

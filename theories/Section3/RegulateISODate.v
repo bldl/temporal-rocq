@@ -7,7 +7,6 @@ From Temporal Require Import
   Section3.ISODateRecord
   Section3.IsValidISODate
   Section12.ISODaysInMonth
-  Section12.Sec12Thm
   StringUtil.
 Open Scope Z.
 
