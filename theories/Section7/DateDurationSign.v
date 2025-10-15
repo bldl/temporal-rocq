@@ -1,5 +1,6 @@
 From Stdlib Require Import
   ZArith
+  Lia
   List.
 From Temporal Require Import
   Basic
@@ -26,3 +27,39 @@ Definition DateDurationSign (dateDuration : DateDurationRecord) : Z :=
   (*>> 2. Return 0. <<*)
   | None => 0
   end.
+
+Theorem DateDurationSign_year_sign_dominates :
+  forall years months weeks days,
+  (DateDurationSign (mkDateDurationRecord years months weeks days) = 0 -> value years = 0) /\
+  (value years > 0 -> DateDurationSign (mkDateDurationRecord years months weeks days) = 1) /\
+  (value years < 0 -> DateDurationSign (mkDateDurationRecord years months weeks days) = (-1)).
+Proof.
+  intros.
+  split.
+  unfold DateDurationSign.
+  simpl.
+  destruct (value years <? 0) eqn:H.
+  easy.
+  destruct (value years >? 0) eqn:H1.
+  easy.
+  destruct (value months <? 0).
+  easy.
+  destruct (value months >? 0).
+  easy.
+  destruct (value weeks <? 0).
+  easy.
+  destruct (value weeks >? 0).
+  easy.
+  destruct (value days <? 0).
+  easy.
+  destruct (value days >? 0).
+  easy.
+  rewrite Z.ltb_ge in H.
+  rewrite Z.gtb_ltb in H1.
+  rewrite Z.ltb_ge in H1.
+  intros.
+  apply Z.le_antisymm.
+  assumption.
+  assumption.
+  
+
