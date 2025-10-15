@@ -86,3 +86,13 @@ Proof.
     + assumption.
     + apply ISODaysInMonth_range.
 Qed.
+
+Theorem RegulateISODate_never_throws_on_constrain :
+  forall y m d, exists isoDateRecord,
+  RegulateISODate y m d CONSTRAIN = Normal isoDateRecord.
+Proof.
+  intros.
+  unfold RegulateISODate.
+  eexists.
+  reflexivity.
+Qed.
