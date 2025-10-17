@@ -98,6 +98,18 @@ Proof.
   reflexivity.
 Qed.
 
+Theorem BalanceTime_days_valid_when_nonnegative_inputs :
+  forall h min s ms us ns,
+  0 <= h -> 0 <= min -> 0 <= s -> 0 <= ms -> 0 <= us -> 0 <= ns ->
+  0 <= days (BalanceTime h min s ms us ns).
+Proof.
+  intros.
+  unfold BalanceTime.
+  simpl.
+  repeat (apply Z.div_pos; try (apply Z.add_nonneg_nonneg); try assumption);
+  easy.
+Qed.
+
 (* Proofs that BalanceTime is missing a precondition *)
 Theorem delta_days_can_be_negative : exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.
 Proof.
