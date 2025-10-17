@@ -1,6 +1,7 @@
 From Stdlib Require Import
   ZArith
-  Strings.String.
+  Strings.String
+  Lia.
 From Temporal Require Import StringUtil.
 Open Scope bool_scope.
 Open Scope string_scope.
@@ -25,10 +26,30 @@ Next Obligation.
   apply proj1 in Heq_anonymous.
   apply Z.geb_le in Heq_anonymous.
   apply Heq_anonymous.
-Qed.
+Defined.
 
-Next Obligation. apply (Z.abs_nonneg). Qed.  
+Next Obligation. apply (Z.abs_nonneg). Defined.
 
 Theorem PadISOYear_result_length_at_least_4 :
-  forall (y : Z), (length (PadISOYear y) >= 4)%nat.
-Admitted.
+  forall (y : Z), (4 <= length (PadISOYear y))%nat.
+Proof.
+  intros.
+  unfold PadISOYear.
+  unfold PadISOYear_obligation_1.
+  generalize (Bool.andb_true_iff (y >=? 0) (y <=? 9999)).
+  destruct ((y >=? 0) && (y <=? 9999)).
+  - intros.
+    simpl.
+    now apply ToZeroPaddedDecimalString_length.
+  - intros.
+    destruct i.
+    destruct (y >? 0).
+    + simpl.
+      rewrite <- Nat.le_pred_le_succ.
+      apply ToZeroPaddedDecimalString_length.
+      lia.
+    + simpl.
+      rewrite <- Nat.le_pred_le_succ.
+      apply ToZeroPaddedDecimalString_length.
+      lia.
+Qed.

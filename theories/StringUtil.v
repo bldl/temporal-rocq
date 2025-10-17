@@ -197,11 +197,12 @@ Proof.
 Qed.
 
 Lemma ToZeroPaddedDecimalString_length :
-  forall n m nv mv,
-  Z.to_nat m <= length (ToZeroPaddedDecimalString n m nv mv).
+  forall n m m' nv mv, m' <= Z.to_nat m ->
+  m' <= length (ToZeroPaddedDecimalString n m nv mv).
 Proof.
   intros.
   unfold ToZeroPaddedDecimalString.
-  apply StringPad_length.
-  easy.
+  apply Nat.le_trans with (m := Z.to_nat m).
+  assumption.
+  now apply StringPad_length.
 Qed.
