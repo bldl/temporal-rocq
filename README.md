@@ -93,7 +93,5 @@ $ ./build.sh
 ### Proven
 * [RegulateISODate_never_throws_on_constrain](theories/Section3/RegulateISODate.v)
 * [PadISOYear_result_length_at_least_4](theories/Section3/PadISOYear.v)
+* [BalanceTime_is_valid](theories/Section4/BalanceTime.v)
 * [DateDurationSign_year_sign_dominates](theories/Section7/DateDurationSign.v)
-
-### Unproven
-* [BalanceTime_is_consistent_when_inputs_are_nonnegative](theories/Section4/BalanceTime.v)
