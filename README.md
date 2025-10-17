@@ -92,6 +92,7 @@ $ ./build.sh
 ## Theorems
 ### Proven
 * [RegulateISODate_never_throws_on_constrain](theories/Section3/RegulateISODate.v)
+* [DateDurationSign_year_sign_dominates](theories/Section7/DateDurationSign.v)
 
 ### Unproven
 * [PadISOYear_result_length_at_least_4](theories/Section3/PadISOYear.v)
