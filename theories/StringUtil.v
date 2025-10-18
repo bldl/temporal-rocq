@@ -46,6 +46,31 @@ Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.
 
 Close Scope Z.
 
+Lemma append_assoc :
+  forall (s0 s1 s2 : string), (s0 ++ s1) ++ s2 = s0 ++ (s1 ++ s2).
+Proof.
+  intros.
+  induction s0.
+  - reflexivity.
+  - simpl.
+    f_equal.
+    assumption.
+Qed.
+
+Lemma append_empty_l : forall s, EmptyString ++ s = s.
+Proof.
+  reflexivity.
+Qed.
+
+Lemma append_empty_r : forall s, s ++ EmptyString = s.
+Proof.
+  induction s.
+  - reflexivity.
+  - simpl.
+    f_equal.
+    assumption.
+Qed.
+
 Lemma append_length :
   forall s0 s1, length (s0 ++ s1) = length s0 + length s1.
 Proof.

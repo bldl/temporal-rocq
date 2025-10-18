@@ -1,11 +1,13 @@
 From Stdlib Require Import ZArith Strings.String.
 From Temporal Require Import
   StringUtil
+  Grammar
   Section3.ISODateRecord
   Section3.PadISOYear
   Section3.PlainDate
   Section12.FormatCalendarAnnotation
   Section12.ShowCalendar.
+From Temporal Require RFC3339.
 Open Scope Z.
 
 (* 3.5.10 TemporalDateToString *)
@@ -34,3 +36,8 @@ Next Obligation.
   destruct (day_valid (isoDate temporalDate)).
   assumption.
 Qed.
+
+Theorem TemporalDateToString_without_calendar_satisfies_rfc3339 :
+  forall temporalDate,
+  generates RFC3339.full_date (TemporalDateToString temporalDate SC_NEVER).
+Admitted.
