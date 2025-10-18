@@ -25,6 +25,7 @@ $ ./build.sh
 * [3.5.6 RegulateISODate](theories/Section3/RegulateISODate.v)
 * [3.5.7 IsValidISODate](theories/Section3/IsValidISODate.v)
 * [3.5.9 PadISOYear](theories/Section3/PadISOYear.v)
+* [3.5.10 TemporalDateToString](theories/Section3/TemporalDateToString.v)
 * [3.5.12 CompareISODate](theories/Section3/CompareISODate.v)
 ### Section 4
 * [4.5.1 Time Records](theories/Section4/TimeRecord.v)
