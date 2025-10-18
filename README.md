@@ -96,3 +96,7 @@ $ ./build.sh
 * [PadISOYear_result_length_at_least_4](theories/Section3/PadISOYear.v)
 * [BalanceTime_IsValidTime](theories/Section4/BalanceTime.v)
 * [DateDurationSign_year_sign_dominates](theories/Section7/DateDurationSign.v)
+
+### Unproven
+* [TemporalDateToString_without_calendar_satisfies_rfc3339](theories/Section3/TemporalDateToString.v)
+* [ISODateTimeToString_without_calendar_satisfies_rfc3339](theories/Section5/ISODateTimeToString.v)

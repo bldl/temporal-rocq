@@ -4,6 +4,7 @@ From Stdlib Require Import
   Lia.
 From Temporal Require Import 
   Basic
+  Grammar
   StringUtil
   Section3.ISODateRecord
   Section3.PadISOYear
@@ -14,6 +15,7 @@ From Temporal Require Import
   Section12.ShowCalendar
   Section13.FormatTimeString
   Section13.PrecisionPrime.
+From Temporal Require RFC3339.
 Open Scope string_scope.
 Open Scope Z.
 
@@ -40,3 +42,8 @@ Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
 Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
 Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
 Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
+
+Theorem ISODateTimeToString_without_calendar_satisfies_rfc3339 :
+  forall isoDateTime calendar precision',
+  generates RFC3339.date_time (ISODateTimeToString isoDateTime calendar precision' SC_NEVER).
+Admitted.
