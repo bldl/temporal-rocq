@@ -58,12 +58,13 @@ Proof.
 Qed.
 
 Lemma length_char_eq :
-  forall a a', length (String a "") = length (String a' "").
+  forall a a', length (String a EmptyString) = length (String a' EmptyString).
 Proof.
   reflexivity.
 Qed.
 
-Lemma length_append_char : forall s a, length (s ++ String a "") = S (length s).
+Lemma length_append_char :
+  forall s a, length (s ++ String a EmptyString) = S (length s).
 Proof.
   intros.
   induction s.
@@ -92,7 +93,7 @@ Proof.
     now inversion H.
 Qed.
 
-Lemma length_nonempty : forall s, s <> "" -> 0 < length s.
+Lemma length_nonempty : forall s, s <> EmptyString -> 0 < length s.
 Proof.
   intros.
   destruct s.
@@ -113,7 +114,7 @@ Proof.
 Qed.
 
 Lemma RepeatString_zero :
-  forall s, length (RepeatString s 0%nat) = 0%nat.
+  forall s, length (RepeatString s 0) = 0.
 Proof.
   reflexivity.
 Qed.
@@ -159,7 +160,7 @@ Proof.
 Qed.
 
 Lemma StringPad_length :
-  forall s l filler placement h, filler <> "" ->
+  forall s l filler placement h, filler <> EmptyString ->
   Z.to_nat l <= length (StringPad s l filler placement h).
 Proof.
   intros.
@@ -169,7 +170,7 @@ Proof.
     apply Nat2Z.inj_le.
     rewrite Z2Nat.id; assumption.
   - rewrite Z.leb_gt in cmp.
-    destruct (filler =? "") eqn: filler_eq.
+    destruct (filler =? EmptyString) eqn: filler_eq.
     + rewrite eqb_eq in filler_eq.
       rewrite filler_eq in H.
       contradiction.

@@ -82,7 +82,7 @@ Proof.
   - assumption.
 Qed.
 
-Theorem BalanceTime_is_valid :
+Theorem BalanceTime_IsValidTime :
   forall h min s ms us ns,
   let t := BalanceTime h min s ms us ns in
   IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
