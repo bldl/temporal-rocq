@@ -100,3 +100,4 @@ $ ./build.sh
 ### Unproven
 * [TemporalDateToString_without_calendar_satisfies_rfc3339](theories/Section3/TemporalDateToString.v)
 * [ISODateTimeToString_without_calendar_satisfies_rfc3339](theories/Section5/ISODateTimeToString.v)
+* [AddTime_adding_zero_no_change](theories/Section4/AddTime.v)
