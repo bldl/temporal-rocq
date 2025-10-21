@@ -96,8 +96,12 @@ $ ./build.sh
 * [PadISOYear_result_length_at_least_4](theories/Section3/PadISOYear.v)
 * [BalanceTime_IsValidTime](theories/Section4/BalanceTime.v)
 * [DateDurationSign_year_sign_dominates](theories/Section7/DateDurationSign.v)
+* [CompareISODate_eq_zero](theories/Section3/CompareISODate.v)
+* [CompareISODate_eq_implies_eq_zero](theories/Section3/CompareISODate.v)
 
 ### Unproven
 * [TemporalDateToString_without_calendar_satisfies_rfc3339](theories/Section3/TemporalDateToString.v)
 * [ISODateTimeToString_without_calendar_satisfies_rfc3339](theories/Section5/ISODateTimeToString.v)
 * [AddTime_adding_zero_no_change](theories/Section4/AddTime.v)
+* [CompareTimeRecord_eq_zero](theories/Section4/CompareTimeRecord.v)
+* [CompareTimeRecord_eq_implies_eq_zero](theories/Section4/CompareTimeRecord.v)
