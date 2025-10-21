@@ -25,6 +25,7 @@ $ ./build.sh
 * [3.5.6 RegulateISODate](theories/Section3/RegulateISODate.v)
 * [3.5.7 IsValidISODate](theories/Section3/IsValidISODate.v)
 * [3.5.9 PadISOYear](theories/Section3/PadISOYear.v)
+* [3.5.10 TemporalDateToString](theories/Section3/TemporalDateToString.v)
 * [3.5.12 CompareISODate](theories/Section3/CompareISODate.v)
 ### Section 4
 * [4.5.1 Time Records](theories/Section4/TimeRecord.v)
@@ -79,6 +80,7 @@ $ ./build.sh
 * [13.27 GetUnsignedRoundingMode](theories/Section13/GetUnsignedRoundingMode.v)
 
 ## Inconsistencies
+* [3.5.1 ISO Date Records](theories/Section3/ISODateRecord.v) (Implied consistent, but not explicit)
 * [4.5.10 BalanceTime](theories/Section4/BalanceTime.v)
 * [7.5.21 TimeDurationFromComponents](theories/Section7/TimeDurationFromComponents.v)
 * [7.5.26 TimeDurationFromEpochNanosecondsDifference](theories/Section7/TimeDurationFromEpochNanosecondsDifference.v)
@@ -87,3 +89,19 @@ $ ./build.sh
 
 ## Notes
 * [5.5.3 CombineISODateAndTimeRecord](theories/Section5/Notes/CombineISODateAndTime.v)
+
+## Theorems
+### Proven
+* [RegulateISODate_never_throws_on_constrain](theories/Section3/RegulateISODate.v)
+* [PadISOYear_result_length_at_least_4](theories/Section3/PadISOYear.v)
+* [BalanceTime_IsValidTime](theories/Section4/BalanceTime.v)
+* [DateDurationSign_year_sign_dominates](theories/Section7/DateDurationSign.v)
+* [CompareISODate_eq_zero](theories/Section3/CompareISODate.v)
+* [CompareISODate_eq_implies_eq_zero](theories/Section3/CompareISODate.v)
+
+### Unproven
+* [TemporalDateToString_without_calendar_satisfies_rfc3339](theories/Section3/TemporalDateToString.v)
+* [ISODateTimeToString_without_calendar_satisfies_rfc3339](theories/Section5/ISODateTimeToString.v)
+* [AddTime_adding_zero_no_change](theories/Section4/AddTime.v)
+* [CompareTimeRecord_eq_zero](theories/Section4/CompareTimeRecord.v)
+* [CompareTimeRecord_eq_implies_eq_zero](theories/Section4/CompareTimeRecord.v)

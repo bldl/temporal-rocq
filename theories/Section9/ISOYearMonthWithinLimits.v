@@ -14,7 +14,7 @@ Definition ISOYearMonthWithinLimits (isoDate : ISODateRecord) : bool :=
     (*>> a. Return false. <<*)
     then false
   (*>> 3. If isoDate.[[Year]] = 275760 and isoDate.[[Month]] > 9, then <<*)
-  else if (year isoDate =? 275760) || (month isoDate >? 9)
+  else if (year isoDate =? 275760) && (month isoDate >? 9)
     (*>> a. Return false. <<*)
     then false
   (*>> 4. Return true. <<*)

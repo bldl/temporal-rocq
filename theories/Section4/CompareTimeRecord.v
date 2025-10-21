@@ -45,3 +45,17 @@ Proof.
   repeat (rewrite Z.gtb_ltb, Z.ltb_irrefl).
   reflexivity.
 Qed.
+
+Theorem CompareTimeRecord_eq_zero : forall time, CompareTimeRecord time time = 0.
+Admitted.
+
+Theorem CompareTimeRecord_eq_implies_eq_zero :
+  forall (d1 d2 h1 h2 m1 m2 s1 s2 ms1 ms2 us1 us2 ns1 ns2 : Z),
+  h1 = h2 /\ m1 = m2 /\ s1 = s2 /\ ms1 = ms2 /\ us1 = us2 /\ ns1 = ns2 ->
+  forall (d1_valid : d1 >= 0) (h1_valid : 0 <= h1 <= 23) (m1_valid : 0 <= m1 <= 59) (s1_valid : 0 <= s1 <= 59)
+  (ms1_valid : 0 <= ms1 <= 999) (us1_valid : 0 <= us1 <= 999) (ns1_valid : 0 <= ns1 <= 999)
+  (d2_valid : d2 >= 0) (h2_valid : 0 <= h2 <= 23) (m2_valid : 0 <= m2 <= 59) (s2_valid : 0 <= s2 <= 59)
+  (ms2_valid : 0 <= ms2 <= 999) (us2_valid : 0 <= us2 <= 999) (ns2_valid : 0 <= ns2 <= 999),
+  CompareTimeRecord (mkTimeRecord d1 d1_valid h1 h1_valid m1 m1_valid s1 s1_valid ms1 ms1_valid us1 us1_valid ns1 ns1_valid)
+                    (mkTimeRecord d2 d2_valid h2 h2_valid m2 m2_valid s2 s2_valid ms2 ms2_valid us2 us2_valid ns2 ns2_valid) = 0.
+Admitted.

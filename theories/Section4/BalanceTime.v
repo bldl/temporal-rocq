@@ -1,6 +1,7 @@
 From Stdlib Require Import ZArith.
 From Temporal Require Import 
   Section4.CreateTimeRecord
+  Section4.IsValidTime
   Section4.TimeRecord.
 Open Scope Z.
 
@@ -55,6 +56,59 @@ Next Obligation. Proof. refine (mod_pos_bound 60 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
 Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
+
+Lemma mod_if_range :
+  forall e u otherwise, 0 < u -> otherwise = true ->
+  (if ((e mod u) <? 0) || ((e mod u) >? Z.pred u) then false else otherwise) = true.
+Proof.
+  intros.
+  destruct (((e mod u) <? 0) || ((e mod u) >? Z.pred u)) eqn: range.
+  - exfalso.
+    destruct (Bool.orb_true_elim _ _ range).
+    + rewrite Z.ltb_lt in e0.
+      apply Z.lt_irrefl with (x := 0).
+      apply Z.le_lt_trans with (m := (e mod u)).
+      apply Z.mod_pos_bound.
+      assumption.
+      assumption.
+    + rewrite Z.gtb_ltb in e0.
+      rewrite Z.ltb_lt in e0.
+      apply Z.lt_irrefl with (x := Z.pred u).
+      apply Z.lt_le_trans with (m := e mod u).
+      assumption.
+      rewrite <- Z.lt_succ_r.
+      rewrite Z.succ_pred.
+      now apply Z.mod_pos_bound.
+  - assumption.
+Qed.
+
+Theorem BalanceTime_IsValidTime :
+  forall h min s ms us ns,
+  let t := BalanceTime h min s ms us ns in
+  IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
+Proof.
+  intros.
+  unfold IsValidTime.
+  apply mod_if_range. { easy. }
+  apply mod_if_range. { easy. }
+  apply mod_if_range. { easy. }
+  apply mod_if_range. { easy. }
+  apply mod_if_range. { easy. }
+  apply mod_if_range. { easy. }
+  reflexivity.
+Qed.
+
+Theorem BalanceTime_days_valid_when_nonnegative_inputs :
+  forall h min s ms us ns,
+  0 <= h -> 0 <= min -> 0 <= s -> 0 <= ms -> 0 <= us -> 0 <= ns ->
+  0 <= days (BalanceTime h min s ms us ns).
+Proof.
+  intros.
+  unfold BalanceTime.
+  simpl.
+  repeat (apply Z.div_pos; try (apply Z.add_nonneg_nonneg); try assumption);
+  easy.
+Qed.
 
 (* Proofs that BalanceTime is missing a precondition *)
 Theorem delta_days_can_be_negative : exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.

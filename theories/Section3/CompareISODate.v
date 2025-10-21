@@ -19,7 +19,7 @@ Definition CompareISODate (isoDate1 isoDate2 : ISODateRecord) : Z :=
   (*>> 7. Return 0. <<*)
   else 0.
 
-Theorem CompareISODate_eq_zero : forall i, CompareISODate i i = 0.
+Theorem CompareISODate_eq_zero : forall isoDate, CompareISODate isoDate isoDate = 0.
 Proof.
   intros.
   unfold CompareISODate.
