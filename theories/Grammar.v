@@ -49,19 +49,19 @@ Module Grammar.
   Definition Equiv (a b : grammar) := forall s, generates a s <-> generates b s.
 
   Module Equiv.
-    Theorem refl : reflexive grammar Equiv.
+    Lemma refl : reflexive grammar Equiv.
     Proof.
       unfold reflexive, Equiv.
       split; intros; assumption.
     Qed.
 
-    Theorem symm : symmetric grammar Equiv.
+    Lemma symm : symmetric grammar Equiv.
     Proof.
       unfold symmetric, Equiv.
       split; apply H.
     Qed.
 
-    Theorem trans : transitive grammar Equiv.
+    Lemma trans : transitive grammar Equiv.
     Proof.
       unfold transitive, Equiv.
       split.
@@ -76,7 +76,7 @@ Module Grammar.
       as Equiv_rel.
   End Equiv.
 
-  Theorem alternative_assoc :
+  Lemma alternative_assoc :
     forall a b c,
     Equiv (alternative (alternative a b) c) (alternative a (alternative b c)).
   Proof.
@@ -95,7 +95,7 @@ Module Grammar.
         apply gen_alt_r; assumption.
   Qed.
 
-  Theorem alternative_comm :
+  Lemma alternative_comm :
     forall a b, Equiv (alternative a b) (alternative b a).
   Proof.
     split.
@@ -113,7 +113,7 @@ Module Grammar.
         assumption.
   Qed.
 
-  Theorem alternative_nothing : forall a, Equiv a (alternative a nothing).
+  Lemma alternative_nothing : forall a, Equiv a (alternative a nothing).
   Proof.
     split.
     - intros.
@@ -125,7 +125,7 @@ Module Grammar.
       + inversion H.
   Qed.
 
-  Theorem sequence_assoc :
+  Lemma sequence_assoc :
     forall a b c,
     Equiv (sequence (sequence a b) c) (sequence a (sequence b c)).
   Proof.
@@ -146,7 +146,7 @@ Module Grammar.
       + assumption.
   Qed.
 
-  Theorem sequence_empty_l : forall a, Equiv a (sequence empty a).
+  Lemma sequence_empty_l : forall a, Equiv a (sequence empty a).
   Proof.
     split.
     - intros.
@@ -160,7 +160,7 @@ Module Grammar.
       assumption.
   Qed.
 
-  Theorem sequence_empty_r : forall a, Equiv a (sequence a empty).
+  Lemma sequence_empty_r : forall a, Equiv a (sequence a empty).
   Proof.
     split.
     - intros.
@@ -175,7 +175,7 @@ Module Grammar.
       assumption.
   Qed.
 
-  Theorem sequence_nothing_l : forall a, Equiv nothing (sequence nothing a).
+  Lemma sequence_nothing_l : forall a, Equiv nothing (sequence nothing a).
   Proof.
     split.
     - intros.
@@ -185,7 +185,7 @@ Module Grammar.
       inversion H.
   Qed.
 
-  Theorem sequence_nothing_r : forall a, Equiv nothing (sequence a nothing).
+  Lemma sequence_nothing_r : forall a, Equiv nothing (sequence a nothing).
   Proof.
     split.
     - intros.
@@ -195,7 +195,7 @@ Module Grammar.
       inversion H0.
   Qed.
 
-  Theorem unfold_star : forall a, Equiv (star a) (maybe (sequence a (star a))).
+  Lemma unfold_star : forall a, Equiv (star a) (maybe (sequence a (star a))).
   Proof.
     split.
     - intros.
@@ -210,7 +210,7 @@ Module Grammar.
       + apply gen_star_r; assumption.
   Qed.
 
-  Theorem sequence_alternative_distrib_l :
+  Lemma sequence_alternative_distrib_l :
     forall a b c,
     Equiv (sequence a (alternative b c)) (alternative (sequence a b) (sequence a c)).
   Proof.
@@ -234,7 +234,7 @@ Module Grammar.
         assumption.
   Qed.
 
-  Theorem sequence_alternative_distrib_r :
+  Lemma sequence_alternative_distrib_r :
     forall a b c,
     Equiv (sequence (alternative a b) c) (alternative (sequence a c) (sequence b c)).
   Proof.

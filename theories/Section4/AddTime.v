@@ -10,12 +10,9 @@ Definition AddTime (time : TimeRecord) (timeDuration : Z) (timeDuration_valid : 
   BalanceTime (hour time) (minute time) (second time) (millisecond time) (microsecond time) (nanosecond time + timeDuration).
   (*>> 2. NOTE: If using floating points to implement this operation, add the time components separately before balancing to avoid errors with unsafe integers. <<*)
 
-Lemma zero_timeDuration_valid :
-  MinTimeDuration <= 0 <= MaxTimeDuration.
+Lemma zero_timeDuration_valid : MinTimeDuration <= 0 <= MaxTimeDuration.
 Proof.
-  split.
-  easy.
-  easy.
+  split; easy.
 Qed.
 
 Theorem AddTime_adding_zero_no_change :

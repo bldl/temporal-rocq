@@ -42,8 +42,6 @@ Definition ToZeroPaddedDecimalString (n minLength : Z) (n_valid : 0 <= n) (minLe
   let S := Z_to_string n in
   StringPad S minLength "0" START minLength_valid.
 
-Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.
-
 Close Scope Z.
 
 Lemma append_assoc :

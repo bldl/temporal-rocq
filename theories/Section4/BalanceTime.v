@@ -46,16 +46,14 @@ Program Definition BalanceTime (hour minute second millisecond microsecond nanos
   CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' (Some deltaDays) _ _ _ _ _ _ _.
 
 (* DeltaDaysValid (Some deltaDays) *)
-Next Obligation.
-Proof.
-Admitted.
+Next Obligation. Admitted.
 
-Next Obligation. Proof. refine (mod_pos_bound 24 _ _). easy. Qed.
-Next Obligation. Proof. refine (mod_pos_bound 60 _ _). easy. Qed.
-Next Obligation. Proof. refine (mod_pos_bound 60 _ _). easy. Qed.
-Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
-Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
-Next Obligation. Proof. refine (mod_pos_bound 1000 _ _). easy. Qed.
+Next Obligation. refine (mod_pos_bound 24 _ _). easy. Qed.
+Next Obligation. refine (mod_pos_bound 60 _ _). easy. Qed.
+Next Obligation. refine (mod_pos_bound 60 _ _). easy. Qed.
+Next Obligation. refine (mod_pos_bound 1000 _ _). easy. Qed.
+Next Obligation. refine (mod_pos_bound 1000 _ _). easy. Qed.
+Next Obligation. refine (mod_pos_bound 1000 _ _). easy. Qed.
 
 Lemma mod_if_range :
   forall e u otherwise, 0 < u -> otherwise = true ->
