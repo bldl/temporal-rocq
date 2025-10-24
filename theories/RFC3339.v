@@ -33,3 +33,6 @@ Definition full_time := sequence partial_time time_offset.
 
 Definition date_time :=
   seq (full_date :: alternative (char "T") (char "t") :: full_time :: nil).
+
+Definition date_time_without_offset :=
+  seq (full_date :: alternative (char "T") (char "t") :: partial_time :: nil).

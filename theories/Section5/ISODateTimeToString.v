@@ -74,7 +74,7 @@ Qed.
 Theorem ISODateTimeToString_without_calendar_satisfies_rfc3339 :
   forall isoDateTime calendar precision,
   0 <= year (ISODate isoDateTime) <= 9999 ->
-  generates RFC3339.date_time (ISODateTimeToString isoDateTime calendar (NormalPrecision precision) SC_NEVER).
+  generates RFC3339.date_time_without_offset (ISODateTimeToString isoDateTime calendar (NormalPrecision precision) SC_NEVER).
 Proof.
   intros.
   unfold ISODateTimeToString.

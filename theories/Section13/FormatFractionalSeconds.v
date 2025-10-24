@@ -3,8 +3,10 @@ From Stdlib Require Import
   Strings.String
   Ascii.
 From Temporal Require Import
+  Grammar
   StringUtil
   Section13.Precision.
+From Temporal Require RFC3339.
 Open Scope string_scope.
 Open Scope Z.
 
@@ -42,3 +44,26 @@ Program Definition FormatFractionalSeconds (subSecondNanoseconds : Z) (precision
   (*>> 3. Return the string-concatenation of the code unit 0x002E (FULL STOP) and fractionString. <<*)
     "." ++ fractionString'
   end.
+
+Lemma FormatFractionalSeconds_rfc3339 :
+  forall ns p nsv,
+  generates (maybe RFC3339.time_secfrac) (FormatFractionalSeconds ns p nsv).
+Proof.
+  intros.
+  unfold FormatFractionalSeconds.
+  destruct p.
+  - destruct (ns =? 0).
+    + apply gen_alt_l.
+      constructor.
+    + apply gen_alt_r.
+      apply gen_seq.
+      * constructor.
+      * admit.
+  - destruct (p =? 0).
+    + apply gen_alt_l.
+      constructor.
+    + apply gen_alt_r.
+      apply gen_seq.
+      * constructor.
+      * admit.
+Admitted.
