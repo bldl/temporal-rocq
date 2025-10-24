@@ -80,6 +80,12 @@ Proof.
     reflexivity.
 Qed.
 
+Lemma append_char_l : forall a s0, String a EmptyString ++ s0 = String a s0.
+Proof.
+  intros.
+  reflexivity.
+Qed.
+
 Lemma length_char_eq :
   forall a a', length (String a EmptyString) = length (String a' EmptyString).
 Proof.
