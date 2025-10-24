@@ -315,6 +315,9 @@ Set Default Proof Mode "Ltac2".
 (** Apply the given thunk to the first goal. *)
 Ltac2 first f := Control.focus 1 1 f.
 
+Ltac2 Notation "either" f(constr) g(constr) :=
+  Control.plus (fun () => f) (fun _ex => g).
+
 (** Applying a particular tactic by looping over the digit characters. *)
 Ltac2 rec char_loop f cs :=
   match cs with
@@ -477,19 +480,64 @@ Proof.
       * reflexivity.
 Qed.
 
-Lemma string_of_int_digits :
-  forall n,
-  generates (star digit) (DecimalString.NilEmpty.string_of_int n).
+Ltac2 decimal_digit () :=
+  rewrite <- append_char_l;
+  apply gen_star_r;
+  Control.enter (fun () => orelse construct_digit (fun _ex => assumption)).
+
+Lemma string_of_int_some_digits :
+  forall n, (0 <= n)%Z ->
+  generates
+    (sequence digit (star digit))
+    (DecimalString.NilEmpty.string_of_int (Z.to_int n)).
 Admitted.
+
+Lemma string_of_int_digits :
+  forall n, (0 <= n)%Z ->
+  generates (star digit) (DecimalString.NilEmpty.string_of_int (Z.to_int n)).
+Proof.
+  intros.
+  unfold DecimalString.NilEmpty.string_of_int, Z.to_int.
+  destruct n eqn: n_def.
+  - apply Grammar.unfold_star.
+    apply gen_alt_r.
+    rewrite <- append_empty_r.
+    apply gen_seq.
+    + construct_digit ().
+    + apply gen_star_l.
+  - induction (Pos.to_uint p); simpl.
+    apply gen_star_l.
+    all: decimal_digit ().
+  - destruct H.
+    reflexivity.
+Qed.
 
 Lemma string_of_int_length_2 :
   forall n, (0 <= n <= 99)%Z ->
   length (DecimalString.NilEmpty.string_of_int (Z.to_int n)) <= 2.
+Proof.
+  intros.
+  destruct H.
+  unfold Z.to_int.
+  destruct n eqn: n_def.
+  - auto.
+  - admit.
+  - destruct H.
+    reflexivity.
 Admitted.
 
 Lemma string_of_int_length_4 :
   forall n, (0 <= n <= 9999)%Z ->
   length (DecimalString.NilEmpty.string_of_int (Z.to_int n)) <= 4.
+Proof.
+  intros.
+  destruct H.
+  unfold Z.to_int.
+  destruct n eqn: n_def.
+  - auto.
+  - admit.
+  - destruct H.
+    reflexivity.
 Admitted.
 
 Lemma Z_to_string_2_digits :
@@ -504,11 +552,18 @@ Proof.
   now apply string_of_int_length_4.
 Qed.
 
+Lemma Z_to_string_some_digits :
+  forall n, (0 <= n)%Z ->
+  generates (sequence digit (star digit)) (Z_to_string n).
+Proof.
+  now apply string_of_int_some_digits.
+Qed.
+
 Lemma Z_to_string_digits :
-  forall n, generates (star digit) (Z_to_string n).
+  forall n, (0 <= n)%Z -> generates (star digit) (Z_to_string n).
 Proof.
   intros.
-  apply string_of_int_digits.
+  now apply string_of_int_digits.
 Qed.
 
 Lemma RepeatString_digits :
@@ -521,6 +576,20 @@ Proof.
     apply gen_star_r.
     + construct_digit ().
     + assumption.
+Qed.
+
+Lemma RepeatString_some_digits :
+  forall n, 0 < n ->
+  generates (sequence digit (star digit)) (RepeatString "0" n).
+Proof.
+  intros.
+  destruct n.
+  - auto with *.
+  - simpl.
+    rewrite <- append_char_l.
+    apply gen_seq.
+    + construct_digit ().
+    + apply RepeatString_digits.
 Qed.
 
 Lemma length_nonnegative_z : forall s, (0 <= Z.of_nat (length s))%Z.
@@ -536,10 +605,14 @@ Proof.
   assert (z4 : 4%Z = Z.of_nat 4). { ltac1:(easy). }
   intros.
   unfold ToZeroPaddedDecimalString, StringPad.
+  destruct ("0" =? EmptyString) eqn: h'. {
+    rewrite eqb_eq in h'.
+    discriminate.
+  }
   destruct (4 <=? Z.of_nat (length (Z_to_string n)))%Z eqn: n_len.
   - unfold Z_to_string.
     apply ntimes_digits.
-    + apply string_of_int_digits.
+    + now apply string_of_int_digits.
     + rewrite Z.leb_le in n_len.
       rewrite z4 in n_len.
       rewrite <- Nat2Z.inj_le in n_len.
@@ -548,16 +621,10 @@ Proof.
         assumption.
       * assumption.
   - apply ntimes_digits.
-    + destruct ("0" =? "") eqn: h'.
-      rewrite eqb_eq in h'.
-      discriminate.
-      apply Grammar.star_append.
+    + apply Grammar.star_append.
       * apply RepeatString_digits.
-      * apply Z_to_string_digits.
-    + destruct ("0" =? "") eqn: h'.
-      rewrite eqb_eq in h'.
-      discriminate.
-      rewrite append_length.
+      * now apply Z_to_string_digits.
+    + rewrite append_length.
       rewrite RepeatString_length.
       * rewrite z4.
         rewrite Z2Nat.inj_sub.
@@ -585,10 +652,14 @@ Proof.
   assert (z2 : 2%Z = Z.of_nat 2). { ltac1:(easy). }
   intros.
   unfold ToZeroPaddedDecimalString, StringPad.
+  destruct ("0" =? EmptyString) eqn: h'. {
+    rewrite eqb_eq in h'.
+    discriminate.
+  }
   destruct (2 <=? Z.of_nat (length (Z_to_string n)))%Z eqn: n_len.
   - unfold Z_to_string.
     apply ntimes_digits.
-    + apply string_of_int_digits.
+    + now apply string_of_int_digits.
     + rewrite Z.leb_le in n_len.
       rewrite z2 in n_len.
       rewrite <- Nat2Z.inj_le in n_len.
@@ -597,16 +668,10 @@ Proof.
         assumption.
       * assumption.
   - apply ntimes_digits.
-    + destruct ("0" =? "") eqn: h'.
-      rewrite eqb_eq in h'.
-      discriminate.
-      apply Grammar.star_append.
+    + apply Grammar.star_append.
       * apply RepeatString_digits.
-      * apply Z_to_string_digits.
-    + destruct ("0" =? "") eqn: h'.
-      rewrite eqb_eq in h'.
-      discriminate.
-      rewrite append_length.
+      * now apply Z_to_string_digits.
+    + rewrite append_length.
       rewrite RepeatString_length.
       * rewrite z2.
         rewrite Z2Nat.inj_sub.
@@ -623,3 +688,18 @@ Proof.
         apply length_nonnegative_z.
       * apply Nat.lt_0_1.
 Qed.
+
+Lemma ToZeroPaddedDecimalString_gt_0_digits :
+  forall n m nv mv, (0 < m)%Z ->
+  generates (sequence digit (star digit)) (ToZeroPaddedDecimalString n m nv mv).
+Proof.
+  intros.
+  unfold ToZeroPaddedDecimalString, StringPad.
+  destruct ("0" =? EmptyString) eqn: h'. {
+    rewrite eqb_eq in h'.
+    discriminate.
+  }
+  destruct (m <=? Z.of_nat (length (Z_to_string n)))%Z.
+  - now apply Z_to_string_some_digits.
+  - admit.
+Admitted.
