@@ -46,7 +46,7 @@ Definition FormatOffsetTimeZoneIdentifier_obligation_1_copy (offsetMinutes : Z) 
   let hour := absoluteMinutes / 60 in let minute := absoluteMinutes mod 60 in
   0 <= hour <= 23.
 
-Theorem hour_in_FormatOffsetTimeZoneIdentifier_outside_bounds_of_FormatTimeString :
+Theorem FormatOffsetTimeZoneIdentifier_hour_outside_bounds_of_FormatTimeString :
   exists (offsetMinutes : Z) (style : option Style),
   ~ FormatOffsetTimeZoneIdentifier_obligation_1_copy offsetMinutes style.
 Proof.

@@ -77,7 +77,7 @@ Definition FormatUTCOffsetNanoseconds_obligation_1_copy (offsetNanoseconds : Z) 
   let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION else NormalPrecision AUTO in
   0 <= hour <= 23.
 
-Theorem hour_in_FormatUTCOffsetNanoseconds_outside_bounds_of_FormatTimeString :
+Theorem FormatUTCOffsetNanoseconds_hour_outside_bounds_of_FormatTimeString :
   exists (offsetNanoseconds : Z),
   ~ FormatUTCOffsetNanoseconds_obligation_1_copy offsetNanoseconds.
 Proof.
