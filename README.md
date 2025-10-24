@@ -1,5 +1,6 @@
 # Temporal Mechanization
-Our mission is to prove the correctness of a selection of the functions in the ECMAScript Temporal Proposal.
+Our mission is to prove the correctness of a selection of the functions in the ECMAScript [Temporal Proposal](https://tc39.es/proposal-temporal/).
+Note: [Based on our findings](https://github.com/tc39/proposal-temporal/pull/3167), the specification text of the proposal will be updated in the nearest future. Our mechanization is based on a previous version of the specification (the most recent snapshot of which was available on October 16th, 2025).
 
 ## Developers
 - **Aria Bjørnbakken Eide**
