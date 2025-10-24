@@ -116,6 +116,18 @@ Proof.
     now inversion H.
 Qed.
 
+Lemma length_empty : forall s, length s = 0 <-> s = EmptyString.
+Proof.
+  split.
+  - intros.
+    destruct s.
+    + reflexivity.
+    + discriminate.
+  - intros.
+    rewrite H.
+    reflexivity.
+Qed.
+
 Lemma length_nonempty : forall s, s <> EmptyString -> 0 < length s.
 Proof.
   intros.

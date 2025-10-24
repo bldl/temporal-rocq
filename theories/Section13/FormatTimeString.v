@@ -3,10 +3,12 @@ From Stdlib Require Import
   Strings.String.
 From Temporal Require Import
   Basic
+  Grammar
   StringUtil
   Section13.FormatFractionalSeconds
   Section13.PrecisionPrime
   Section13.Style.
+From Temporal Require RFC3339.
 Open Scope Z.
 
 (* 13.26 FormatTimeString *)
@@ -36,3 +38,34 @@ Definition FormatTimeString (hour minute second subSecondNanoseconds : Z) (preci
   (*>> 7. Return the string-concatenation of hh, separator, mm, separator, ss, and subSecondsPart. <<*)
   hh ++ separator ++ mm ++ separator ++ ss ++ subSecondsPart
   end.
+
+Lemma FormatTimeString_rfc3339 :
+  forall h min s ns precision h0 h1 h2 h3,
+  generates RFC3339.full_time (FormatTimeString h min s ns (NormalPrecision precision) None h0 h1 h2 h3).
+Proof.
+  intros.
+  unfold FormatTimeString.
+  repeat (rewrite <- append_assoc).
+  apply gen_seq.
+  - repeat (rewrite append_assoc).
+    repeat (apply gen_seq).
+    + apply ToZeroPaddedDecimalString_2_digits.
+      destruct h0.
+      split.
+      * assumption.
+      * now (apply Z.le_trans with (m := 23); try assumption).
+    + constructor.
+    + apply ToZeroPaddedDecimalString_2_digits.
+      destruct h1.
+      split.
+      * assumption.
+      * now (apply Z.le_trans with (m := 59); try assumption).
+    + constructor.
+    + rewrite <- append_empty_r.
+      apply gen_seq.
+      * apply ToZeroPaddedDecimalString_2_digits.
+        auto with *.
+      * rewrite <- append_empty_r.
+        apply gen_seq; try apply gen_alt_l; constructor.
+  - admit.
+Admitted.
