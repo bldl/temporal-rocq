@@ -34,7 +34,7 @@ Definition TimeDurationFromComponents_obligation_1_copy (hours minutes seconds m
   let nanoseconds' := nanoseconds + microseconds * 1000 in
   Z.abs nanoseconds' <= MaxTimeDuration.
 
-Theorem nanoseconds'_in_TimeDurationFromComponents_outside_bounds_of_MaxTimeDuration :
+Theorem TimeDurationFromComponents_nanoseconds'_outside_bounds_of_MaxTimeDuration :
   exists (hours minutes seconds milliseconds microseconds nanoseconds : Z),
   ~ TimeDurationFromComponents_obligation_1_copy hours minutes seconds milliseconds microseconds nanoseconds.
 Proof.

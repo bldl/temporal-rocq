@@ -1,10 +1,13 @@
-# INF319 Temporal Mechanisation
-Our mission is to prove the correctness of a selection of the functions in the Ecmascript Temporal Proposal.
+# Temporal Mechanization
+Our mission is to prove the correctness of a selection of the functions in the ECMAScript [Temporal Proposal](https://tc39.es/proposal-temporal/).
+Note: [Based on our findings](https://github.com/tc39/proposal-temporal/pull/3167), the specification text of the proposal will be updated in the nearest future. Our mechanization is based on a previous version of the specification (the most recent snapshot of which was available on October 16th, 2025).
 
 ## Developers
-- Aria Bjørnbakken Eide
-- Vebjørn Søreide Øiestad
+- **Aria Bjørnbakken Eide**
+- **Vebjørn Søreide Øiestad**
 
+## Supervisor
+- **Mikhail Barash**
 
 ## Creating Makefile and Building Project
 ```
@@ -80,12 +83,14 @@ $ ./build.sh
 * [13.27 GetUnsignedRoundingMode](theories/Section13/GetUnsignedRoundingMode.v)
 
 ## Inconsistencies
-* [3.5.1 ISO Date Records](theories/Section3/ISODateRecord.v) (Implied consistent, but not explicit)
-* [4.5.10 BalanceTime](theories/Section4/BalanceTime.v)
-* [7.5.21 TimeDurationFromComponents](theories/Section7/TimeDurationFromComponents.v)
-* [7.5.26 TimeDurationFromEpochNanosecondsDifference](theories/Section7/TimeDurationFromEpochNanosecondsDifference.v)
-* [11.1.5 FormatOffsetTimeZoneIdentifier](theories/Section11/FormatOffsetTimeZoneIdentifier.v)
-* [11.1.6 FormatUTCOffsetNanoseconds](theories/Section11/FormatUTCOffsetNanoseconds.v)
+* [3.5.1 ISODateRecord_IsValidISODate_not_guaranteed](theories/Section3/ISODateRecord.v)
+* [4.5.10 BalanceTime_creates_invalid_TimeRecord](theories/Section4/BalanceTime.v)
+* [11.1.5 FormatOffsetTimeZoneIdentifier_hour_outside_bounds_of_FormatTimeString](theories/Section11/FormatOffsetTimeZoneIdentifier.v)
+* [11.1.6 FormatUTCOffsetNanoseconds_hour_outside_bounds_of_FormatTimeString](theories/Section11/FormatUTCOffsetNanoseconds.v)
+
+## Other Findings
+* [7.5.21 TimeDurationFromComponents_nanoseconds'_outside_bounds_of_MaxTimeDuration](theories/Section7/TimeDurationFromComponents.v)
+* [7.5.26 TimeDurationFromEpochNanosecondsDifference_result_outside_bounds_of_MaxTimeDuration](theories/Section7/TimeDurationFromEpochNanosecondsDifference.v)
 
 ## Notes
 * [5.5.3 CombineISODateAndTimeRecord](theories/Section5/Notes/CombineISODateAndTime.v)
