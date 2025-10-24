@@ -2,6 +2,7 @@ From Stdlib Require Import
   ZArith
   Strings.String.
 From Temporal Require Import
+  Basic
   StringUtil
   Section13.FormatFractionalSeconds
   Section13.PrecisionPrime

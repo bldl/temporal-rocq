@@ -47,7 +47,6 @@ Next Obligation. Proof. apply ISODaysInMonth_at_least_1. Qed.
 Next Obligation. Proof. apply clamp_between_lower_and_upper. Qed.
 
 Next Obligation.
-Proof.
   split.
   - apply clamp_between_lower_and_upper.
   - apply clamp_upper_le.
@@ -55,27 +54,23 @@ Proof.
 Qed.
 
 Next Obligation.
-Proof.
   refine (IsValidISODate_month_day_range year _ _ _ _).
   apply clamp_between_lower_and_upper.
 Qed.
 
 Next Obligation.
-Proof.
   destruct overflow.
   - contradiction.
   - reflexivity.
 Qed.
 
 Next Obligation.
-Proof.
   symmetry in Heq_anonymous.
   destruct (IsValidISODate_true year month day Heq_anonymous).
   assumption.
 Qed.
 
 Next Obligation.
-Proof.
   symmetry in Heq_anonymous.
   destruct (IsValidISODate_true year month day Heq_anonymous).
   destruct H.

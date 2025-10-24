@@ -47,7 +47,12 @@ Proof.
 Qed.
 
 Theorem CompareTimeRecord_eq_zero : forall time, CompareTimeRecord time time = 0.
-Admitted.
+Proof.
+  intros.
+  unfold CompareTimeRecord.
+  repeat (rewrite Z.gtb_ltb, Z.ltb_irrefl).
+  reflexivity.
+Qed.
 
 Theorem CompareTimeRecord_eq_implies_eq_zero :
   forall (d1 d2 h1 h2 m1 m2 s1 s2 ms1 ms2 us1 us2 ns1 ns2 : Z),

@@ -77,7 +77,7 @@ Proof.
   intros.
   unfold DateDurationSign.
   simpl.
-  rewrite <-Z.ltb_lt in H.
+  rewrite <- Z.ltb_lt in H.
   rewrite H.
   reflexivity.
 Qed.

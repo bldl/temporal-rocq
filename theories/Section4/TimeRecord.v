@@ -33,7 +33,7 @@ Record TimeRecord :=
     nanosecond_valid : 0 <= nanosecond <= 999;
   }.
 
-Theorem TimeRecord_IsValidTime :
+Lemma TimeRecord_IsValidTime :
   forall (t : TimeRecord),
   IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
 Proof.

@@ -15,7 +15,7 @@ Ltac2 Notation lia := lia0 ().
      month (an integer in the inclusive interval from 1 to 12) and returns a
      positive integer. <<*)
 Definition ISODaysInMonth (year month : Z) (h : 1 <= month <= 12) : Z.
-  ltac1:(refine (
+  refine open_constr:(
     match month as m return (month = m -> Z) with
     (*>> 1. If month is 1, 3, 5, 7, 8, 10, or 12, return 31. <<*)
     | 1 | 3 | 5 | 7 | 8 | 10 | 12 => fun _ => 31
@@ -27,7 +27,7 @@ Definition ISODaysInMonth (year month : Z) (h : 1 <= month <= 12) : Z.
         (*>> 4. Return 28 + MathematicalInLeapYear(EpochTimeForYear(year)). <<*)
         28 + MathematicalInLeapYear (EpochTimeForYear year)
     end eq_refl
-  )).
+  ).
 
   (* Proof of the assert *)
   all: lia.

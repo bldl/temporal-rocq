@@ -33,7 +33,6 @@ Program Definition CreateTimeRecord (hour minute second millisecond microsecond 
   mkTimeRecord deltaDays' _ hour hour_valid minute minute_valid second second_valid millisecond millisecond_valid microsecond microsecond_valid nanosecond nanosecond_valid.
 
 Next Obligation.
-Proof.
   unfold IsValidTime.
   destruct_with_eqn ((hour <? 0) || (hour >? 23)); try lia.
   destruct_with_eqn ((minute <? 0) || (minute >? 59)); try lia.
@@ -44,7 +43,6 @@ Proof.
 Qed.
 
 Next Obligation.
-Proof.
   destruct deltaDays.
   unfold DeltaDaysValid in days_valid.
   assumption.

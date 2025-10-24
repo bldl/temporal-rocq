@@ -92,7 +92,7 @@ Proof.
       * easy.
 Qed.
 
-Theorem EpochTimeForYear_monotonic :
+Lemma EpochTimeForYear_monotonic :
     forall y0 y1,
     y0 < y1 -> EpochTimeForYear y0 < EpochTimeForYear y1.
 Proof.
@@ -113,14 +113,12 @@ Program Fixpoint FindYearForwards (t y : Z) (h : EpochTimeForYear y < t)
   end.
 
 Next Obligation.
-Proof.
   rewrite <- Z.compare_lt_iff.
   symmetry.
   exact Heq_anonymous.
 Qed.
 
 Next Obligation.
-Proof.
   rewrite <- Z2Nat.inj_lt.
 
   (* t - EpochTimeForYear (y + 1) < t - EpochTimeForYear y *)
@@ -151,14 +149,12 @@ Program Fixpoint FindYearBackwards (t y : Z) (h : t < EpochTimeForYear y)
   end.
 
 Next Obligation.
-Proof.
   rewrite <- Z.compare_lt_iff.
   symmetry.
   exact Heq_anonymous.
 Qed.
 
 Next Obligation.
-Proof.
   rewrite <- Z2Nat.inj_lt.
 
   (* EpochTimeForYear (y - 1) - t < EpochTimeForYear y - t *)
@@ -189,14 +185,12 @@ Program Definition EpochTimeToEpochYear (t : Z) : Z :=
   end.
 
 Next Obligation.
-Proof.
   apply Z.gt_lt.
   symmetry.
   exact Heq_anonymous.
 Qed.
 
 Next Obligation.
-Proof.
   symmetry.
   exact Heq_anonymous.
 Qed.

@@ -158,3 +158,5 @@ Proof.
   easy.
   easy.
 Qed.
+
+Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.

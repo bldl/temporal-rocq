@@ -28,6 +28,7 @@ Proof.
   rewrite CompareISODate_eq_zero.
   apply CompareTimeRecord_ignores_days.
 Qed.
+
 Theorem ISODateTimeToString_holds :
   With (fun i0 i1 => ISODateTimeToString i0 = ISODateTimeToString i1).
 Proof.
