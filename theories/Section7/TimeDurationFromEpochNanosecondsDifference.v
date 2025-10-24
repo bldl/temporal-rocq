@@ -21,7 +21,7 @@ Next Obligation. Admitted.
 Definition TimeDurationFromEpochNanosecondsDifference_obligation_1_copy (one two : Z) :=
 let result := one - two in Z.abs result <= MaxTimeDuration.
 
-Theorem result_in_TimeDurationFromEpochNanosecondsDifference_outside_bounds_of_MaxTimeDuration :
+Theorem TimeDurationFromEpochNanosecondsDifference_result_outside_bounds_of_MaxTimeDuration :
   exists (one two : Z),
   ~ TimeDurationFromEpochNanosecondsDifference_obligation_1_copy one two.
 Proof.
