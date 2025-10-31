@@ -160,3 +160,33 @@ Proof.
 Qed.
 
 Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.
+
+Lemma div_small_pred : forall a b, 0 <= a <= Z.pred b -> a / b = 0.
+Proof.
+  intros.
+  rewrite Z.div_small.
+  - reflexivity.
+  - rewrite <- Z.succ_pred with (n := b).
+    rewrite Z.lt_succ_r.
+    assumption.
+Qed.
+
+Lemma mod_small_pred : forall a b, 0 <= a <= Z.pred b -> a mod b = a.
+Proof.
+  intros.
+  rewrite Z.mod_small.
+  - reflexivity.
+  - rewrite <- Z.succ_pred with (n := b).
+    rewrite Z.lt_succ_r.
+    assumption.
+Qed.
+
+Lemma add_div_small :
+  forall n a b,
+  0 <= a <= Z.pred b -> n + (a / b) = n.
+Proof.
+  intros.
+  rewrite div_small_pred.
+  - apply Z.add_0_r.
+  - assumption.
+Qed.

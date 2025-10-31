@@ -1,5 +1,6 @@
 From Stdlib Require Import ZArith.
 From Temporal Require Import
+  Basic
   Section4.BalanceTime
   Section4.TimeRecord
   Section7.MaxTimeDuration.
@@ -18,10 +19,44 @@ Qed.
 Theorem AddTime_adding_zero_no_change :
   forall time,
   let time' := AddTime time 0 zero_timeDuration_valid in
-     days time = days time' 
+     days time' = 0
   /\ minute time = minute time'
   /\ second time = second time'
   /\ millisecond time = millisecond time'
   /\ microsecond time = microsecond time'
   /\ nanosecond time = nanosecond time'.
-Admitted.
+Proof.
+  intros.
+  repeat split.
+  - simpl.
+    rewrite add_div_small with (a := microsecond time).
+    rewrite add_div_small with (a := millisecond time).
+    rewrite add_div_small with (a := second time).
+    rewrite add_div_small with (a := minute time).
+    rewrite div_small_pred.
+    all: now destruct time.
+  - simpl.
+    rewrite add_div_small with (a := microsecond time).
+    rewrite add_div_small with (a := millisecond time).
+    rewrite add_div_small with (a := second time).
+    rewrite mod_small_pred.
+    all: now destruct time.
+  - simpl.
+    rewrite add_div_small with (a := microsecond time).
+    rewrite add_div_small with (a := millisecond time).
+    rewrite mod_small_pred.
+    all: now destruct time.
+  - simpl.
+    rewrite add_div_small with (a := microsecond time).
+    rewrite mod_small_pred.
+    all: now destruct time.
+  - simpl.
+    rewrite Z.add_0_r.
+    rewrite add_div_small with (a := nanosecond time).
+    rewrite mod_small_pred.
+    all: now destruct time.
+  - simpl.
+    rewrite Z.add_0_r.
+    rewrite mod_small_pred.
+    all: now destruct time.
+Qed.

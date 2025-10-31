@@ -104,9 +104,9 @@ $ ./build.sh
 * [CompareISODate_eq_zero](theories/Section3/CompareISODate.v)
 * [CompareISODate_eq_implies_eq_zero](theories/Section3/CompareISODate.v)
 * [CompareTimeRecord_eq_zero](theories/Section4/CompareTimeRecord.v)
+* [AddTime_adding_zero_no_change](theories/Section4/AddTime.v)
 
 ### Unproven
 * [TemporalDateToString_without_calendar_satisfies_rfc3339](theories/Section3/TemporalDateToString.v)
 * [ISODateTimeToString_without_calendar_satisfies_rfc3339](theories/Section5/ISODateTimeToString.v)
-* [AddTime_adding_zero_no_change](theories/Section4/AddTime.v)
 * [CompareTimeRecord_eq_implies_eq_zero](theories/Section4/CompareTimeRecord.v)
