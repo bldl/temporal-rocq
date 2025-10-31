@@ -43,7 +43,59 @@ Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
 Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
 Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
 
+Lemma month_rfc3339 :
+  forall isoDate h,
+  generates RFC3339.date_month (ToZeroPaddedDecimalString (month isoDate) 2 h zero_le_two).
+Proof.
+  intros.
+  apply ToZeroPaddedDecimalString_2_digits.
+  split.
+  - assumption.
+  - destruct (month_valid isoDate).
+    apply Z.le_trans with (m := 12).
+    + assumption.
+    + easy.
+Qed.
+
+Lemma mday_rfc3339 :
+  forall isoDate h,
+  generates RFC3339.date_mday (ToZeroPaddedDecimalString (day isoDate) 2 h zero_le_two).
+Proof.
+  intros.
+  apply ToZeroPaddedDecimalString_2_digits.
+  split.
+  - assumption.
+  - destruct (day_valid isoDate).
+    apply Z.le_trans with (m := 31).
+    + assumption.
+    + easy.
+Qed.
+
 Theorem ISODateTimeToString_without_calendar_satisfies_rfc3339 :
-  forall isoDateTime calendar precision',
-  generates RFC3339.date_time (ISODateTimeToString isoDateTime calendar precision' SC_NEVER).
-Admitted.
+  forall isoDateTime calendar precision,
+  0 <= year (ISODate isoDateTime) <= 9999 ->
+  generates RFC3339.date_time_without_offset (ISODateTimeToString isoDateTime calendar (NormalPrecision precision) SC_NEVER).
+Proof.
+  intros.
+  unfold ISODateTimeToString.
+  rewrite <- append_assoc.
+  rewrite <- append_assoc.
+  rewrite <- append_assoc.
+  rewrite <- append_assoc.
+  apply gen_seq.
+  - repeat (rewrite append_assoc).
+    repeat (try apply gen_seq).
+    + apply PadISOYear_satisfies_rfc3339.
+      assumption.
+    + constructor.
+    + apply month_rfc3339.
+    + constructor.
+    + refine (Grammar.equiv_elim _ (Grammar.sequence_empty_r _)).
+      apply mday_rfc3339.
+  - apply gen_seq.
+    + apply gen_alt_l.
+      constructor.
+    + apply gen_seq.
+      * apply FormatTimeString_rfc3339.
+      * apply FormatCalendarAnnotation_never.
+Qed.

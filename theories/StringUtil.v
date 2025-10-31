@@ -80,6 +80,12 @@ Proof.
     reflexivity.
 Qed.
 
+Lemma append_char_l : forall a s0, String a EmptyString ++ s0 = String a s0.
+Proof.
+  intros.
+  reflexivity.
+Qed.
+
 Lemma length_char_eq :
   forall a a', length (String a EmptyString) = length (String a' EmptyString).
 Proof.
@@ -114,6 +120,18 @@ Proof.
   - intros.
     rewrite length_prepend_char, length_prepend_char in H.
     now inversion H.
+Qed.
+
+Lemma length_empty : forall s, length s = 0 <-> s = EmptyString.
+Proof.
+  split.
+  - intros.
+    destruct s.
+    + reflexivity.
+    + discriminate.
+  - intros.
+    rewrite H.
+    reflexivity.
 Qed.
 
 Lemma length_nonempty : forall s, s <> EmptyString -> 0 < length s.

@@ -1,5 +1,6 @@
 From Stdlib Require Import Strings.String.
 From Temporal Require Import
+  Grammar
   Section12.CalendarType
   Section12.ShowCalendar.
 Open Scope string_scope.
@@ -23,3 +24,10 @@ Definition FormatCalendarAnnotation (id' : CalendarType) (showCalendar : ShowCal
     end in
     "[" ++ flag ++ "u-ca=" ++ idStringValue ++ "]"
   end.
+
+Lemma FormatCalendarAnnotation_never :
+  forall id', generates empty (FormatCalendarAnnotation id' SC_NEVER).
+Proof.
+  intros.
+  constructor.
+Qed.
