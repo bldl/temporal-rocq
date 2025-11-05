@@ -63,4 +63,12 @@ Theorem CompareTimeRecord_eq_implies_eq_zero :
   (ms2_valid : 0 <= ms2 <= 999) (us2_valid : 0 <= us2 <= 999) (ns2_valid : 0 <= ns2 <= 999),
   CompareTimeRecord (mkTimeRecord d1 d1_valid h1 h1_valid m1 m1_valid s1 s1_valid ms1 ms1_valid us1 us1_valid ns1 ns1_valid)
                     (mkTimeRecord d2 d2_valid h2 h2_valid m2 m2_valid s2 s2_valid ms2 ms2_valid us2 us2_valid ns2 ns2_valid) = 0.
-Admitted.
+Proof.
+  intros.
+  unfold CompareTimeRecord.
+  simpl.
+  destruct H.
+  repeat (destruct H; destruct H0).
+  repeat (rewrite Z.gtb_ltb, Z.ltb_irrefl).
+  reflexivity.
+Qed.
