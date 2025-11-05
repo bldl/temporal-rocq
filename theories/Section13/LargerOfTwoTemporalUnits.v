@@ -1,4 +1,6 @@
-From Stdlib Require Import List.
+From Stdlib Require Import
+  List
+  Lia.
 From Temporal Require Import
   Basic
   Section13.TemporalUnit
@@ -7,25 +9,13 @@ From Temporal Require Import
 Lemma TemporalUnitEqb_neq : forall (u1 u2 : TemporalUnit), TemporalUnitEqb u1 u2 = false -> u1 <> u2.
 Proof.
   intros.
-  destruct u1.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
-  destruct u2. all: try easy.
+  destruct u1; destruct u2; easy.
 Qed.
 
 Lemma TemporalUnitEqb_sym : forall (u1 u2 : TemporalUnit), TemporalUnitEqb u1 u2 = TemporalUnitEqb u2 u1.
 Proof.
   intros.
-  destruct u1.
-  destruct u2.
-  all: easy.
+  destruct u1; destruct u2; easy.
 Qed.
 
 Definition TemporalUnits : list TemporalUnit := YEAR :: MONTH :: WEEK :: DAY :: HOUR :: MINUTE :: SECOND :: MILLISECOND :: MICROSECOND :: NANOSECOND :: nil.
@@ -75,28 +65,9 @@ Program Definition LargerOfTwoTemporalUnits (u1 u2 : TemporalUnit) : TemporalUni
 
 Next Obligation.
   destruct u1.
-  left.  easy.
-  right. left.  easy.
-  right. right. left.  easy.
-  right. right. right. left.  easy.
-  right. right. right. right. left.  easy.
-  right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. right. right. right. left. easy.
+  all: repeat (try (left; easy); right).
 Qed.
-
 Next Obligation.
   destruct u2.
-  left.  easy.
-  right. left.  easy.
-  right. right. left.  easy.
-  right. right. right. left.  easy.
-  right. right. right. right. left.  easy.
-  right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. right. right. left.  easy.
-  right. right. right. right. right. right. right. right. right. left. easy.
+  all: repeat (try (left; easy); right).
 Qed.

@@ -51,9 +51,13 @@ Next Obligation. apply clamp_between_lower_and_upper. Qed.
 Next Obligation. destruct overflow. easy. easy. Qed.
 Next Obligation.
   unfold IsValidTime in Heq_anonymous.
+  destruct ((hour <? 0) || (hour >? 23)) eqn:H in Heq_anonymous; lia.
+Qed.
+Next Obligation.
+  unfold IsValidTime in Heq_anonymous.
   destruct ((hour <? 0) || (hour >? 23)) eqn:H in Heq_anonymous.
   easy.
-  lia.
+  destruct ((minute <? 0) || (minute >? 59)) eqn:H1 in Heq_anonymous; lia.
 Qed.
 Next Obligation.
   unfold IsValidTime in Heq_anonymous.
@@ -61,7 +65,7 @@ Next Obligation.
   easy.
   destruct ((minute <? 0) || (minute >? 59)) eqn:H1 in Heq_anonymous.
   easy.
-  lia.
+  destruct ((second <? 0) || (second >? 59)) eqn:H2 in Heq_anonymous; lia.
 Qed.
 Next Obligation.
   unfold IsValidTime in Heq_anonymous.
@@ -71,19 +75,7 @@ Next Obligation.
   easy.
   destruct ((second <? 0) || (second >? 59)) eqn:H2 in Heq_anonymous.
   easy.
-  lia.
-Qed.
-Next Obligation.
-  unfold IsValidTime in Heq_anonymous.
-  destruct ((hour <? 0) || (hour >? 23)) eqn:H in Heq_anonymous.
-  easy.
-  destruct ((minute <? 0) || (minute >? 59)) eqn:H1 in Heq_anonymous.
-  easy.
-  destruct ((second <? 0) || (second >? 59)) eqn:H2 in Heq_anonymous.
-  easy.
-  destruct ((millisecond <? 0) || (millisecond >? 999)) eqn:H3 in Heq_anonymous.
-  easy.
-  lia.
+  destruct ((millisecond <? 0) || (millisecond >? 999)) eqn:H3 in Heq_anonymous; lia.
 Qed.
 Next Obligation.
   unfold IsValidTime in Heq_anonymous.
@@ -95,9 +87,7 @@ Next Obligation.
   easy.
   destruct ((millisecond <? 0) || (millisecond >? 999)) eqn:H3 in Heq_anonymous.
   easy.
-  destruct ((microsecond <? 0) || (microsecond >? 999)) eqn:H4 in Heq_anonymous.
-  easy.
-  lia.
+  destruct ((microsecond <? 0) || (microsecond >? 999)) eqn:H4 in Heq_anonymous; lia.
 Qed.
 Next Obligation.
   unfold IsValidTime in Heq_anonymous.
@@ -111,7 +101,5 @@ Next Obligation.
   easy.
   destruct ((microsecond <? 0) || (microsecond >? 999)) eqn:H4 in Heq_anonymous.
   easy.
-  destruct ((nanosecond <? 0) || (nanosecond >? 999)) eqn:H5 in Heq_anonymous.
-  easy.
-  lia.
+  destruct ((nanosecond <? 0) || (nanosecond >? 999)) eqn:H5 in Heq_anonymous; lia.
 Qed.

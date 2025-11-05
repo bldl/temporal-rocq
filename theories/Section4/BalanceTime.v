@@ -87,13 +87,7 @@ Theorem BalanceTime_IsValidTime :
 Proof.
   intros.
   unfold IsValidTime.
-  apply mod_if_range. { easy. }
-  apply mod_if_range. { easy. }
-  apply mod_if_range. { easy. }
-  apply mod_if_range. { easy. }
-  apply mod_if_range. { easy. }
-  apply mod_if_range. { easy. }
-  reflexivity.
+  repeat (apply mod_if_range; try easy).
 Qed.
 
 Theorem BalanceTime_days_valid_when_nonnegative_inputs :
@@ -103,9 +97,7 @@ Theorem BalanceTime_days_valid_when_nonnegative_inputs :
 Proof.
   intros.
   unfold BalanceTime.
-  simpl.
-  repeat (apply Z.div_pos; try (apply Z.add_nonneg_nonneg); try assumption);
-  easy.
+  repeat (apply Z.div_pos; try (apply Z.add_nonneg_nonneg); try assumption); easy.
 Qed.
 
 (* Proofs that BalanceTime is missing a precondition *)
@@ -113,6 +105,5 @@ Theorem BalanceTime_creates_invalid_TimeRecord : exists hour, days (BalanceTime 
 Proof.
   exists (-42).
   unfold BalanceTime.
-  simpl.
   easy.
 Qed.

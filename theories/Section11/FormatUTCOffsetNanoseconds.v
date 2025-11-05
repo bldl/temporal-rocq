@@ -38,7 +38,6 @@ Next Obligation.
   apply Z.mod_pos_bound.
   easy.
   apply Zlt_succ_le.
-  simpl.
   apply Z.mod_pos_bound.
   easy.
 Qed.
@@ -48,7 +47,6 @@ Next Obligation.
   apply Z.mod_pos_bound.
   easy.
   apply Zlt_succ_le.
-  simpl.
   apply Z.mod_pos_bound.
   easy.
 Qed.
@@ -58,7 +56,6 @@ Next Obligation.
   apply Z.mod_pos_bound.
   easy.
   apply Zlt_succ_le.
-  simpl.
   apply Z.mod_pos_bound.
   easy.
 Qed.
@@ -83,6 +80,5 @@ Theorem FormatUTCOffsetNanoseconds_hour_outside_bounds_of_FormatTimeString :
 Proof.
   exists (3600000000000 * 30).
   unfold FormatUTCOffsetNanoseconds_obligation_1_copy.
-  simpl.
   easy.
 Qed.

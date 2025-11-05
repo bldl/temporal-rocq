@@ -28,8 +28,6 @@ Theorem ISODateRecord_IsValidISODate_not_guaranteed :
   IsValidISODate (year date) (month date) (day date) = false.
 Proof.
   eexists (mkISODateRecord 2025 2 _ 31 _).
-  easy.
   Unshelve.
-  easy.
-  easy.
+  all: easy.
 Qed.

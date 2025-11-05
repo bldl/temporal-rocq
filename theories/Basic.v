@@ -53,11 +53,7 @@ Proof.
 Qed.
 
 Lemma eq_sym_iff {A} (x y : A) : x = y <-> y = x.
-Proof.
-  split.
-  intro. symmetry. assumption.
-  intro. symmetry. assumption.
-Qed.
+Proof. split; intro; symmetry; easy. Qed.
 
 Lemma sub_swap : forall x y z, x - y - z = x - z - y.
 Proof.
@@ -144,20 +140,10 @@ Proof.
 Qed.
 
 Lemma not_B_if_A_or_B_then_A : forall (A B : Prop), ~B -> A \/ B -> A.
-Proof.
-  intros.
-  destruct H0.
-  easy.
-  easy.
-Qed.
+Proof. intros; destruct H0; easy. Qed.
 
 Lemma not_A_if_A_or_B_then_B : forall (A B : Prop), ~A -> A \/ B -> B.
-Proof.
-  intros.
-  destruct H0.
-  easy.
-  easy.
-Qed.
+Proof. intros; destruct H0; easy. Qed.
 
 Lemma zero_le_two : 0 <= 2. Proof. easy. Qed.
 

@@ -28,8 +28,4 @@ Program Definition ValidateTemporalRoundingIncrement (increment dividend : Z) (i
   (*>> 5. Return unused. <<*)
   else Normal UNUSED.
 
-Next Obligation.
-  apply not_B_if_A_or_B_then_A in relation_valid.
-  easy.
-  easy.
-Qed.
+Next Obligation. apply not_B_if_A_or_B_then_A in relation_valid; easy. Qed.

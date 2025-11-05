@@ -43,8 +43,5 @@ Next Obligation.
 Qed.
 
 Next Obligation.
-  destruct deltaDays.
-  unfold DeltaDaysValid in days_valid.
-  assumption.
-  easy.
+  destruct deltaDays; easy.
 Qed.

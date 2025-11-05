@@ -30,7 +30,6 @@ Next Obligation.
   apply Z.mod_pos_bound.
   easy.
   apply Zlt_succ_le.
-  simpl.
   apply Z.mod_pos_bound.
   easy.
 Qed.
@@ -53,6 +52,5 @@ Proof.
   exists (2000).
   exists (Some SEPARATED).
   unfold FormatOffsetTimeZoneIdentifier_obligation_1_copy.
-  simpl.
   easy.
 Qed.
