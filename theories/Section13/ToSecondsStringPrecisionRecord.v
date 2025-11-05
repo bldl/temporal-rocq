@@ -73,9 +73,18 @@ Next Obligation. easy. Qed.
 Next Obligation. easy. Qed.
 Next Obligation. easy. Qed.
 Next Obligation. destruct smallestUnit; try easy. Qed.
-Next Obligation. Admitted.
-Next Obligation. Admitted.
+Next Obligation.
+  assert (Hp : p = 1 \/ p = 2 \/ p = 3) by lia.
+  destruct Hp as [-> | [-> | ->]]; simpl; lia.
+Qed.
+Next Obligation.
+  assert (Hp : p = 4 \/ p = 5 \/ p = 6) by lia.
+  destruct Hp as [-> | [-> | ->]]; simpl; lia.
+Qed.
 Next Obligation. lia. Qed.
-Next Obligation. Admitted.
+Next Obligation.
+  assert (Hp : p = 7 \/ p = 8 \/ p = 9) by lia.
+  destruct Hp as [-> | [-> | ->]]; simpl; lia.
+Qed.
 Next Obligation. easy. Qed. 
 
