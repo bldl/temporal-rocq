@@ -1,4 +1,6 @@
-From Stdlib Require Import ZArith Lia.
+From Stdlib Require Import
+  ZArith
+  Lia.
 From Temporal Require Import
   Basic
   Section4.TimeRecord

@@ -35,6 +35,7 @@ $ ./build.sh
 * [4.5.2 CreateTimeRecord](theories/Section4/CreateTimeRecord.v)
 * [4.5.3 MidnightTimeRecord](theories/Section4/MidnightTimeRecord.v)
 * [4.5.4 NoonTimeRecord](theories/Section4/NoonTimeRecord.v)
+* [4.5.5 DifferenceTime](theories/Section4/DifferenceTime.v)
 * [4.5.9 IsValidTime](theories/Section4/IsValidTime.v)
 * [4.5.10 BalanceTime](theories/Section4/BalanceTime.v)
 * [4.5.13 TimeRecordToString](theories/Section4/TimeRecordToString.v)
@@ -58,6 +59,7 @@ $ ./build.sh
 ### Section 8
 * [8.5.1 IsValidEpochNanoseconds](theories/Section8/IsValidEpochNanoseconds.v)
 * [8.5.4 CompareEpochNanoseconds](theories/Section8/CompareEpochNanoseconds.v)
+* [8.5.5 AddInstant](/theories/Section8/AddInstant.v)
 ### Section 9
 * [9.5.1 ISO Year-Month Records](theories/Section9/ISOYearMonthRecord.v)
 * [9.5.3 ISOYearMonthWithinLimits](theories/Section9/ISOYearMonthWithinLimits.v)
