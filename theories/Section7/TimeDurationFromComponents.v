@@ -9,13 +9,13 @@ Program Definition TimeDurationFromComponents (hours minutes seconds millisecond
   (*>> 1. Set minutes to minutes + hours × 60. <<*)
   let minutes' := minutes + hours * 60 in
   (*>> 2. Set seconds to seconds + minutes × 60. <<*)
-  let seconds' := seconds + minutes * 60 in
+  let seconds' := seconds + minutes' * 60 in
   (*>> 3. Set milliseconds to milliseconds + seconds × 1000. <<*)
-  let milliseconds' := milliseconds + seconds * 1000 in
+  let milliseconds' := milliseconds + seconds' * 1000 in
   (*>> 4. Set microseconds to microseconds + milliseconds × 1000. <<*)
-  let microseconds' := microseconds + milliseconds * 1000 in
+  let microseconds' := microseconds + milliseconds' * 1000 in
   (*>> 5. Set nanoseconds to nanoseconds + microseconds × 1000. <<*)
-  let nanoseconds' := nanoseconds + microseconds * 1000 in
+  let nanoseconds' := nanoseconds + microseconds' * 1000 in
   (*>> 6. Assert: abs(nanoseconds) ≤ maxTimeDuration. <<*)
   assert Z.abs nanoseconds' <= MaxTimeDuration in
   (*>> 7. Return nanoseconds. <<*)
