@@ -38,6 +38,37 @@ Next Obligation.
 Qed.
 
 Theorem TemporalDateToString_without_calendar_satisfies_rfc3339 :
-  forall temporalDate,
+  forall temporalDate, 0 <= year (PlainDate.isoDate temporalDate) <= 9999 ->
   generates RFC3339.full_date (TemporalDateToString temporalDate SC_NEVER).
-Admitted.
+Proof.
+  intros.
+  unfold TemporalDateToString.
+  repeat (apply gen_seq).
+  - apply PadISOYear_satisfies_rfc3339.
+    assumption.
+  - constructor.
+  - apply ToZeroPaddedDecimalString_2_digits.
+    destruct temporalDate.
+    destruct isoDate.
+    destruct month_valid.
+    split.
+    + apply Z.le_trans with (m := 1).
+      easy.
+      assumption.
+    + apply Z.le_trans with (m := 12).
+      assumption.
+      easy.
+  - constructor.
+  - apply ToZeroPaddedDecimalString_2_digits.
+    destruct temporalDate.
+    destruct isoDate.
+    destruct day_valid.
+    split.
+    + apply Z.le_trans with (m := 1).
+      easy.
+      assumption.
+    + apply Z.le_trans with (m := 31).
+      assumption.
+      easy.
+  - apply FormatCalendarAnnotation_never.
+Qed.
