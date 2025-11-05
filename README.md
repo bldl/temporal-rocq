@@ -77,6 +77,7 @@ $ ./build.sh
 * [13.3 Date Equations](theories/Section13/DateEquations.v)
 * [13.8 NegateRoundingMode](theories/Section13/NegateRoundingMode.v)
 * [13.14 ValidateTemporalRoundingIncrement](theories/Section13/ValidateTemporalRoundingIncrement.v)
+* [13.16 ToSecondsStringPrecisionRecord](theories/Section13/ToSecondsStringPrecisionRecord.v)
 * [13.20 LargerOfTwoTemporalUnits](theories/Section13/LargerOfTwoTemporalUnits.v)
 * [13.21 IsCalendarUnit](theories/Section13/IsCalendarUnit.v)
 * [13.22 TemporalUnitCategory](theories/Section13/TemporalUnitCategory.v)
