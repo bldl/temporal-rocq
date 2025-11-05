@@ -36,6 +36,7 @@ $ ./build.sh
 * [4.5.3 MidnightTimeRecord](theories/Section4/MidnightTimeRecord.v)
 * [4.5.4 NoonTimeRecord](theories/Section4/NoonTimeRecord.v)
 * [4.5.5 DifferenceTime](theories/Section4/DifferenceTime.v)
+* [4.5.8 RegulateTime](theories/Section4/RegulateTime.v)
 * [4.5.9 IsValidTime](theories/Section4/IsValidTime.v)
 * [4.5.10 BalanceTime](theories/Section4/BalanceTime.v)
 * [4.5.13 TimeRecordToString](theories/Section4/TimeRecordToString.v)
