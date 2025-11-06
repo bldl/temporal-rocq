@@ -7,6 +7,8 @@ Notation "'assert' P 'in' A" := (let tt := assert P _ in A) (at level 100).
 Notation "'impossible'" := (False_rect _ _).
 Notation "a '!=?' b" := (negb (a =? b)) (at level 70).
 
+Inductive Unused := UNUSED.
+
 Inductive Exception := RangeError.
 
 Inductive Completion (result : Type) : Type :=
