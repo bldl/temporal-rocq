@@ -35,6 +35,8 @@ $ ./build.sh
 * [4.5.2 CreateTimeRecord](theories/Section4/CreateTimeRecord.v)
 * [4.5.3 MidnightTimeRecord](theories/Section4/MidnightTimeRecord.v)
 * [4.5.4 NoonTimeRecord](theories/Section4/NoonTimeRecord.v)
+* [4.5.5 DifferenceTime](theories/Section4/DifferenceTime.v)
+* [4.5.8 RegulateTime](theories/Section4/RegulateTime.v)
 * [4.5.9 IsValidTime](theories/Section4/IsValidTime.v)
 * [4.5.10 BalanceTime](theories/Section4/BalanceTime.v)
 * [4.5.13 TimeRecordToString](theories/Section4/TimeRecordToString.v)
@@ -58,6 +60,7 @@ $ ./build.sh
 ### Section 8
 * [8.5.1 IsValidEpochNanoseconds](theories/Section8/IsValidEpochNanoseconds.v)
 * [8.5.4 CompareEpochNanoseconds](theories/Section8/CompareEpochNanoseconds.v)
+* [8.5.5 AddInstant](/theories/Section8/AddInstant.v)
 ### Section 9
 * [9.5.1 ISO Year-Month Records](theories/Section9/ISOYearMonthRecord.v)
 * [9.5.3 ISOYearMonthWithinLimits](theories/Section9/ISOYearMonthWithinLimits.v)
@@ -74,6 +77,7 @@ $ ./build.sh
 * [13.3 Date Equations](theories/Section13/DateEquations.v)
 * [13.8 NegateRoundingMode](theories/Section13/NegateRoundingMode.v)
 * [13.14 ValidateTemporalRoundingIncrement](theories/Section13/ValidateTemporalRoundingIncrement.v)
+* [13.16 ToSecondsStringPrecisionRecord](theories/Section13/ToSecondsStringPrecisionRecord.v)
 * [13.20 LargerOfTwoTemporalUnits](theories/Section13/LargerOfTwoTemporalUnits.v)
 * [13.21 IsCalendarUnit](theories/Section13/IsCalendarUnit.v)
 * [13.22 TemporalUnitCategory](theories/Section13/TemporalUnitCategory.v)
