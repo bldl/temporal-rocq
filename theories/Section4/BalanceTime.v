@@ -100,10 +100,10 @@ Proof.
   repeat (apply Z.div_pos; try (apply Z.add_nonneg_nonneg); try assumption); easy.
 Qed.
 
-(* Proofs that BalanceTime is missing a precondition *)
-Theorem BalanceTime_creates_invalid_TimeRecord : exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.
+(* Proves that BalanceTime can create invalid Time Records *)
+Theorem BalanceTime_creates_invalid_TimeRecord :
+  exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.
 Proof.
   exists (-42).
-  unfold BalanceTime.
   easy.
 Qed.
