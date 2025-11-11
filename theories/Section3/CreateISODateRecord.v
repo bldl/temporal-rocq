@@ -16,4 +16,4 @@ Program Definition CreateISODateRecord (year month day : Z)
     (*>> 1. Assert: IsValidISODate(year, month, day) is true. <<*)
     assert IsValidISODate year month day = true in
     (*>> 2. Return ISO Date Record { [[Year]]: year, [[Month]]: month, [[Day]]: day }. <<*)
-    mkISODateRecord year month month_valid day day_valid.
+    mkISODateRecord year month month_valid day day_valid _.

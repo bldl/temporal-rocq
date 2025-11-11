@@ -29,7 +29,7 @@ Program Definition RegulateTime (hour minute second millisecond microsecond nano
     (*>> f. Set nanosecond to the result of clamping nanosecond between 0 and 999. <<*)
     let nanosecond' := Clamp 0 999 nanosecond _ in
     (*>> 3. Return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond). <<*)
-    Normal (CreateTimeRecord hour' minute' second' millisecond' microsecond' nanosecond' None _ _ _ _ _ _ _)
+    Normal (CreateTimeRecord hour' minute' second' millisecond' microsecond' nanosecond' None _ _ _ _ _ _)
   (*>> 2. Else, <<*)
   | _ =>
     (*>> a. Assert: overflow is reject. <<*)
@@ -38,7 +38,7 @@ Program Definition RegulateTime (hour minute second millisecond microsecond nano
     match IsValidTime hour minute second millisecond microsecond nanosecond with
     | false => Throw RangeError
     (*>> 3. Return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond). <<*)
-    | true => Normal (CreateTimeRecord hour minute second millisecond microsecond nanosecond None _ _ _ _ _ _ _)
+    | true => Normal (CreateTimeRecord hour minute second millisecond microsecond nanosecond None _ _ _ _ _ _)
     end
   end.
 

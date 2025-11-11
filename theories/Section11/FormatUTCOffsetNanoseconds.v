@@ -11,7 +11,8 @@ Open Scope string_scope.
 Open Scope Z.
 
 (* 11.1.6 FormatUTCOffsetNanoseconds *)
-Program Definition FormatUTCOffsetNanoseconds (offsetNanoseconds : Z) : string :=
+Program Definition FormatUTCOffsetNanoseconds 
+  (offsetNanoseconds : Z) (offsetNanoseconds_valid : -86400 * 1000000000 < offsetNanoseconds < 86400 * 1000000000) : string :=
   (*>> 1. If offsetNanoseconds ≥ 0, let sign be the code unit 0x002B (PLUS SIGN); otherwise, let sign be the code unit 0x002D (HYPHEN-MINUS). <<*)
   let sign := if offsetNanoseconds >=? 0 then "+" else "-" in 
   (*>> 2. Let absoluteNanoseconds be abs(offsetNanoseconds). <<*)
@@ -31,7 +32,19 @@ Program Definition FormatUTCOffsetNanoseconds (offsetNanoseconds : Z) : string :
   (*>> 9. Return the string-concatenation of sign and timeString. <<*)
   sign ++ timeString.
 
-Next Obligation. Admitted.
+Next Obligation.
+  split.
+  apply Z_div_nonneg_nonneg.
+  apply Z.abs_nonneg.
+  easy.
+  apply Zlt_succ_le.
+  apply Z.div_lt_upper_bound.
+  easy.
+  apply Z.abs_lt.
+  split.
+  easy.
+  easy.
+Qed.
 
 Next Obligation.
   split.

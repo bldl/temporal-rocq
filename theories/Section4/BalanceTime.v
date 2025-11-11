@@ -43,10 +43,7 @@ Program Definition BalanceTime (hour minute second millisecond microsecond nanos
   (*>> 12. Set hour to hour modulo 24. <<*)
   let hour'' := hour' mod 24 in
   (*>> 13. Return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays). <<*)
-  CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' (Some deltaDays) _ _ _ _ _ _ _.
-
-(* DeltaDaysValid (Some deltaDays) *)
-Next Obligation. Admitted.
+  CreateTimeRecord hour'' minute'' second'' millisecond'' microsecond'' nanosecond' (Some deltaDays) _ _ _ _ _ _.
 
 Next Obligation. refine (mod_pos_bound 24 _ _). easy. Qed.
 Next Obligation. refine (mod_pos_bound 60 _ _). easy. Qed.
