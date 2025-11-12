@@ -72,26 +72,3 @@ Next Obligation.
   apply Z.mod_pos_bound.
   easy.
 Qed.
-
-
-(* Contradictions for 11.1.6 FormatUTCOffsetNanoseconds *)
-(* Check FormatUTCOffsetNanoseconds_obligation_1. *)
-
-Definition FormatUTCOffsetNanoseconds_obligation_1_copy (offsetNanoseconds : Z) : Prop :=
-  let sign := if offsetNanoseconds >=? 0 then "+" else "-" in
-  let absoluteNanoseconds := Z.abs offsetNanoseconds in
-  let hour := absoluteNanoseconds / (3600 * 1000000000) in
-  let minute := (absoluteNanoseconds / (60 * 1000000000)) mod 60 in
-  let second := (absoluteNanoseconds / 1000000000) mod 60 in
-  let subSecondNanoseconds := absoluteNanoseconds mod 1000000000 in
-  let precision' := if (second =? 0) && (subSecondNanoseconds =? 0) then MINUTE_PRECISION else NormalPrecision AUTO in
-  0 <= hour <= 23.
-
-Theorem FormatUTCOffsetNanoseconds_hour_outside_bounds_of_FormatTimeString :
-  exists (offsetNanoseconds : Z),
-  ~ FormatUTCOffsetNanoseconds_obligation_1_copy offsetNanoseconds.
-Proof.
-  exists (3600000000000 * 30).
-  unfold FormatUTCOffsetNanoseconds_obligation_1_copy.
-  easy.
-Qed.

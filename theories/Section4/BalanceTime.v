@@ -96,11 +96,3 @@ Proof.
   unfold BalanceTime.
   repeat (apply Z.div_pos; try (apply Z.add_nonneg_nonneg); try assumption); easy.
 Qed.
-
-(* Proves that BalanceTime can create invalid Time Records *)
-Theorem BalanceTime_creates_invalid_TimeRecord :
-  exists hour, days (BalanceTime hour 0 0 0 0 0) < 0.
-Proof.
-  exists (-42).
-  easy.
-Qed.
