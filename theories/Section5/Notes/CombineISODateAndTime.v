@@ -12,9 +12,9 @@ Open Scope Z.
 (* 5.5.3 CombineISODateAndTimeRecord *)
 (*>> 1. NOTE: time.[[Days]] is ignored. <<*)
 Definition With (f : ISODateTimeRecord -> ISODateTimeRecord -> Prop) : Prop :=
-  forall i iv d0 d0v d1 d1v h hv m mv s sv ms msv us usv ns nsv,
-  let t0 := mkTimeRecord d0 d0v h hv m mv s sv ms msv us usv ns nsv in
-  let t1 := mkTimeRecord d1 d1v h hv m mv s sv ms msv us usv ns nsv in
+  forall i iv d0 d1 h hv m mv s sv ms msv us usv ns nsv,
+  let t0 := mkTimeRecord d0 h hv m mv s sv ms msv us usv ns nsv in
+  let t1 := mkTimeRecord d1 h hv m mv s sv ms msv us usv ns nsv in
   let t0v := TimeRecord_IsValidTime t0 in
   let t1v := TimeRecord_IsValidTime t1 in
   f (mkISODateTimeRecord i iv t0 t0v) (mkISODateTimeRecord i iv t1 t1v).

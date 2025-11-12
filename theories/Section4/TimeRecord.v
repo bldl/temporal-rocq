@@ -10,9 +10,8 @@ Open Scope Z.
 Record TimeRecord := 
   mkTimeRecord {
     (*>> Field Name      | Value                                              | Meaning <<*)
-    (*>> [[Days]]        | an integer ≥ 0                                     | A number of overflow days. <<*)
+    (*>> [[Days]]        | an integer                                         | A number of overflow days. <<*)
     days : Z;
-    days_valid : days >= 0;
     (*>> [[Hour]]        | an integer in the inclusive interval from 0 to 23  | The number of the hour. <<*)
     hour : Z;
     hour_valid : 0 <= hour <= 23;

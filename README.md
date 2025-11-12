@@ -1,6 +1,8 @@
 # Temporal Mechanization
 Our mission is to prove the correctness of a selection of the functions in the ECMAScript [Temporal Proposal](https://tc39.es/proposal-temporal/).
-Note: [Based on our findings](https://github.com/tc39/proposal-temporal/pull/3167), the specification text of the proposal will be updated in the nearest future. Our mechanization is based on a previous version of the specification (the most recent snapshot of which was available on October 16th, 2025).
+
+## Changes to Specification
+[Based on our findings](https://github.com/tc39/proposal-temporal/pull/3167), the specification text of the proposal has been changed. Our mechanization is now updated without the inconsistencies we found, but there are links to the proofs of the inconsistencies in the [Previous Inconsistencies section](#previous-inconsistencies).
 
 ## Developers
 - **Aria Bjørnbakken Eide**
@@ -78,6 +80,7 @@ $ ./build.sh
 * [13.8 NegateRoundingMode](theories/Section13/NegateRoundingMode.v)
 * [13.14 ValidateTemporalRoundingIncrement](theories/Section13/ValidateTemporalRoundingIncrement.v)
 * [13.16 ToSecondsStringPrecisionRecord](theories/Section13/ToSecondsStringPrecisionRecord.v)
+* [13.18 ValidateTemporalUnitValue](theories/Section13/ValidateTemporalUnitValue.v)
 * [13.20 LargerOfTwoTemporalUnits](theories/Section13/LargerOfTwoTemporalUnits.v)
 * [13.21 IsCalendarUnit](theories/Section13/IsCalendarUnit.v)
 * [13.22 TemporalUnitCategory](theories/Section13/TemporalUnitCategory.v)
@@ -86,11 +89,11 @@ $ ./build.sh
 * [13.26 FormatTimeString](theories/Section13/FormatTimeString.v)
 * [13.27 GetUnsignedRoundingMode](theories/Section13/GetUnsignedRoundingMode.v)
 
-## Inconsistencies
-* [3.5.1 ISODateRecord_IsValidISODate_not_guaranteed](theories/Section3/ISODateRecord.v)
-* [4.5.10 BalanceTime_creates_invalid_TimeRecord](theories/Section4/BalanceTime.v)
-* [11.1.5 FormatOffsetTimeZoneIdentifier_hour_outside_bounds_of_FormatTimeString](theories/Section11/FormatOffsetTimeZoneIdentifier.v)
-* [11.1.6 FormatUTCOffsetNanoseconds_hour_outside_bounds_of_FormatTimeString](theories/Section11/FormatUTCOffsetNanoseconds.v)
+## Previous Inconsistencies
+* [3.5.1 ISODateRecord_IsValidISODate_not_guaranteed](https://github.com/bldl/temporal-rocq/blob/v0.1.0/theories/Section3/ISODateRecord.v)
+* [4.5.10 BalanceTime_creates_invalid_TimeRecord](https://github.com/bldl/temporal-rocq/blob/v0.1.0/theories/Section4/BalanceTime.v)
+* [11.1.5 FormatOffsetTimeZoneIdentifier_hour_outside_bounds_of_FormatTimeString](https://github.com/bldl/temporal-rocq/blob/v0.1.0/theories/Section11/FormatOffsetTimeZoneIdentifier.v)
+* [11.1.6 FormatUTCOffsetNanoseconds_hour_outside_bounds_of_FormatTimeString](https://github.com/bldl/temporal-rocq/blob/v0.1.0/theories/Section11/FormatUTCOffsetNanoseconds.v)
 
 ## Other Findings
 * [7.5.21 TimeDurationFromComponents_nanoseconds'_outside_bounds_of_MaxTimeDuration](theories/Section7/TimeDurationFromComponents.v)

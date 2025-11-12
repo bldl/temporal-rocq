@@ -2,8 +2,6 @@ From Stdlib Require Import ZArith.
 From Temporal Require Import Basic.
 Open Scope Z.
 
-Inductive Unused := UNUSED.
-
 (* 13.14 ValidateTemporalRoundingIncrement *)
 Program Definition ValidateTemporalRoundingIncrement (increment dividend : Z) (inclusive : bool)
   (increment_valid : 1 <= increment) (dividend_valid : 1 <= dividend) (relation_valid : (dividend > 1 /\ inclusive = false) \/ (inclusive = true))

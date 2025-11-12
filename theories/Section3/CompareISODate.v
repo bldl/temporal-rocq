@@ -1,5 +1,7 @@
 From Stdlib Require Import ZArith.
-From Temporal Require Import Section3.ISODateRecord.
+From Temporal Require Import 
+  Section3.IsValidISODate
+  Section3.ISODateRecord.
 Open Scope Z.
 
 (* 3.5.12 CompareISODate *)
@@ -31,8 +33,9 @@ Theorem CompareISODate_eq_implies_eq_zero :
   forall (y1 y2 m1 m2 d1 d2 : Z),
   y1 = y2 /\ m1 = m2 /\ d1 = d2 ->
   forall (m1_valid : 1 <= m1 <= 12) (m2_valid : 1 <= m2 <= 12)
-  (d1_valid : 1 <= d1 <= 31) (d2_valid : 1 <= d2 <= 31),
-  CompareISODate (mkISODateRecord y1 m1 m1_valid d1 d1_valid) (mkISODateRecord y2 m2 m2_valid d2 d2_valid) = 0.
+  (d1_valid : 1 <= d1 <= 31) (d2_valid : 1 <= d2 <= 31) 
+  (date1_valid : IsValidISODate y1 m1 d1 = true) (date2_valid : IsValidISODate y2 m2 d2 = true),
+  CompareISODate (mkISODateRecord y1 m1 m1_valid d1 d1_valid date1_valid) (mkISODateRecord y2 m2 m2_valid d2 d2_valid date2_valid) = 0.
 Proof.
   intros y1 y2 m1 m2 d1 d2.
   intro H.

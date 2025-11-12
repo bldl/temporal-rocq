@@ -14,20 +14,5 @@ Record ISODateRecord : Type :=
     (*>> [[Day]]   | an integer between 1 and 31, inclusive | The number of the day of the month in the ISO 8601 calendar. <<*)
     day : Z;
     day_valid : 1 <= day <= 31;
+    is_valid_ISO_date: IsValidISODate year month day = true;
   }.
-
-(* This seems to be the case but the spec does not explicitly state it yet. *)
-Lemma ISODateRecord_IsValidISODate :
-  forall (date : ISODateRecord),
-  IsValidISODate (year date) (month date) (day date) = true.
-Admitted.
-
-(* Without explicit invariance *)
-Theorem ISODateRecord_IsValidISODate_not_guaranteed :
-  exists (date : ISODateRecord),
-  IsValidISODate (year date) (month date) (day date) = false.
-Proof.
-  eexists (mkISODateRecord 2025 2 _ 31 _).
-  Unshelve.
-  all: easy.
-Qed.

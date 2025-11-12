@@ -10,5 +10,5 @@ Definition CombineISODateAndTimeRecord (isoDate : ISODateRecord) (time : TimeRec
   (*>> 1. NOTE: time.[[Days]] is ignored. <<*)
   (*>> 2. Return ISO Date-Time Record { [[ISODate]]: isoDate, [[Time]]: time }. <<*)
   mkISODateTimeRecord
-    isoDate (ISODateRecord_IsValidISODate isoDate)
+    isoDate (is_valid_ISO_date isoDate)
     time (TimeRecord_IsValidTime time).
