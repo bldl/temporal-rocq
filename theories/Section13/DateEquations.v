@@ -109,7 +109,8 @@ Program Fixpoint FindYearForwards (t y : Z) (h : EpochTimeForYear y < t)
   let y' := y + 1 in
   match EpochTimeForYear y' ?= t with
   | Lt => FindYearForwards t y' _
-  | _ => y
+  | Eq => y'
+  | Gt => y
   end.
 
 Next Obligation.
@@ -194,6 +195,19 @@ Next Obligation.
   symmetry.
   exact Heq_anonymous.
 Qed.
+
+Theorem EpochTimeForYear_EpochTimeToEpochYear :
+  forall y, EpochTimeToEpochYear (EpochTimeForYear y) = y.
+Admitted.
+
+Theorem EpochTimeToEpochYear_le :
+  forall t, EpochTimeForYear (EpochTimeToEpochYear t) <= t.
+Admitted.
+
+Theorem EpochTimeToEpochYear_largest :
+  forall t y0,
+  EpochTimeForYear y0 <= t -> EpochTimeForYear y0 <= EpochTimeToEpochYear t.
+Admitted.
 
 Definition MathematicalDaysInYear (y : Z) : Z :=
   match (y mod 4) =? 0, (y mod 100) =? 0, (y mod 400) =? 0 with
