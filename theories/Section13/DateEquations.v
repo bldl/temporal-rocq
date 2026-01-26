@@ -206,7 +206,7 @@ Admitted.
 
 Theorem EpochTimeToEpochYear_largest :
   forall t y0,
-  EpochTimeForYear y0 <= t -> EpochTimeForYear y0 <= EpochTimeToEpochYear t.
+  EpochTimeForYear y0 <= t -> y0 <= EpochTimeToEpochYear t.
 Admitted.
 
 Definition MathematicalDaysInYear (y : Z) : Z :=
