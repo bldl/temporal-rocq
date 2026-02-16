@@ -10,7 +10,7 @@ From Stdlib Require Import
   Setoid
   Program.Equality
   ZArith.
-From Temporal Require Import StringUtil.
+From Temporal Require Import Basic StringUtil.
 Open Scope string_scope.
 
 (** A regular grammar *)
@@ -32,6 +32,13 @@ Inductive generates : grammar -> string -> Prop :=
 | gen_seq : forall s0 s1 a b, generates a s0 -> generates b s1 -> generates (sequence a b) (s0 ++ s1)
 | gen_star_l : forall a, generates (star a) EmptyString
 | gen_star_r : forall s0 s1 a, generates a s0 -> generates (star a) s1 -> generates (star a) (s0 ++ s1).
+
+Inductive nullable : grammar -> Prop :=
+| null_empty : nullable empty
+| null_alt_l : forall a b, nullable a -> nullable (alternative a b)
+| null_alt_r : forall a b, nullable b -> nullable (alternative a b)
+| null_seq : forall a b, nullable a -> nullable b -> nullable (sequence a b)
+| null_star : forall a, nullable (star a).
 
 Fixpoint ntimes (n : nat) (a : grammar) :=
   match n with
@@ -59,6 +66,21 @@ Definition digit : grammar :=
     char "5" :: char "6" :: char "7" :: char "8" :: char "9" ::
     nil
   ).
+
+Lemma digit_not_null : ~ (nullable digit).
+Proof.
+  intros H.
+  ltac2:(
+    let rec destroy () :=
+      lazy_match! goal with
+      | [h : nullable _ |- _] =>
+          let h' := Control.hyp h in
+          ltac1:(a |- dependent destruction a) (Ltac1.of_constr h');
+          Control.enter destroy
+      end
+    in destroy ()
+  ).
+Qed.
 
 Module Grammar.
   (* two grammars are equivalent if they generate the same strings *)
@@ -293,6 +315,16 @@ Module Grammar.
     apply gen_seq; assumption.
   Qed.
 
+  Lemma star_string :
+    forall a s g,
+    generates g (String a EmptyString) -> generates (star g) s ->
+    generates (star g) (String a s).
+  Proof.
+    intros.
+    rewrite <- append_char_l.
+    now apply gen_star_r.
+  Qed.
+
   Fixpoint star_append :
     forall g s0 s1,
     generates (star g) s0 -> generates (star g) s1 ->
@@ -307,6 +339,91 @@ Module Grammar.
       apply gen_seq.
       + assumption.
       + apply star_append; assumption.
+  Qed.
+
+  Lemma sequence_star :
+    forall g s,
+    generates (sequence g (star g)) s -> generates (star g) s.
+  Proof.
+    intros.
+    dependent induction H.
+    now apply gen_star_r.
+  Qed.
+
+  Lemma sequence_star_append :
+    forall g s0 s1,
+    generates (star g) s0 -> generates (sequence g (star g)) s1 ->
+    generates (sequence g (star g)) (s0 ++ s1).
+  Proof.
+    intros.
+    dependent induction H.
+    - now rewrite append_empty_l.
+    - rewrite append_assoc.
+      apply gen_seq.
+      + assumption.
+      + apply star_append.
+        * assumption.
+        * now apply sequence_star.
+  Qed.
+
+  Lemma generates_empty_iff_null : forall g, nullable g <-> generates g "".
+  Proof.
+    intro g.
+    constructor.
+    - intro null_g.
+      induction null_g.
+      + constructor.
+      + apply gen_alt_l. assumption.
+      + apply gen_alt_r. assumption.
+      + rewrite <- append_empty_l.
+        apply gen_seq; assumption.
+      + apply gen_star_l.
+    - intro gen_g.
+      dependent induction gen_g.
+      + constructor.
+      + apply null_alt_l. now apply IHgen_g.
+      + apply null_alt_r. now apply IHgen_g.
+      + assert (H : s0 = "" /\ s1 = "") by now apply append_eq_empty.
+        destruct H.
+        apply null_seq.
+        * now apply IHgen_g1.
+        * now apply IHgen_g2.
+      + constructor.
+      + constructor.
+  Qed.
+
+  Lemma not_generates_empty_iff_not_null :
+    forall g, ~ (nullable g) <-> ~ (generates g "").
+  Proof.
+    intro g.
+    constructor.
+    - intros not_null_g gen_g.
+      dependent destruction g; apply not_null_g.
+      + inversion gen_g.
+      + constructor.
+      + inversion gen_g.
+      + inversion gen_g.
+        * apply null_alt_l.
+          now apply generates_empty_iff_null.
+        * apply null_alt_r.
+          now apply generates_empty_iff_null.
+      + inversion gen_g.
+        assert (H4 : s0 = "" /\ s1 = "") by now apply append_eq_empty.
+        destruct H4.
+        rewrite H4 in H2.
+        rewrite H5 in H3.
+        apply null_seq; now apply generates_empty_iff_null.
+      + constructor.
+    - intros not_gen_g null_g.
+      dependent destruction null_g; apply not_gen_g.
+      + constructor.
+      + apply gen_alt_l.
+        now apply generates_empty_iff_null.
+      + apply gen_alt_r.
+        now apply generates_empty_iff_null.
+      + rewrite <- append_empty_l.
+        apply gen_seq; now apply generates_empty_iff_null.
+      + constructor.
   Qed.
 End Grammar.
 
@@ -485,50 +602,258 @@ Ltac2 decimal_digit () :=
   apply gen_star_r;
   Control.enter (fun () => orelse construct_digit (fun _ex => assumption)).
 
+Lemma string_of_uint_digits :
+  forall u,
+  generates (star digit) (DecimalString.NilEmpty.string_of_uint u).
+Proof.
+  intros.
+  induction u; simpl.
+  apply gen_star_l.
+  all: apply Grammar.star_string; try (construct_digit ()); assumption.
+Qed.
+
 Lemma string_of_int_some_digits :
   forall n, (0 <= n)%Z ->
   generates
     (sequence digit (star digit))
-    (DecimalString.NilEmpty.string_of_int (Z.to_int n)).
-Admitted.
-
-Lemma string_of_int_digits :
-  forall n, (0 <= n)%Z ->
-  generates (star digit) (DecimalString.NilEmpty.string_of_int (Z.to_int n)).
+    (DecimalString.NilZero.string_of_int (Z.to_int n)).
 Proof.
   intros.
-  unfold DecimalString.NilEmpty.string_of_int, Z.to_int.
+  unfold DecimalString.NilZero.string_of_int, Z.to_int.
+  unfold DecimalString.NilZero.string_of_uint.
   destruct n eqn: n_def.
-  - apply Grammar.unfold_star.
-    apply gen_alt_r.
-    rewrite <- append_empty_r.
-    apply gen_seq.
+  - rewrite <- append_empty_r.
+    constructor.
     + construct_digit ().
     + apply gen_star_l.
   - induction (Pos.to_uint p); simpl.
+    rewrite <- append_empty_r.
+    constructor.
+    construct_digit ().
     apply gen_star_l.
-    all: decimal_digit ().
-  - destruct H.
-    reflexivity.
+    all:
+      apply Grammar.sequence_string;
+      try (construct_digit ());
+      apply string_of_uint_digits.
+  - ltac1:(exfalso).
+    assert (H1 : (Z.neg p < 0)%Z) by apply Pos2Z.neg_is_neg.
+    now apply (proj1 (Z.lt_nge (Z.neg p) 0)).
 Qed.
 
-Lemma string_of_int_length_2 :
-  forall n, (0 <= n <= 99)%Z ->
-  length (DecimalString.NilEmpty.string_of_int (Z.to_int n)) <= 2.
+Lemma string_of_int_digits :
+  forall n, (0 <= n)%Z ->
+  generates (star digit) (DecimalString.NilZero.string_of_int (Z.to_int n)).
+Proof.
+  intros.
+  apply Grammar.sequence_star.
+  now apply string_of_int_some_digits.
+Qed.
+
+(* given a term like 'p~1~0~1~1', returns the inner 'p' *)
+Ltac2 rec find_it t :=
+  lazy_match! t with
+  | xO ?u => find_it u
+  | xI ?u => find_it u
+  | _ => t
+  end.
+
+(* given a name 'n' and a term like 'p~1~0~1~1', returns 'n~1~0~1~1' *)
+Ltac2 rec build_it name t :=
+  lazy_match! t with
+  | xO ?u => let u' := build_it name u in constr:(xO ltac2:(exact $u'))
+  | xI ?u => let u' := build_it name u in constr:(xI ltac2:(exact $u'))
+  | _ => Control.hyp name
+  end.
+
+(* proves goals of the form '_ : n <= 9 |- False' *)
+Ltac2 contradict_it n :=
+  lazy_match! goal with
+  | [_ : (Z.pos ?t <= _)%Z |- _] =>
+      let p := find_it t in
+      refine open_constr:(
+        match $p
+        as p'
+        return ($n < Z.pos ltac2:(Control.refine (fun () => build_it @p' t)))%Z
+        with
+        | xH => eq_refl
+        | xI _ | xO _ => eq_refl
+        end 
+      )
+  end.
+
+(* turns an ltac2 int into a rocq positive pattern *)
+Ltac2 rec build_positive (n : int) : pattern :=
+  if Int.lt n 1 then
+    Control.zero (Tactic_failure (Some (fprintf "non-positive")))
+  else if Int.equal n 1 then pat:(xH)
+  else
+    let d := Int.mod n 2 in
+    let m := build_positive (Int.div n 2) in
+    if Int.equal d 1 then pat:(xI $pattern:m)
+    else pat:(xO $pattern:m).
+
+Lemma string_of_int_length_1 :
+  forall n, (0 <= n <= 9)%Z ->
+  length (DecimalString.NilZero.string_of_int (Z.to_int n)) <= 2.
 Proof.
   intros.
   destruct H.
   unfold Z.to_int.
   destruct n eqn: n_def.
   - auto.
-  - admit.
+  - refine open_constr:(
+      match p as n' return (p = n' -> _) with
+      | 1%positive => fun H1 => _
+      | 2%positive => fun H1 => _
+      | 3%positive => fun H1 => _
+      | 4%positive => fun H1 => _
+      | 5%positive => fun H1 => _
+      | 6%positive => fun H1 => _
+      | 7%positive => fun H1 => _
+      | 8%positive => fun H1 => _
+      | 9%positive => fun H1 => _
+      | _ => fun H1 => impossible
+      end eq_refl
+    ).
+
+    all:
+      try auto;
+      rewrite H1 in H0;
+      eapply (proj2 (Z.nle_gt _ 9));
+      try (contradict_it '9%Z);
+      apply H0.
   - destruct H.
     reflexivity.
-Admitted.
+Qed.
 
+Lemma string_of_int_length_2 :
+  forall n, (0 <= n <= 99)%Z ->
+  length (DecimalString.NilZero.string_of_int (Z.to_int n)) <= 2.
+Proof.
+  intros.
+  destruct H.
+  unfold Z.to_int.
+  destruct n eqn: n_def.
+  - auto.
+  - refine open_constr:(
+      match p as n' return (p = n' -> _) with
+      | 1%positive => fun H1 => _
+      | 2%positive => fun H1 => _
+      | 3%positive => fun H1 => _
+      | 4%positive => fun H1 => _
+      | 5%positive => fun H1 => _
+      | 6%positive => fun H1 => _
+      | 7%positive => fun H1 => _
+      | 8%positive => fun H1 => _
+      | 9%positive => fun H1 => _
+      | 10%positive => fun H1 => _
+      | 11%positive => fun H1 => _
+      | 12%positive => fun H1 => _
+      | 13%positive => fun H1 => _
+      | 14%positive => fun H1 => _
+      | 15%positive => fun H1 => _
+      | 16%positive => fun H1 => _
+      | 17%positive => fun H1 => _
+      | 18%positive => fun H1 => _
+      | 19%positive => fun H1 => _
+      | 20%positive => fun H1 => _
+      | 21%positive => fun H1 => _
+      | 22%positive => fun H1 => _
+      | 23%positive => fun H1 => _
+      | 24%positive => fun H1 => _
+      | 25%positive => fun H1 => _
+      | 26%positive => fun H1 => _
+      | 27%positive => fun H1 => _
+      | 28%positive => fun H1 => _
+      | 29%positive => fun H1 => _
+      | 30%positive => fun H1 => _
+      | 31%positive => fun H1 => _
+      | 32%positive => fun H1 => _
+      | 33%positive => fun H1 => _
+      | 34%positive => fun H1 => _
+      | 35%positive => fun H1 => _
+      | 36%positive => fun H1 => _
+      | 37%positive => fun H1 => _
+      | 38%positive => fun H1 => _
+      | 39%positive => fun H1 => _
+      | 40%positive => fun H1 => _
+      | 41%positive => fun H1 => _
+      | 42%positive => fun H1 => _
+      | 43%positive => fun H1 => _
+      | 44%positive => fun H1 => _
+      | 45%positive => fun H1 => _
+      | 46%positive => fun H1 => _
+      | 47%positive => fun H1 => _
+      | 48%positive => fun H1 => _
+      | 49%positive => fun H1 => _
+      | 50%positive => fun H1 => _
+      | 51%positive => fun H1 => _
+      | 52%positive => fun H1 => _
+      | 53%positive => fun H1 => _
+      | 54%positive => fun H1 => _
+      | 55%positive => fun H1 => _
+      | 56%positive => fun H1 => _
+      | 57%positive => fun H1 => _
+      | 58%positive => fun H1 => _
+      | 59%positive => fun H1 => _
+      | 60%positive => fun H1 => _
+      | 61%positive => fun H1 => _
+      | 62%positive => fun H1 => _
+      | 63%positive => fun H1 => _
+      | 64%positive => fun H1 => _
+      | 65%positive => fun H1 => _
+      | 66%positive => fun H1 => _
+      | 67%positive => fun H1 => _
+      | 68%positive => fun H1 => _
+      | 69%positive => fun H1 => _
+      | 70%positive => fun H1 => _
+      | 71%positive => fun H1 => _
+      | 72%positive => fun H1 => _
+      | 73%positive => fun H1 => _
+      | 74%positive => fun H1 => _
+      | 75%positive => fun H1 => _
+      | 76%positive => fun H1 => _
+      | 77%positive => fun H1 => _
+      | 78%positive => fun H1 => _
+      | 79%positive => fun H1 => _
+      | 80%positive => fun H1 => _
+      | 81%positive => fun H1 => _
+      | 82%positive => fun H1 => _
+      | 83%positive => fun H1 => _
+      | 84%positive => fun H1 => _
+      | 85%positive => fun H1 => _
+      | 86%positive => fun H1 => _
+      | 87%positive => fun H1 => _
+      | 88%positive => fun H1 => _
+      | 89%positive => fun H1 => _
+      | 90%positive => fun H1 => _
+      | 91%positive => fun H1 => _
+      | 92%positive => fun H1 => _
+      | 93%positive => fun H1 => _
+      | 94%positive => fun H1 => _
+      | 95%positive => fun H1 => _
+      | 96%positive => fun H1 => _
+      | 97%positive => fun H1 => _
+      | 98%positive => fun H1 => _
+      | 99%positive => fun H1 => _
+      | _ => fun H1 => impossible
+      end eq_refl
+    ).
+
+    all:
+      try auto;
+      rewrite H1 in H0;
+      eapply (proj2 (Z.nle_gt _ 99));
+      try (contradict_it '99%Z);
+      apply H0.
+  - destruct H.
+    reflexivity.
+Qed.
+
+(* it's doable .... *)
 Lemma string_of_int_length_4 :
   forall n, (0 <= n <= 9999)%Z ->
-  length (DecimalString.NilEmpty.string_of_int (Z.to_int n)) <= 4.
+  length (DecimalString.NilZero.string_of_int (Z.to_int n)) <= 4.
 Proof.
   intros.
   destruct H.
@@ -701,5 +1026,7 @@ Proof.
   }
   destruct (m <=? Z.of_nat (length (Z_to_string n)))%Z.
   - now apply Z_to_string_some_digits.
-  - admit.
-Admitted.
+  - apply Grammar.sequence_star_append.
+    + apply RepeatString_digits.
+    + now apply Z_to_string_some_digits.
+Qed.
