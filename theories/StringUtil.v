@@ -7,7 +7,7 @@ Open Scope string_scope.
 Open Scope Z.
 
 Definition Z_to_string (x : Z) : string :=
-  NilEmpty.string_of_int (Z.to_int x).
+  NilZero.string_of_int (Z.to_int x).
 
 Inductive PadPlacement := START | END.
 
@@ -67,6 +67,26 @@ Proof.
   - simpl.
     f_equal.
     assumption.
+Qed.
+
+Lemma append_string_neq_empty : forall s0 a s1, s0 ++ String a s1 <> "".
+Proof.
+  intros s0 a s1.
+  now induction s0.
+Qed.
+
+Lemma append_eq_empty : forall s0 s1, s0 ++ s1 = "" -> s0 = "" /\ s1 = "".
+Proof.
+  intros s0 s1 H.
+  constructor.
+  - induction s0.
+    + reflexivity.
+    + discriminate.
+  - induction s1.
+    + reflexivity.
+    + exfalso.
+      eapply append_string_neq_empty.
+      apply H.
 Qed.
 
 Lemma append_length :
