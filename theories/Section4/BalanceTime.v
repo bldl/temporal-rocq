@@ -23,7 +23,7 @@ Program Definition BalanceTime (hour minute second millisecond microsecond nanos
   (*>> 2. Set nanosecond to nanosecond modulo 1000. <<*)
   let nanosecond' := nanosecond mod 1000 in
   (*>> 3. Set millisecond to millisecond + floor(microsecond / 1000). <<*)
-  let millisecond' :=  millisecond + microsecond / 1000 in
+  let millisecond' := millisecond + microsecond' / 1000 in
   (*>> 4. Set microsecond to microsecond modulo 1000. <<*)
   let microsecond'' := microsecond' mod 1000 in
   (*>> 5. Set second to second + floor(millisecond / 1000). <<*)

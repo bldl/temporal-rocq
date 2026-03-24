@@ -29,6 +29,8 @@ Proof.
   intros.
   repeat split.
   - simpl.
+    rewrite add_div_small with (a := (nanosecond time + 0)).
+    all: try rewrite Z.add_0_r.
     rewrite add_div_small with (a := microsecond time).
     rewrite add_div_small with (a := millisecond time).
     rewrite add_div_small with (a := second time).
@@ -36,17 +38,23 @@ Proof.
     rewrite div_small_pred.
     all: now destruct time.
   - simpl.
+    rewrite add_div_small with (a := (nanosecond time + 0)).
+    all: try rewrite Z.add_0_r.
     rewrite add_div_small with (a := microsecond time).
     rewrite add_div_small with (a := millisecond time).
     rewrite add_div_small with (a := second time).
     rewrite mod_small_pred.
     all: now destruct time.
   - simpl.
+    rewrite add_div_small with (a := (nanosecond time + 0)).
+    all: try rewrite Z.add_0_r.
     rewrite add_div_small with (a := microsecond time).
     rewrite add_div_small with (a := millisecond time).
     rewrite mod_small_pred.
     all: now destruct time.
   - simpl.
+    rewrite add_div_small with (a := (nanosecond time + 0)).
+    all: try rewrite Z.add_0_r.
     rewrite add_div_small with (a := microsecond time).
     rewrite mod_small_pred.
     all: now destruct time.
