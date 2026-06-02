@@ -69,7 +69,9 @@ $ ./build.sh
 |section|title|spec text|mechanization|
 |-------|-----|---------|-------------|
 |7.5.1|Date Duration Records|[spec](https://tc39.es/proposal-temporal/#sec-temporal-date-duration-records)|[DateDurationRecord.v](theories/Section7/DateDurationRecord.v)
+|7.5.3|Internal Duration Records|[spec](https://tc39.es/proposal-temporal/#sec-temporal-internal-duration-records)|[InternalDurationRecord.v](theories/Section7/InternalDurationRecord.v)
 |7.5.14|`DateDurationSign`|[spec](https://tc39.es/proposal-temporal/#sec-temporal-datedurationsign)|[DateDurationSign.v](theories/Section7/DateDurationSign.v)
+|7.5.15|`InternalDurationSign`|[spec](https://tc39.es/proposal-temporal/#sec-temporal-internaldurationsign)|[InternalDurationSign.v](theories/Section7/InternalDurationSign.v)
 |7.5.21|`TimeDurationFromComponents`|[spec](https://tc39.es/proposal-temporal/#sec-temporal-timedurationfromcomponents)|[TimeDurationFromComponents.v](theories/Section7/TimeDurationFromComponents.v)
 |7.5.22|`AddTimeDuration`|[spec](https://tc39.es/proposal-temporal/#sec-temporal-addtimeduration)|[AddTimeDuration.v](theories/Section7/AddTimeDuration.v)
 |7.5.23|`Add24HourDaysToTimeDuration`|[spec](https://tc39.es/proposal-temporal/#sec-temporal-add24hourdaystonormalizedtimeduration)|[Add24HourDaysToTimeDuration.v](theories/Section7/Add24HourDaysToTimeDuration.v)
@@ -151,3 +153,4 @@ $ ./build.sh
 * [TemporalDateToString_without_calendar_satisfies_rfc3339](theories/Section3/TemporalDateToString.v)
 * [ISODateTimeToString_without_calendar_satisfies_rfc3339](theories/Section5/ISODateTimeToString.v)
 * [CompareTimeRecord_eq_implies_eq_zero](theories/Section4/CompareTimeRecord.v)
+* [InternalDurationSign_inside_correct_range](theories/Section7/InternalDurationSign.v)
