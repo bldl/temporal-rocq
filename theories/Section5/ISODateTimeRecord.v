@@ -16,8 +16,9 @@ mkISODateTimeRecord {
   (*>> Field Name  | Value              | Meaning <<*)
   (*>> [[ISODate]] | an ISO Date Record | The date in the ISO 8601 calendar. <<*)
   ISODate : ISODateRecord;
-  ISODate_valid : IsValidISODate (year ISODate) (month ISODate) (day ISODate) = true;
   (*>> [[Time]]    | a Time Record      | The time. The [[Days]] field is ignored. <<*)
   Time : TimeRecord;
+
+  ISODate_valid : IsValidISODate (year ISODate) (month ISODate) (day ISODate) = true;
   Time_valid : IsValidTime (hour Time) (minute Time) (second Time) (millisecond Time) (microsecond Time) (nanosecond Time) = true;
   }.

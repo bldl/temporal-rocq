@@ -9,6 +9,4 @@ Open Scope Z.
 Definition CombineISODateAndTimeRecord (isoDate : ISODateRecord) (time : TimeRecord) : ISODateTimeRecord :=
   (*>> 1. NOTE: time.[[Days]] is ignored. <<*)
   (*>> 2. Return ISO Date-Time Record { [[ISODate]]: isoDate, [[Time]]: time }. <<*)
-  mkISODateTimeRecord
-    isoDate (is_valid_ISO_date isoDate)
-    time (TimeRecord_IsValidTime time).
+  mkISODateTimeRecord isoDate time (is_valid_ISO_date isoDate) (TimeRecord_IsValidTime time).
