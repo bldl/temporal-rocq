@@ -35,7 +35,7 @@ Theorem CompareISODate_eq_implies_eq_zero :
   forall (m1_valid : 1 <= m1 <= 12) (m2_valid : 1 <= m2 <= 12)
   (d1_valid : 1 <= d1 <= 31) (d2_valid : 1 <= d2 <= 31) 
   (date1_valid : IsValidISODate y1 m1 d1 = true) (date2_valid : IsValidISODate y2 m2 d2 = true),
-  CompareISODate (mkISODateRecord y1 m1 m1_valid d1 d1_valid date1_valid) (mkISODateRecord y2 m2 m2_valid d2 d2_valid date2_valid) = 0.
+  CompareISODate (mkISODateRecord y1 m1 d1 m1_valid d1_valid date1_valid) (mkISODateRecord y2 m2 d2 m2_valid d2_valid date2_valid) = 0.
 Proof.
   intros y1 y2 m1 m2 d1 d2.
   intro H.

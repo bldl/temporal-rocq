@@ -10,9 +10,10 @@ Record ISODateRecord : Type :=
     year : Z;
     (*>> [[Month]] | an integer between 1 and 12, inclusive | The number of the month in the ISO 8601 calendar. <<*)
     month : Z;
-    month_valid : 1 <= month <= 12;
     (*>> [[Day]]   | an integer between 1 and 31, inclusive | The number of the day of the month in the ISO 8601 calendar. <<*)
     day : Z;
+
+    month_valid : 1 <= month <= 12;
     day_valid : 1 <= day <= 31;
     is_valid_ISO_date: IsValidISODate year month day = true;
   }.

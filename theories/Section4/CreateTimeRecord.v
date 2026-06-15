@@ -29,7 +29,7 @@ Program Definition CreateTimeRecord (hour minute second millisecond microsecond 
   (*>> 2. Assert: IsValidTime(hour, minute, second, millisecond, microsecond, nanosecond). <<*)
   assert IsValidTime hour minute second millisecond microsecond nanosecond = true in
   (*>> 3. Return Time Record { [[Days]]: deltaDays, [[Hour]]: hour, [[Minute]]: minute, [[Second]]: second, [[Millisecond]]: millisecond, [[Microsecond]]: microsecond, [[Nanosecond]]: nanosecond  }. <<*)
-  mkTimeRecord deltaDays' hour hour_valid minute minute_valid second second_valid millisecond millisecond_valid microsecond microsecond_valid nanosecond nanosecond_valid.
+  mkTimeRecord deltaDays' hour minute second millisecond microsecond nanosecond hour_valid minute_valid second_valid millisecond_valid microsecond_valid nanosecond_valid.
 
 Next Obligation.
   unfold IsValidTime.

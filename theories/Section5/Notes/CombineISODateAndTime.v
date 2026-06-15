@@ -13,11 +13,11 @@ Open Scope Z.
 (*>> 1. NOTE: time.[[Days]] is ignored. <<*)
 Definition With (f : ISODateTimeRecord -> ISODateTimeRecord -> Prop) : Prop :=
   forall i iv d0 d1 h hv m mv s sv ms msv us usv ns nsv,
-  let t0 := mkTimeRecord d0 h hv m mv s sv ms msv us usv ns nsv in
-  let t1 := mkTimeRecord d1 h hv m mv s sv ms msv us usv ns nsv in
+  let t0 := mkTimeRecord d0 h m s ms us ns hv mv sv msv usv nsv in
+  let t1 := mkTimeRecord d1 h m s ms us ns hv mv sv msv usv nsv in
   let t0v := TimeRecord_IsValidTime t0 in
   let t1v := TimeRecord_IsValidTime t1 in
-  f (mkISODateTimeRecord i iv t0 t0v) (mkISODateTimeRecord i iv t1 t1v).
+  f (mkISODateTimeRecord i t0 iv t0v) (mkISODateTimeRecord i t1 iv t1v).
 
 Theorem CompareISODate_holds :
   With (fun i0 i1 => CompareISODateTime i0 i1 = 0).
