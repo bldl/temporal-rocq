@@ -8,8 +8,6 @@ From Temporal Require Import
   Section4.TimeRecord.
 Open Scope Z.
 
-Inductive Overflow := CONSTRAIN | REJECT.
-
 (* 4.5.8 RegulateTime *)
 Program Definition RegulateTime (hour minute second millisecond microsecond nanosecond : Z) 
   (overflow : Overflow) : Completion TimeRecord :=

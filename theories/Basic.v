@@ -7,6 +7,14 @@ Notation "'assert' P 'in' A" := (let tt := assert P _ in A) (at level 100).
 Notation "'impossible'" := (False_rect _ _).
 Notation "a '!=?' b" := (negb (a =? b)) (at level 70).
 
+Inductive Overflow := CONSTRAIN | REJECT.
+Definition eq (a b : Overflow) : bool := 
+  match a, b with
+  | CONSTRAIN, CONSTRAIN => true
+  | REJECT, REJECT => true
+  | _, _ => false
+  end.
+
 Inductive Unused := UNUSED.
 
 Inductive Exception := RangeError.

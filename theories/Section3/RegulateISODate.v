@@ -10,14 +10,6 @@ From Temporal Require Import
   StringUtil.
 Open Scope Z.
 
-Inductive Overflow := CONSTRAIN | REJECT.
-Definition eq (a b : Overflow) : bool := 
-  match a, b with
-  | CONSTRAIN, CONSTRAIN => true
-  | REJECT, REJECT => true
-  | _, _ => false
-  end.
-
 (* 3.5.6 RegulateISODate *)
 Program Definition RegulateISODate (year month day : Z) (overflow : Overflow) : Completion ISODateRecord :=
   match overflow with
