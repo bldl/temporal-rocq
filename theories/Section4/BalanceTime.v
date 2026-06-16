@@ -80,7 +80,7 @@ Qed.
 Theorem BalanceTime_IsValidTime :
   forall h min s ms us ns,
   let t := BalanceTime h min s ms us ns in
-  IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
+  IsValidTime (Hour t) (Minute t) (Second t) (Millisecond t) (Microsecond t) (Nanosecond t) = true.
 Proof.
   intros.
   unfold IsValidTime.
@@ -90,7 +90,7 @@ Qed.
 Theorem BalanceTime_days_valid_when_nonnegative_inputs :
   forall h min s ms us ns,
   0 <= h -> 0 <= min -> 0 <= s -> 0 <= ms -> 0 <= us -> 0 <= ns ->
-  0 <= days (BalanceTime h min s ms us ns).
+  0 <= Days (BalanceTime h min s ms us ns).
 Proof.
   intros.
   unfold BalanceTime.

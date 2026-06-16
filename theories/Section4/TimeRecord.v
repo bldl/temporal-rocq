@@ -11,41 +11,41 @@ Record TimeRecord :=
   mkTimeRecord {
     (*>> Field Name      | Value                                              | Meaning <<*)
     (*>> [[Days]]        | an integer                                         | A number of overflow days. <<*)
-    days : Z;
+    Days : Z;
     (*>> [[Hour]]        | an integer in the inclusive interval from 0 to 23  | The number of the hour. <<*)
-    hour : Z;
+    Hour : Z;
     (*>> [[Minute]]      | an integer in the inclusive interval from 0 to 59  | The number of the minute. <<*)
-    minute : Z;
+    Minute : Z;
     (*>> [[Second]]      | an integer in the inclusive interval from 0 to 59  | The number of the second. <<*)
-    second : Z;
+    Second : Z;
     (*>> [[Millisecond]] | an integer in the inclusive interval from 0 to 999 | The number of the millisecond. <<*)
-    millisecond : Z;
+    Millisecond : Z;
     (*>> [[Microsecond]] | an integer in the inclusive interval from 0 to 999 | The number of the microsecond. <<*)
-    microsecond : Z;
+    Microsecond : Z;
     (*>> [[Nanosecond]]  | an integer in the inclusive interval from 0 to 999 | The number of the nanosecond. <<*)
-    nanosecond : Z;
+    Nanosecond : Z;
 
-    hour_valid : 0 <= hour <= 23;
-    minute_valid : 0 <= minute <= 59;
-    second_valid : 0 <= second <= 59;
-    millisecond_valid : 0 <= millisecond <= 999;
-    microsecond_valid : 0 <= microsecond <= 999;
-    nanosecond_valid : 0 <= nanosecond <= 999;
+    hour_valid : 0 <= Hour <= 23;
+    minute_valid : 0 <= Minute <= 59;
+    second_valid : 0 <= Second <= 59;
+    millisecond_valid : 0 <= Millisecond <= 999;
+    microsecond_valid : 0 <= Microsecond <= 999;
+    nanosecond_valid : 0 <= Nanosecond <= 999;
   }.
 
 Lemma TimeRecord_IsValidTime :
   forall (t : TimeRecord),
-  IsValidTime (hour t) (minute t) (second t) (millisecond t) (microsecond t) (nanosecond t) = true.
+  IsValidTime (Hour t) (Minute t) (Second t) (Millisecond t) (Microsecond t) (Nanosecond t) = true.
 Proof.
   intro t.
   destruct t.
   simpl.
   unfold IsValidTime.
 
-  destruct_with_eqn ((hour0 <? 0) || (hour0 >? 23)); try lia.
-  destruct_with_eqn ((minute0 <? 0) || (minute0 >? 59)); try lia.
-  destruct_with_eqn ((second0 <? 0) || (second0 >? 59)); try lia.
-  destruct_with_eqn ((millisecond0 <? 0) || (millisecond0 >? 999)); try lia.
-  destruct_with_eqn ((microsecond0 <? 0) || (microsecond0 >? 999)); try lia.
-  destruct_with_eqn ((nanosecond0 <? 0) || (nanosecond0 >? 999)); try lia.
+  destruct_with_eqn ((Hour0 <? 0) || (Hour0 >? 23)); try lia.
+  destruct_with_eqn ((Minute0 <? 0) || (Minute0 >? 59)); try lia.
+  destruct_with_eqn ((Second0 <? 0) || (Second0 >? 59)); try lia.
+  destruct_with_eqn ((Millisecond0 <? 0) || (Millisecond0 >? 999)); try lia.
+  destruct_with_eqn ((Microsecond0 <? 0) || (Microsecond0 >? 999)); try lia.
+  destruct_with_eqn ((Nanosecond0 <? 0) || (Nanosecond0 >? 999)); try lia.
 Qed.

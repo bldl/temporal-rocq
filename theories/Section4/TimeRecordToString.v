@@ -11,9 +11,9 @@ Open Scope Z.
 (* 4.5.13 TimeRecordToString *)
 Program Definition TimeRecordToString (time : TimeRecord) (precision : Precision') : string :=
   (*>> 1. Let subSecondNanoseconds be time.[[Millisecond]] × 10**6 + time.[[Microsecond]] × 10**3 + time.[[Nanosecond]]. <<*)
-  let subSecondNanoseconds := (millisecond time) * 1000000 + (microsecond time) * 1000 + (nanosecond time) in 
+  let subSecondNanoseconds := (Millisecond time) * 1000000 + (Microsecond time) * 1000 + (Nanosecond time) in 
   (*>> 2. Return FormatTimeString(time.[[Hour]], time.[[Minute]], time.[[Second]], subSecondNanoseconds, precision). <<*)
-  FormatTimeString (hour time) (minute time) (second time) subSecondNanoseconds precision None (hour_valid time) (minute_valid time) (second_valid time) _.
+  FormatTimeString (Hour time) (Minute time) (Second time) subSecondNanoseconds precision None (hour_valid time) (minute_valid time) (second_valid time) _.
 
 Next Obligation.
   split.
