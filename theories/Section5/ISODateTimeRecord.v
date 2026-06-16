@@ -19,6 +19,6 @@ mkISODateTimeRecord {
   (*>> [[Time]]    | a Time Record      | The time. The [[Days]] field is ignored. <<*)
   Time : TimeRecord;
 
-  ISODate_valid : IsValidISODate (year ISODate) (month ISODate) (day ISODate) = true;
-  Time_valid : IsValidTime (hour Time) (minute Time) (second Time) (millisecond Time) (microsecond Time) (nanosecond Time) = true;
+  ISODate_valid : IsValidISODate (Year ISODate) (Month ISODate) (Day ISODate) = true;
+  Time_valid : IsValidTime (Hour Time) (Minute Time) (Second Time) (Millisecond Time) (Microsecond Time) (Nanosecond Time) = true;
   }.

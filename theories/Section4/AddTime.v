@@ -8,7 +8,7 @@ From Temporal Require Import
 (* 4.5.15 AddTime *)
 Definition AddTime (time : TimeRecord) (timeDuration : Z) (timeDuration_valid : MinTimeDuration <= timeDuration <= MaxTimeDuration) : TimeRecord :=
   (*>> 1. Return BalanceTime(time.[[Hour]], time.[[Minute]], time.[[Second]], time.[[Millisecond]], time.[[Microsecond]], time.[[Nanosecond]] + timeDuration). <<*)
-  BalanceTime (hour time) (minute time) (second time) (millisecond time) (microsecond time) (nanosecond time + timeDuration).
+  BalanceTime (Hour time) (Minute time) (Second time) (Millisecond time) (Microsecond time) (Nanosecond time + timeDuration).
   (*>> 2. NOTE: If using floating points to implement this operation, add the time components separately before balancing to avoid errors with unsafe integers. <<*)
 
 Lemma zero_timeDuration_valid : MinTimeDuration <= 0 <= MaxTimeDuration.
@@ -19,48 +19,48 @@ Qed.
 Theorem AddTime_adding_zero_no_change :
   forall time,
   let time' := AddTime time 0 zero_timeDuration_valid in
-     days time' = 0
-  /\ minute time = minute time'
-  /\ second time = second time'
-  /\ millisecond time = millisecond time'
-  /\ microsecond time = microsecond time'
-  /\ nanosecond time = nanosecond time'.
+     Days time' = 0
+  /\ Minute time = Minute time'
+  /\ Second time = Second time'
+  /\ Millisecond time = Millisecond time'
+  /\ Microsecond time = Microsecond time'
+  /\ Nanosecond time = Nanosecond time'.
 Proof.
   intros.
   repeat split.
   - simpl.
-    rewrite add_div_small with (a := (nanosecond time + 0)).
+    rewrite add_div_small with (a := (Nanosecond time + 0)).
     all: try rewrite Z.add_0_r.
-    rewrite add_div_small with (a := microsecond time).
-    rewrite add_div_small with (a := millisecond time).
-    rewrite add_div_small with (a := second time).
-    rewrite add_div_small with (a := minute time).
+    rewrite add_div_small with (a := Microsecond time).
+    rewrite add_div_small with (a := Millisecond time).
+    rewrite add_div_small with (a := Second time).
+    rewrite add_div_small with (a := Minute time).
     rewrite div_small_pred.
     all: now destruct time.
   - simpl.
-    rewrite add_div_small with (a := (nanosecond time + 0)).
+    rewrite add_div_small with (a := (Nanosecond time + 0)).
     all: try rewrite Z.add_0_r.
-    rewrite add_div_small with (a := microsecond time).
-    rewrite add_div_small with (a := millisecond time).
-    rewrite add_div_small with (a := second time).
+    rewrite add_div_small with (a := Microsecond time).
+    rewrite add_div_small with (a := Millisecond time).
+    rewrite add_div_small with (a := Second time).
     rewrite mod_small_pred.
     all: now destruct time.
   - simpl.
-    rewrite add_div_small with (a := (nanosecond time + 0)).
+    rewrite add_div_small with (a := (Nanosecond time + 0)).
     all: try rewrite Z.add_0_r.
-    rewrite add_div_small with (a := microsecond time).
-    rewrite add_div_small with (a := millisecond time).
+    rewrite add_div_small with (a := Microsecond time).
+    rewrite add_div_small with (a := Millisecond time).
     rewrite mod_small_pred.
     all: now destruct time.
   - simpl.
-    rewrite add_div_small with (a := (nanosecond time + 0)).
+    rewrite add_div_small with (a := (Nanosecond time + 0)).
     all: try rewrite Z.add_0_r.
-    rewrite add_div_small with (a := microsecond time).
+    rewrite add_div_small with (a := Microsecond time).
     rewrite mod_small_pred.
     all: now destruct time.
   - simpl.
     rewrite Z.add_0_r.
-    rewrite add_div_small with (a := nanosecond time).
+    rewrite add_div_small with (a := Nanosecond time).
     rewrite mod_small_pred.
     all: now destruct time.
   - simpl.

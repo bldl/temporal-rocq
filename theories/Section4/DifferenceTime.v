@@ -11,17 +11,17 @@ Open Scope Z.
 (* 4.5.5 DifferenceTime *)
 Program Definition DifferenceTime (time1 time2 : TimeRecord) : Z :=
   (*>> 1. Let hours be time2.[[Hour]] - time1.[[Hour]]. <<*)
-  let hours := (hour time2) - (hour time1) in
+  let hours := (Hour time2) - (Hour time1) in
   (*>> 2. Let minutes be time2.[[Minute]] - time1.[[Minute]]. <<*)
-  let minutes := (minute time2) - (minute time1) in
+  let minutes := (Minute time2) - (Minute time1) in
   (*>> 3. Let seconds be time2.[[Second]] - time1.[[Second]]. <<*)
-  let seconds := (second time2) - (second time1) in
+  let seconds := (Second time2) - (Second time1) in
   (*>> 4. Let milliseconds be time2.[[Millisecond]] - time1.[[Millisecond]]. <<*)
-  let milliseconds := (millisecond time2) - (millisecond time1) in
+  let milliseconds := (Millisecond time2) - (Millisecond time1) in
   (*>> 5. Let microseconds be time2.[[Microsecond]] - time1.[[Microsecond]]. <<*)
-  let microseconds := (microsecond time2) - (microsecond time1) in
+  let microseconds := (Microsecond time2) - (Microsecond time1) in
   (*>> 6. Let nanoseconds be time2.[[Nanosecond]] - time1.[[Nanosecond]]. <<*)
-  let nanoseconds := (nanosecond time2) - (nanosecond time1) in
+  let nanoseconds := (Nanosecond time2) - (Nanosecond time1) in
   (*>> 7. Let timeDuration be TimeDurationFromComponents(hours, minutes, seconds, milliseconds, microseconds, nanoseconds). <<*)
   let timeDuration := TimeDurationFromComponents hours minutes seconds milliseconds microseconds nanoseconds in
   (*>> 8. Assert: abs(timeDuration) < nsPerDay. <<*)

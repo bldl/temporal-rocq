@@ -22,15 +22,15 @@ Open Scope Z.
 (* 5.5.9 ISODateTimeToString *)
 Program Definition ISODateTimeToString (isoDateTime : ISODateTimeRecord) (calendar : CalendarType) (precision' : Precision') (showCalendar : ShowCalendar) :=
 (*>> 1. Let yearString be PadISOYear(isoDateTime.[[ISODate]].[[Year]]). <<*)
-  let yearString := PadISOYear (year (ISODate isoDateTime)) in
+  let yearString := PadISOYear (Year (ISODate isoDateTime)) in
   (*>> 2. Let monthString be ToZeroPaddedDecimalString(isoDateTime.[[ISODate]].[[Month]], 2). <<*)
-  let monthString := ToZeroPaddedDecimalString (month (ISODate isoDateTime)) 2 _ zero_le_two in
+  let monthString := ToZeroPaddedDecimalString (Month (ISODate isoDateTime)) 2 _ zero_le_two in
   (*>> 3. Let dayString be ToZeroPaddedDecimalString(isoDateTime.[[ISODate]].[[Day]], 2). <<*)
-  let dayString := ToZeroPaddedDecimalString (day (ISODate isoDateTime)) 2 _ zero_le_two in
+  let dayString := ToZeroPaddedDecimalString (Day (ISODate isoDateTime)) 2 _ zero_le_two in
   (*>> 4. Let subSecondNanoseconds be isoDateTime.[[Time]].[[Millisecond]] × 10**6 + isoDateTime.[[Time]].[[Microsecond]] × 10**3 + isoDateTime.[[Time]].[[Nanosecond]]. <<*)
-  let subSecondNanoseconds := (millisecond (Time isoDateTime)) * 1000000 + (microsecond (Time isoDateTime)) * 1000 + (nanosecond (Time isoDateTime)) in 
+  let subSecondNanoseconds := (Millisecond (Time isoDateTime)) * 1000000 + (Microsecond (Time isoDateTime)) * 1000 + (Nanosecond (Time isoDateTime)) in 
   (*>> 5. Let timeString be FormatTimeString(isoDateTime.[[Time]].[[Hour]], isoDateTime.[[Time]].[[Minute]], isoDateTime.[[Time]].[[Second]], subSecondNanoseconds, precision). <<*)
-  let timeString := FormatTimeString (hour (Time isoDateTime)) (minute (Time isoDateTime)) (second (Time isoDateTime)) subSecondNanoseconds precision' None _ _ _ _ in
+  let timeString := FormatTimeString (Hour (Time isoDateTime)) (Minute (Time isoDateTime)) (Second (Time isoDateTime)) subSecondNanoseconds precision' None _ _ _ _ in
   (*>> 6. Let calendarString be FormatCalendarAnnotation(calendar, showCalendar). <<*)
   let calendarString := FormatCalendarAnnotation calendar showCalendar in
   (*>> 7. Return the string-concatenation of yearString, the code unit 0x002D (HYPHEN-MINUS), monthString, the code unit 0x002D (HYPHEN-MINUS), dayString, 0x0054 (LATIN CAPITAL LETTER T), timeString, and calendarString. <<*)
@@ -45,7 +45,7 @@ Next Obligation. destruct isoDateTime. destruct Time. simpl. lia. Qed.
 
 Lemma month_rfc3339 :
   forall isoDate h,
-  generates RFC3339.date_month (ToZeroPaddedDecimalString (month isoDate) 2 h zero_le_two).
+  generates RFC3339.date_month (ToZeroPaddedDecimalString (Month isoDate) 2 h zero_le_two).
 Proof.
   intros.
   apply ToZeroPaddedDecimalString_2_digits.
@@ -59,7 +59,7 @@ Qed.
 
 Lemma mday_rfc3339 :
   forall isoDate h,
-  generates RFC3339.date_mday (ToZeroPaddedDecimalString (day isoDate) 2 h zero_le_two).
+  generates RFC3339.date_mday (ToZeroPaddedDecimalString (Day isoDate) 2 h zero_le_two).
 Proof.
   intros.
   apply ToZeroPaddedDecimalString_2_digits.
@@ -73,7 +73,7 @@ Qed.
 
 Theorem ISODateTimeToString_without_calendar_satisfies_rfc3339 :
   forall isoDateTime calendar precision,
-  0 <= year (ISODate isoDateTime) <= 9999 ->
+  0 <= Year (ISODate isoDateTime) <= 9999 ->
   generates RFC3339.date_time_without_offset (ISODateTimeToString isoDateTime calendar (NormalPrecision precision) SC_NEVER).
 Proof.
   intros.

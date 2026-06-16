@@ -13,11 +13,11 @@ Open Scope Z.
 (* 3.5.10 TemporalDateToString *)
 Program Definition TemporalDateToString (temporalDate : PlainDate) (showCalendar : ShowCalendar) : string :=
   (*>> 1. Let year be PadISOYear(temporalDate.[[ISODate]].[[Year]]). <<*)
-  let year := PadISOYear (year (isoDate temporalDate)) in
+  let year := PadISOYear (Year (isoDate temporalDate)) in
   (*>> 2. Let month be ToZeroPaddedDecimalString(temporalDate.[[ISODate]].[[Month]], 2). <<*)
-  let month := ToZeroPaddedDecimalString (month (isoDate temporalDate)) 2 _ _ in
+  let month := ToZeroPaddedDecimalString (Month (isoDate temporalDate)) 2 _ _ in
   (*>> 3. Let day be ToZeroPaddedDecimalString(temporalDate.[[ISODate]].[[Day]], 2). <<*)
-  let day := ToZeroPaddedDecimalString (day (isoDate temporalDate)) 2 _ _ in
+  let day := ToZeroPaddedDecimalString (Day (isoDate temporalDate)) 2 _ _ in
   (*>> 4. Let calendar be FormatCalendarAnnotation(temporalDate.[[Calendar]], showCalendar). <<*)
   let calendar := FormatCalendarAnnotation (calendar temporalDate) showCalendar in
   (*>> 5. Return the string-concatenation of year, the code unit 0x002D (HYPHEN-MINUS), month, the code unit 0x002D (HYPHEN-MINUS), day, and calendar. <<*)
@@ -38,7 +38,7 @@ Next Obligation.
 Qed.
 
 Theorem TemporalDateToString_without_calendar_satisfies_rfc3339 :
-  forall temporalDate, 0 <= year (PlainDate.isoDate temporalDate) <= 9999 ->
+  forall temporalDate, 0 <= Year (PlainDate.isoDate temporalDate) <= 9999 ->
   generates RFC3339.full_date (TemporalDateToString temporalDate SC_NEVER).
 Proof.
   intros.
